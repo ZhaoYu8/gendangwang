@@ -77,9 +77,9 @@ export default {
 			},
 		},
 		user: {
-			type: Array,
+			type: Object,
 			default: () => {
-				return [];
+				return {};
 			},
 		},
 		checkArrOk: {
@@ -119,11 +119,11 @@ export default {
 		},
 		user: {
 			handler(val) {
-				if (!val) return;
-				this.arr[1].data = val[2];
-				this.arr[2].data = val[1];
-				this.arr[3].data = val[3];
-				this.arr[4].data = val[0];
+				if (!Object.keys(val).length) return;
+				this.arr[1].data = val.delivery_train_options;
+				this.arr[2].data = val.delivery_member_options;
+				this.arr[3].data = val.with_member_options;
+				this.arr[4].data = val.allocate_member_options;
 			},
 			immediate: true,
 		},

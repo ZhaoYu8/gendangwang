@@ -126,13 +126,13 @@ export default {
 	},
 	data: () => {
 		return {
-			users: [],
+			users: {},
 			centerDialogVisible: false, // 第一个dialog
 			paginate_meta: {},
 			paginate_meta2: {},
 			arr: [
 				{ label: '送货日期', model: '', placeholder: '', id: 'delivery_date', type: 'date', data: [] },
-				{ label: '送货班次', model: '', placeholder: '', id: 'delivery_shifts'},
+				{ label: '送货班次', model: '', placeholder: '', id: 'delivery_shifts' },
 				{ label: '送货路线', model: '', placeholder: '请输入送货路线', id: 'delivery_route' },
 				{ label: '下单客户', model: '', placeholder: '', id: 'customer_id', type: 'select', data: [] },
 				{ label: '产品名称', model: '', placeholder: '请输入产品名称', id: '' },
@@ -290,7 +290,7 @@ export default {
 			let obj = res.data.data;
 			for (const key in obj) {
 				if (obj.hasOwnProperty(key)) {
-					this.$set(this.users, this.users.length, obj[key]);
+					this.$set(this.users, key, obj[key]);
 				}
 			}
 		});

@@ -1,32 +1,71 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+	<div id="app">
+		<router-view />
+	</div>
 </template>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+* {
+	margin: 0;
+	padding: 0;
 }
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+html {
+	height: 100%;
+}
+body {
+	height: 100%;
+	margin: 0;
+}
+li {
+	list-style-type: none;
+}
+#app {
+	width: 100%;
+	height: 100%;
+}
+.el-table {
+	.el-input-number {
+		.el-input__inner {
+			border: 0px;
+			border-radius: 0;
+		}
+	}
+}
+.el-table .el-input__inner {
+	border: 0px;
+	border-bottom: 1px solid #dcdfe6;
+	border-radius: 0;
+}
+.el-form--inline .el-form-item__label {
+	text-align-last: justify;
+	min-width: 7vw;
+}
+.el-form {
+	.el-form-item {
+		margin-bottom: 10px;
+	}
+	.el-card__body {
+		padding: 10px 20px !important;
+	}
+}
+.el-form-item__content {
+	width: 100%;
+}
+.el-table__empty-block {
+	width: 100% !important;
+}
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-color: rgb(214, 214, 214);
+}
+::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+	background-color: #fff;
+	border-radius: 10px;
 }
 </style>

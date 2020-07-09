@@ -132,7 +132,7 @@ export default {
 			paginate_meta2: {},
 			arr: [
 				{ label: '送货日期', model: '', placeholder: '', id: 'delivery_date', type: 'date', data: [] },
-				{ label: '送货班次', model: '', placeholder: '', id: 'delivery_shifts', type: 'select' },
+				{ label: '送货班次', model: '', placeholder: '', id: 'delivery_shifts'},
 				{ label: '送货路线', model: '', placeholder: '请输入送货路线', id: 'delivery_route' },
 				{ label: '下单客户', model: '', placeholder: '', id: 'customer_id', type: 'select', data: [] },
 				{ label: '产品名称', model: '', placeholder: '请输入产品名称', id: '' },

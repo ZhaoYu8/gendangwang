@@ -4,7 +4,7 @@
 		<el-card>
 			<el-row :gutter="20">
 				<el-form label-position="left" :inline="true">
-					<el-col :span="6" v-for="(item, index) in arr" :key="item.label + index">
+					<el-col :span="5" v-for="(item, index) in arr" :key="item.label + index">
 						<el-form-item :label="item.label" class="form-item">
 							<el-input v-model="item.model" :placeholder="item.placeholder || '请输入'" v-if="!item.type"></el-input>
 							<el-select v-model="item.model" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'" style="width: 100%;">
@@ -12,7 +12,7 @@
 							</el-select>
 						</el-form-item>
 					</el-col>
-					<el-col :span="12">
+					<el-col :span="9">
 						<el-form-item class="f-r">
 							<el-button type="primary" @click="summary">汇总</el-button>
 							<el-button type="primary" @click="special">特殊计划单</el-button>
@@ -109,7 +109,15 @@ export default {
 					placeholder: '',
 					type: 'select',
 					data: [],
-					id: 'customer_name',
+					id: 'customer_id',
+				},
+				// 头部查询条件
+				{
+					label: '收货单位：',
+					model: '',
+					placeholder: '',
+					data: [],
+					id: 'receiving_unit',
 				},
 				{ label: '产品名称：', model: '', placeholder: '', id: 'product_name' },
 			],

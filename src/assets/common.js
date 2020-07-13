@@ -13,7 +13,6 @@ let obj = {
 		{ label: '跟单员', id: 'tracking_member', disabled: true },
 		{ label: '订单编号', id: 'order_serial', disabled: true },
 		{ label: '库位', id: 'warehouse_name', type: 'input' },
-		{ label: '类型', id: 'product_group', disabled: true },
 		{ label: '备注', id: 'note', type: 'input' },
 	],
 	format(date) {

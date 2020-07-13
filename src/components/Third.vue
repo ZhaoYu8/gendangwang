@@ -7,9 +7,10 @@
 		<!-- 第二个 表格 -->
 		<div class="p-t-10">
 			<el-table :data="tableData" style="width: 100%;" border ref="multipleTable_b">
-				<el-table-column label="操作" width="150" align="center">
+				<el-table-column label="操作" width="170" align="center">
 					<div slot-scope="scope" style="display: flex; justify-content: space-around;">
-						<el-button type="primary" @click="edit(scope)" size="mini">修改状态</el-button>
+						<el-link :underline="false" type="primary" @click="edit(scope)">修改状态</el-link>
+						<el-link :underline="false" type="primary" @click="go(scope)">详情</el-link>
 					</div>
 				</el-table-column>
 				<el-table-column label="配货员" prop="allocate_member" />
@@ -101,6 +102,9 @@ export default {
 				this.paginate_meta = res.data.paginate_meta;
 			});
 		},
+    go(val) {
+      window.open(`https://gendanwang.com/v1/delivery_goods/${val.row.delivery_good_id}`)
+    }
 	},
 };
 </script>

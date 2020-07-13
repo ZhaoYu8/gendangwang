@@ -75,9 +75,10 @@
 		<!-- 第二个 表格 -->
 		<div class="p-t-10">
 			<el-table :data="tableData2" style="width: 100%;" border height="300" ref="multipleTable_b">
-				<el-table-column label="操作" width="80" align="center">
+				<el-table-column label="操作" width="120" align="center">
 					<div slot-scope="scope" style="display: flex; justify-content: space-around;">
 						<el-link :underline="false" type="danger" @click="delTwo(scope)">删除</el-link>
+						<el-link :underline="false" type="primary" @click="go(scope)">详情</el-link>
 					</div>
 				</el-table-column>
 				<el-table-column label="配货员" prop="allocate_member" />
@@ -132,10 +133,10 @@ export default {
 			paginate_meta2: {},
 			arr: [
 				{ label: '送货日期', model: '', placeholder: '', id: 'delivery_date', type: 'date', data: [] },
-				{ label: '送货班次', model: '', placeholder: '', id: 'delivery_shifts' },
-				{ label: '送货路线', model: '', placeholder: '请输入送货路线', id: 'delivery_route' },
+				{ label: '送货班次', model: '', placeholder: '', id: 'delivery_shifts', type: 'select', data: [] },
+				{ label: '送货路线', model: '', placeholder: '请输入送货路线', id: 'delivery_route', type: 'select', data: [] },
 				{ label: '下单客户', model: '', placeholder: '', id: 'customer_id', type: 'select', data: [] },
-				{ label: '产品名称', model: '', placeholder: '请输入产品名称', id: '' },
+				{ label: '产品名称', model: '', placeholder: '请输入产品名称', id: 'product_name' },
 			],
 			currentPage1: 1, // 第一个表格分页
 			tableData1: [],
@@ -282,7 +283,10 @@ export default {
 				this.tableData2 = data;
 				this.paginate_meta2 = res.data.paginate_meta;
 			});
-		},
+    },
+    go(val) {
+      window.open(`https://gendanwang.com/v1/delivery_goods/${val.row.delivery_good_id}`)
+    }
 	},
 	mounted() {
 		// 取user数据
@@ -293,6 +297,12 @@ export default {
 					this.$set(this.users, key, obj[key]);
 				}
 			}
+		});
+		// 取user数据
+		this.$post('/delivery_plans/list_plan_options', {}).then((res) => {
+			let obj = res.data.data;
+			this.arr[1].data = obj.delivery_shift_options;
+			this.arr[2].data = obj.delivery_route_options;
 		});
 	},
 };

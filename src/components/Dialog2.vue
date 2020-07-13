@@ -109,15 +109,14 @@ export default {
 			let arr = this.checkArr.map((r) => {
 				return { delivery_product_id: r.delivery_product_id, delivery_date: this.$common.format(r.delivery_date) };
 			});
-			// this.$post('/delivery_plans/batch_create', obj).then((res) => {
-			// 	this.$notify({
-			// 		title: '提示',
-			// 		message: '新增工作计划成功!',
-			// 		type: 'success',
-			// 	});
-			// 	this.cancel(true);
-			// });
-			this.cancel(true);
+			this.$post('/delivery_plans/batch_create', arr).then((res) => {
+				this.$notify({
+					title: '提示',
+					message: '新增工作计划成功!',
+					type: 'success',
+				});
+				this.cancel(true);
+			});
 		},
 		reqeat() {
 			this.$nextTick(() => {

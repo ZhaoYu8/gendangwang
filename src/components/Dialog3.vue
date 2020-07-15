@@ -1,5 +1,5 @@
 <template>
-	<el-dialog title="新增特殊计划" :visible.sync="dialogVisible" width="85%" top="5vh" class="dialog" @close="cancel">
+	<el-dialog title="新增特殊计划" :visible.sync="dialogVisible" width="85%" top="5vh" class="dialog" @close="cancel(false)">
 		<!-- 头部查询条件 -->
 		<el-card class="mb-10">
 			<el-row :gutter="20">

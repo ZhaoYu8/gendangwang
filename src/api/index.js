@@ -55,7 +55,10 @@ instance.interceptors.response.use(
 );
 const request = {
 	post(url, params = {}) {
-		params = { ...params, ...{ current_org: '423', current_member: '1092' } };
+    params = { ...params, ...{ current_org: '423', current_member: '1092' } };
+		if (process.env.NODE_ENV === 'development') {
+			params.testing_mode = 1;
+		}
 		return instance.post(url, params, {
 			headers: {
 				'Content-Type': 'application/json',

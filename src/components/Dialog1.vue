@@ -1,5 +1,5 @@
 <template>
-	<el-dialog title="新增工作计划" :visible.sync="dialogVisible" width="85%" top="5vh" class="dialog" @close="cancel">
+	<el-dialog title="新增工作计划" :visible.sync="dialogVisible" width="85%" top="5vh" class="dialog" @close="cancel(false)">
 		<!-- 头部查询条件 -->
 		<el-card class="mb-10">
 			<el-row :gutter="20">
@@ -14,6 +14,7 @@
 								v-if="item.type === 'select'"
 								style="width: 100%;"
 								@change="onChange(item)"
+								clearable
 							>
 								<el-option v-for="(list, d) in item.data" :key="d" :label="list.name" :value="list.id"> </el-option>
 							</el-select>
@@ -227,8 +228,8 @@ export default {
 			} else {
 				let index = this.checkArr.findIndex((r) => r.id === row.id);
 				this.checkArr.splice(index, 1);
-      }
-      console.log(this.checkArr);
+			}
+			console.log(this.checkArr);
 		},
 	},
 };

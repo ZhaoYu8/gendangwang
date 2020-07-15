@@ -1,5 +1,5 @@
 <template>
-	<el-dialog title="新增工作计划" :visible.sync="dialogVisible" width="85%" top="5vh" class="dialog" @close="cancel">
+	<el-dialog title="新增工作计划" :visible.sync="dialogVisible" width="85%" top="5vh" class="dialog" @close="cancel(false)">
 		<!-- 头部查询条件 -->
 		<el-card class="mb-10">
 			<el-row :gutter="20">
@@ -61,7 +61,7 @@
 		</div>
 		<span slot="footer">
 			<el-button type="primary" @click="ok">保存</el-button>
-			<el-button @click="cancel">取消</el-button>
+			<el-button @click="cancel(false)">取消</el-button>
 		</span>
 	</el-dialog>
 </template>

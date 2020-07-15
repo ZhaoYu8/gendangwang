@@ -1,259 +1,270 @@
 <template>
-	<div class="first">
-		<!-- 头部查询条件 -->
-		<el-card>
-			<el-row :gutter="20">
-				<el-form label-position="left" :inline="true">
-					<el-col :span="5" v-for="(item, index) in arr" :key="item.label + index">
-						<el-form-item :label="item.label" class="form-item">
-							<el-input v-model="item.model" :placeholder="item.placeholder || '请输入'" v-if="!item.type"></el-input>
-							<el-select v-model="item.model" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'" style="width: 100%;">
-								<el-option v-for="(list, d) in item.data" :key="d" :label="list.name" :value="list.id"> </el-option>
-							</el-select>
-						</el-form-item>
-					</el-col>
-					<el-col :span="9">
-						<el-form-item class="f-r">
-							<el-button type="primary" @click="summary">汇总</el-button>
-							<el-button type="primary" @click="special">特殊计划单</el-button>
-							<el-button type="primary" @click="copyAdd">复制新建</el-button>
-							<el-button
-								type="primary"
-								@click="
-									() => {
-										this.checkArr = [];
-										this.query();
-									}
-								"
-								>查询</el-button
-							>
-							<el-button type="warning" @click="dialog1 = true">新增</el-button>
-						</el-form-item>
-					</el-col>
-				</el-form>
-			</el-row>
-		</el-card>
-		<!-- 表格 -->
-		<div class="p-t-10">
-			<el-table :data="tableData" style="width: 100%;" border @selection-change="handleSelectionChange" ref="firstTable">
-				<el-table-column type="selection" width="50" align="center"> </el-table-column>
-				<el-table-column label="操作" width="80" align="center">
-					<div slot-scope="scope" style="display: flex; justify-content: space-around;">
-						<el-link :underline="false" type="danger" @click="del(scope)">删除</el-link>
-					</div>
-				</el-table-column>
-				<el-table-column :label="item.label" :width="item.width || 180" v-for="(item, index) in tableHeader" :key="item.label + index">
-					<template slot-scope="scope">
-						<el-date-picker
-							:clearable="false"
-							v-model="scope.row[item.id]"
-							type="date"
-							:placeholder="item.placeholder || '请选择'"
-							style="width: 100%;"
-							v-if="item.type === 'date'"
-							@change="tableChange(scope.row, item)"
-						>
-						</el-date-picker>
-						<el-input v-model="scope.row[item.id]" v-else-if="item.type === 'input'" @change="tableChange(scope.row, item)" v-focus />
-						<div v-else>{{ scope.row[item.id] }}</div>
-					</template>
-				</el-table-column>
-			</el-table>
-		</div>
-		<!--表格分页 -->
-		<el-pagination
-			background
-			layout="total, prev, pager, next, jumper"
-			:total="paginate_meta.total_count"
-			class="pagination"
-			:current-page.sync="currentPage"
-			@current-change="currentChange"
-		>
-		</el-pagination>
+  <div class="first">
+    <!-- 头部查询条件 -->
+    <el-card>
+      <el-row :gutter="20">
+        <el-form label-position="left" :inline="true">
+          <el-col :span="6" v-for="(item, index) in arr" :key="item.label + index">
+            <el-form-item :label="item.label" class="form-item">
+              <el-input v-model="item.model" :placeholder="item.placeholder || '请输入'" v-if="!item.type"></el-input>
+              <el-select v-model="item.model" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'" clearable style="width: 100%;">
+                <el-option v-for="(list, d) in item.data" :key="d" :label="list.name" :value="list.id"> </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item class="f-r">
+              <el-button type="primary" @click="moreDel">多选删除</el-button>
+              <el-button type="primary" @click="summary">汇总</el-button>
+              <el-button type="primary" @click="special">特殊计划单</el-button>
+              <el-button type="primary" @click="copyAdd">复制新建</el-button>
+              <el-button
+                type="primary"
+                @click="
+                  () => {
+                    this.checkArr = [];
+                    this.query();
+                  }
+                "
+                >查询</el-button
+              >
+              <el-button type="warning" @click="dialog1 = true">新增</el-button>
+            </el-form-item>
+          </el-col>
+        </el-form>
+      </el-row>
+    </el-card>
+    <!-- 表格 -->
+    <div class="p-t-10">
+      <el-table :data="tableData" style="width: 100%;" border @selection-change="handleSelectionChange" ref="firstTable">
+        <el-table-column type="selection" width="50" align="center"> </el-table-column>
+        <el-table-column label="操作" width="80" align="center">
+          <div slot-scope="scope" style="display: flex; justify-content: space-around;">
+            <el-link :underline="false" type="danger" @click="del(scope)">删除</el-link>
+          </div>
+        </el-table-column>
+        <el-table-column :label="item.label" :width="item.width || 180" v-for="(item, index) in tableHeader" :key="item.label + index">
+          <template slot-scope="scope">
+            <el-date-picker :clearable="false" v-model="scope.row[item.id]" type="date" :placeholder="item.placeholder || '请选择'" style="width: 100%;" v-if="item.type === 'date'" @change="tableChange(scope.row, item)"> </el-date-picker>
+            <el-input v-model="scope.row[item.id]" v-else-if="item.type === 'input'" @change="tableChange(scope.row, item)" v-focus />
+            <div v-else>{{ scope.row[item.id] }}</div>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <!--表格分页 -->
+    <el-pagination background layout="total, prev, pager, next, jumper" :total="paginate_meta.total_count" class="pagination" :current-page.sync="currentPage" @current-change="currentChange"> </el-pagination>
 
-		<Dialog1 :dialogVisibl="dialog1" :user="user" @cancel="cancel" />
-		<Dialog2 :dialogVisibl="dialog2" :selectArr="checkArr" :user="user" @cancel="cancel" />
-		<Dialog3 :dialogVisibl="dialog3" :user="user" @cancel="cancel" />
-	</div>
+    <Dialog1 :dialogVisibl="dialog1" :user="user" @cancel="cancel" />
+    <Dialog2 :dialogVisibl="dialog2" :selectArr="checkArr" :user="user" @cancel="cancel" />
+    <Dialog3 :dialogVisibl="dialog3" :user="user" @cancel="cancel" />
+  </div>
 </template>
 
 <script>
-import Dialog1 from './Dialog1.vue';
-import Dialog2 from './Dialog2.vue';
-import Dialog3 from './Dialog3.vue';
+import Dialog1 from "./Dialog1.vue";
+import Dialog2 from "./Dialog2.vue";
+import Dialog3 from "./Dialog3.vue";
 
 export default {
-	name: 'First',
-	props: {
-		activeName: {
-			type: String,
-			default: 'first',
-		},
-	},
-	components: {
-		Dialog1,
-		Dialog2,
-		Dialog3,
-	},
-	data: () => {
-		return {
-			dialog1: false, // 第一个dialog
-			dialog2: false,
-			dialog3: false,
-			paginate_meta: {}, // 分页总数数据
-			arr: [
-				// 头部查询条件
-				{
-					label: '下单客户：',
-					model: '',
-					placeholder: '',
-					type: 'select',
-					data: [],
-					id: 'customer_id',
-				},
-				// 头部查询条件
-				{
-					label: '收货单位：',
-					model: '',
-					placeholder: '',
-					data: [],
-					id: 'receiving_unit',
-				},
-				{ label: '产品名称：', model: '', placeholder: '', id: 'product_name' },
-			],
-			currentPage: 1, // 第一个表格分页
-			tableData: [], // 表格数据
-			checkArr: [], // 已经勾选了选项合集
-			user: [],
-		};
-	},
-	watch: {
-		activeName: {
-			handler(val) {
-        console.log(val);
-				if (val === 'first') {
-					this.currentPage = 1;
-					this.query();
-				}
-			},
-			immediate: true,
-		},
-	},
-	computed: {
-		tableHeader() {
-			return this.$common.tableHeader;
-		},
-	},
-	methods: {
-		handleSelectionChange(val) {
-			this.$nextTick(() => {
-				this.$nextTick(() => {
-					this.checkArr[this.currentPage - 1] = val;
-				});
-			});
-		},
-		async currentChange(val) {
-			this.currentPage = val;
-			await this.query();
-			this.$nextTick(() => {
-				this.tableData.map((r) => {
-					if (
-						this.$common
-							.getSelection(this.checkArr)
-							.map((n) => n.delivery_product_id)
-							.includes(r.delivery_product_id)
-					) {
-						this.$refs.firstTable.toggleRowSelection(r);
-					}
-				});
-			});
-		},
-		cancel(type) {
-			if (type) {
-				this.currentPage = 1;
-				this.query();
-			}
-			this.dialog3 = this.dialog2 = this.dialog1 = false;
-		},
-		async query() {
-			let obj = { ...this.$common.querySql.call(this, this.arr), ...{ page: this.currentPage } };
-			await this.$post('/delivery_plans/list_plan', obj).then((res) => {
-				let data = res.data.data;
-				data.map((r) => {
-					if (!Number(r.delivery_number) && !Number(r.sparetime_percent)) {
-						r.sparetime = 0;
-					} else {
-						r.sparetime = Math.ceil((Number(r.delivery_number) * Number(r.sparetime_percent)) / 100);
-					}
-				});
-				this.tableData = [];
-				this.$nextTick(() => {
-					this.tableData = data;
-				});
-				this.paginate_meta = res.data.paginate_meta;
-			});
-		},
-		async del(val) {
-			let obj = await this.$common.del.call(this, val);
-			let _this = this;
-			if (obj) {
-				setTimeout(() => {
-					_this.query();
-				}, 300);
-			}
-		},
-		tableChange(val, item) {
-			this.$common.tableChange.call(this, val, item);
-		},
-		summary() {
-			this.$notify({
-				title: '警告',
-				message: '等接口!',
-				type: 'warning',
-			});
-		},
-		copyAdd() {
-			if (!this.$common.getSelection(this.checkArr).length) {
-				this.$notify({
-					title: '警告',
-					message: '最少选择一条数据!',
-					type: 'warning',
-				});
-				return;
-			}
-			this.dialog2 = true;
-		},
-		special() {
-			this.dialog3 = true;
-		},
-	},
-	mounted() {
-		// 取user数据
-		this.$post('/delivery_plans/new_plan', {}).then((res) => {
-			res.data.data.customer_options.map((r, i) => {
-				this.$set(this.user, i, r);
-			});
-			this.arr[0].data = this.user;
-		});
-	},
+  name: "First",
+  props: {
+    activeName: {
+      type: String,
+      default: "first",
+    },
+  },
+  components: {
+    Dialog1,
+    Dialog2,
+    Dialog3,
+  },
+  data: () => {
+    return {
+      dialog1: false, // 第一个dialog
+      dialog2: false,
+      dialog3: false,
+      paginate_meta: {}, // 分页总数数据
+      arr: [
+        // 头部查询条件
+        {
+          label: "下单客户：",
+          model: "",
+          placeholder: "",
+          type: "select",
+          data: [],
+          id: "customer_id",
+        },
+        // 头部查询条件
+        {
+          label: "收货单位：",
+          model: "",
+          placeholder: "",
+          data: [],
+          id: "receiving_unit",
+        },
+        { label: "产品名称：", model: "", placeholder: "", id: "product_name" },
+      ],
+      currentPage: 1, // 第一个表格分页
+      tableData: [], // 表格数据
+      checkArr: [], // 已经勾选了选项合集
+      user: [],
+    };
+  },
+  watch: {
+    activeName: {
+      handler(val) {
+        if (val === "first") {
+          this.currentPage = 1;
+          this.query();
+        }
+      },
+      immediate: true,
+    },
+  },
+  computed: {
+    tableHeader() {
+      return this.$common.tableHeader;
+    },
+  },
+  methods: {
+    handleSelectionChange(val) {
+      this.$nextTick(() => {
+        this.$nextTick(() => {
+          this.checkArr[this.currentPage - 1] = val;
+        });
+      });
+    },
+    async currentChange(val) {
+      this.currentPage = val;
+      await this.query();
+      this.$nextTick(() => {
+        this.tableData.map((r) => {
+          if (
+            this.$common
+              .getSelection(this.checkArr)
+              .map((n) => n.delivery_product_id)
+              .includes(r.delivery_product_id)
+          ) {
+            this.$refs.firstTable.toggleRowSelection(r);
+          }
+        });
+      });
+    },
+    cancel(type) {
+      if (type) {
+        this.currentPage = 1;
+        this.query();
+      }
+      this.dialog3 = this.dialog2 = this.dialog1 = false;
+    },
+    async query() {
+      let obj = { ...this.$common.querySql.call(this, this.arr), ...{ page: this.currentPage } };
+      await this.$post("/delivery_plans/list_plan", obj).then((res) => {
+        let data = res.data.data;
+        data.map((r) => {
+          if (!Number(r.delivery_number) && !Number(r.sparetime_percent)) {
+            r.sparetime = 0;
+          } else {
+            r.sparetime = Math.ceil((Number(r.delivery_number) * Number(r.sparetime_percent)) / 100);
+          }
+        });
+        this.tableData = [];
+        this.$nextTick(() => {
+          this.tableData = data;
+        });
+        this.paginate_meta = res.data.paginate_meta;
+      });
+    },
+    async del(val) {
+      let obj = await this.$common.del.call(this, val);
+      let _this = this;
+      if (obj) {
+        setTimeout(() => {
+          _this.query();
+        }, 300);
+      }
+    },
+    async moreDel() {
+      let arr = this.$common.getSelection(this.checkArr);
+      if (!arr.length) {
+        this.$notify({
+          title: "警告",
+          message: "你必须选择数据，才能进行多选删除!",
+          type: "warning",
+        });
+        return;
+      }
+      this.$confirm(`确定删除么？本次删除 ${arr.length} 条数据！`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        this.$post("/delivery_plans/batch_delete", { delivery_product_ids: arr.map((r) => r.delivery_product_id) }).then(() => {
+          // 删除之后查询，并且提示删除成功!
+          this.$message({
+            type: "success",
+            message: "删除成功!",
+          });
+          let _this = this;
+          setTimeout(() => {
+            _this.query();
+          }, 300);
+        });
+      });
+    },
+    tableChange(val, item) {
+      this.$common.tableChange.call(this, val, item);
+    },
+    summary() {
+      this.$notify({
+        title: "警告",
+        message: "等接口!",
+        type: "warning",
+      });
+    },
+    copyAdd() {
+      if (!this.$common.getSelection(this.checkArr).length) {
+        this.$notify({
+          title: "警告",
+          message: "最少选择一条数据!",
+          type: "warning",
+        });
+        return;
+      }
+      this.dialog2 = true;
+    },
+    special() {
+      this.dialog3 = true;
+    },
+  },
+  mounted() {
+    // 取user数据
+    this.$post("/delivery_plans/new_plan", {}).then((res) => {
+      res.data.data.customer_options.map((r, i) => {
+        this.$set(this.user, i, r);
+      });
+      this.arr[0].data = this.user;
+    });
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .f-r {
-	float: right;
+  float: right;
 }
 .p-t-10 {
-	padding-top: 10px;
+  padding-top: 10px;
 }
 .pagination {
-	padding: 10px 0;
-	text-align: right;
+  padding: 10px 0;
+  text-align: right;
 }
 </style>
 <style lang="scss">
 .form-item {
-	width: 100%;
-	display: inline-flex !important;
+  width: 100%;
+  display: inline-flex !important;
 }
 </style>

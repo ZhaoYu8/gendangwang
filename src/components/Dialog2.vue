@@ -1,5 +1,5 @@
 <template>
-	<el-dialog title="新增工作计划" :visible.sync="dialogVisible" width="85%" top="5vh" class="dialogthree" @close="cancel">
+	<el-dialog title="复制新建" :visible.sync="dialogVisible" width="85%" top="5vh" class="dialogthree" @close="cancel(false)">
 		<!-- 第一个表格 -->
 		<div class="p-t-10">
 			<el-table :data="tableData" style="width: 100%;" border height="600" ref="dialog2Table" @select="selected">
@@ -109,7 +109,7 @@ export default {
 			let arr = this.checkArr.map((r) => {
 				return { delivery_product_id: r.delivery_product_id, delivery_date: this.$common.format(r.delivery_date) };
 			});
-			this.$post('/delivery_plans/batch_create', arr).then((res) => {
+			this.$post('/delivery_plans/clone_plans', { clone_objects: arr }).then((res) => {
 				this.$notify({
 					title: '提示',
 					message: '新增工作计划成功!',

@@ -5,6 +5,7 @@ import http from './api/index';
 import common from './assets/common';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import Print from 'vue-print-nb';
 Vue.config.productionTip = false;
 let arr = [];
 Vue.prototype.$post = http.post;
@@ -23,6 +24,7 @@ Vue.directive('focus', {
 	},
 });
 Vue.use(ElementUI);
+Vue.use(Print);
 new Vue({
 	router,
 	render: (h) => h(App),

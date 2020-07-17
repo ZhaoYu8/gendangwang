@@ -63,7 +63,7 @@
         </tr>
         <template v-for="(item, index) in tableData">
           <tr
-            v-if="index > 1 && tableData[index - 1].receiving_unit !== tableData[index].receiving_unit"
+            v-if="index > 0 && tableData[index - 1].receiving_unit !== tableData[index].receiving_unit"
             :key="item.product_name + index"
             style="height: 10px;"
           ></tr>

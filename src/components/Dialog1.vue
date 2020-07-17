@@ -34,7 +34,7 @@
 		</el-card>
 		<!-- 第一个表格 -->
 		<div class="p-t-10">
-			<el-table :data="tableData" style="width: 100%;" border height="400" @select="selected" ref="dialog1Table">
+			<el-table :data="tableData" style="width: 100%;" border height="400" @select="selected" @select-all="selectedAll" ref="dialog1Table">
 				<el-table-column type="selection" width="50" align="center"> </el-table-column>
 				<el-table-column label="产品名称" align="center" prop="product_name"> </el-table-column>
 				<el-table-column label="产品编号" align="center" prop="product_serial"> </el-table-column>
@@ -236,8 +236,18 @@ export default {
 				let index = this.checkArr.findIndex((r) => r.id === row.id);
 				this.checkArr.splice(index, 1);
 			}
-			console.log(this.checkArr);
 		},
+		selectedAll(val) {
+			this.tableData.map(row => {
+				let index = this.checkArr.findIndex((r) => r.id === row.id);
+				if (index > -1) this.checkArr.splice(index, 1);
+			})
+			if (val.length) {
+				val.map(r => {
+					this.checkArr.push(r);
+				})
+			}
+		}
 	},
 };
 </script>

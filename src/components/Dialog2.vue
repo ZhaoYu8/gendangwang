@@ -72,7 +72,7 @@ export default {
 			if (val) {
 				this.dialogVisible = true; // 先让弹窗显示
 				this.currentPage1 = 1; // 重置为第一页
-				this.checkArr = JSON.parse(JSON.stringify(this.$common.getSelection(this.selectArr)));
+				this.checkArr = JSON.parse(JSON.stringify(this.selectArr));
 				// 表格数据赋值，0~10
 				this.tableData = this.checkArr.slice((this.currentPage1 - 1) * 10, (this.currentPage1 - 1) * 10 + 10);
 				// 总页数
@@ -88,7 +88,7 @@ export default {
 		currentChange(val) {
 			// 点击分页
 			this.currentPage1 = val;
-			let arr = this.$common.getSelection(this.selectArr);
+			let arr = this.selectArr;
 			this.tableData = arr.slice((this.currentPage1 - 1) * 10, (this.currentPage1 - 1) * 10 + 10);
 			this.reqeat();
 		},

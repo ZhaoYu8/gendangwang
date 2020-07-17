@@ -129,6 +129,7 @@ export default {
 		},
 		checkArrOk: {
 			handler(val) {
+				this.tableData = [];
 				val.map((r, i) => {
 					this.$set(this.tableData, i, r);
 				});

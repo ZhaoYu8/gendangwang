@@ -40,8 +40,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <!--表格分页 -->
-    <el-pagination background layout="total, prev, pager, next, jumper" :total="paginate_meta.total_count" class="pagination" :current-page.sync="currentPage1" @current-change="currentChange"> </el-pagination>
+   
     <!-- 第二个 表格 -->
     <div class="p-t-10">
       <el-table :data="tableData2" style="width: 100%;" border height="300" ref="multipleTable_b">
@@ -97,7 +96,6 @@ export default {
       detailData: {},
       centerDialogVisible: false, // 第一个dialog
       centerDialogVisible1: false,
-      paginate_meta: {},
       paginate_meta2: {},
       arr: [
         { label: "送货日期", model: "", placeholder: "", id: "delivery_date", type: "date", data: [] },
@@ -106,7 +104,6 @@ export default {
         { label: "下单客户", model: "", placeholder: "", id: "customer_id", type: "select", data: [] },
         { label: "产品名称", model: "", placeholder: "请输入产品名称", id: "product_name" },
       ],
-      currentPage1: 1, // 第一个表格分页
       tableData1: [],
       tableData2: [],
       currentPage2: 1, // 第一个表格分页
@@ -119,7 +116,6 @@ export default {
     activeName: {
       handler(val) {
         if (val === "second") {
-          this.currentPage1 = 1;
           this.currentPage2 = 1;
           this.query();
           this.queryTwo();
@@ -137,11 +133,7 @@ export default {
   },
   methods: {
     handleSelectionChange(val) {
-      this.$nextTick(() => {
-        this.$nextTick(() => {
-          this.checkArr[this.currentPage1 - 1] = val;
-        });
-      });
+      this.checkArr = val;
     },
     async del(val) {
       let obj = await this.$common.del.call(this, val);
@@ -175,12 +167,7 @@ export default {
       this.$common.tableChange.call(this, val, item);
     },
     onAdd() {
-      let arr = [];
-      this.checkArr.map((r) => {
-        r.map((n) => {
-          arr.push(n);
-        });
-      });
+      let arr = this.checkArr;
       if (arr.length) {
         this.centerDialogVisible = true;
         this.checkArrOk = JSON.parse(JSON.stringify(arr));
@@ -199,16 +186,10 @@ export default {
       if (type) {
         this.checkArr = [];
         this.checkArrOk = [];
-        this.currentPage1 = 1;
         this.currentPage2 = 1;
         this.query();
         this.queryTwo();
       }
-    },
-    // 点击分页
-    currentChange(val) {
-      this.currentPage1 = val;
-      this.query();
     },
     currentChange2(val) {
       this.currentPage2 = val;
@@ -216,7 +197,7 @@ export default {
     },
     // 查询第一个表格数据
     async query() {
-      let obj = { ...this.$common.querySql.call(this, this.arr), ...{ page: this.currentPage1 } };
+      let obj = { ...this.$common.querySql.call(this, this.arr), ...{ not_paginate: 1 } };
       await this.$post("/delivery_plans/list_plan", obj).then((res) => {
         let data = res.data.data;
         data.map((r) => {
@@ -227,23 +208,8 @@ export default {
           }
         });
         this.tableData1 = [];
-        this.paginate_meta = res.data.paginate_meta;
         this.$nextTick(() => {
           this.tableData1 = data;
-          if (!this.checkArr.length) return;
-          // 在赋值之后，再给他手动绑定一下。
-          this.$nextTick(() => {
-            this.tableData1.map((r) => {
-              if (
-                this.$common
-                  .getSelection(this.checkArr)
-                  .map((n) => n.delivery_product_id)
-                  .includes(r.delivery_product_id)
-              ) {
-                this.$refs.secondTable.toggleRowSelection(r);
-              }
-            });
-          });
         });
       });
     },

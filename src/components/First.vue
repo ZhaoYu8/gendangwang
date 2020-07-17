@@ -36,7 +36,7 @@
     </el-card>
     <!-- 表格 -->
     <div class="p-t-10">
-      <el-table :data="tableData" style="width: 100%;" border @selection-change="handleSelectionChange" ref="firstTable">
+      <el-table :data="tableData" style="width: 100%;" border  ref="firstTable" @select="selected" @select-all="selectedAll" >
         <el-table-column type="selection" width="50" align="center"> </el-table-column>
         <el-table-column label="操作" width="80" align="center">
           <div slot-scope="scope" style="display: flex; justify-content: space-around;">
@@ -54,7 +54,6 @@
     </div>
     <!--表格分页 -->
     <el-pagination background layout="total, prev, pager, next, jumper" :total="paginate_meta.total_count" class="pagination" :current-page.sync="currentPage" @current-change="currentChange"> </el-pagination>
-
     <Dialog1 :dialogVisibl="dialog1" :user="user" @cancel="cancel" />
     <Dialog2 :dialogVisibl="dialog2" :selectArr="checkArr" :user="user" @cancel="cancel" />
     <Dialog3 :dialogVisibl="dialog3" :user="user" @cancel="cancel" />
@@ -139,31 +138,43 @@ export default {
     },
   },
   methods: {
-    handleSelectionChange(val) {
-      this.$nextTick(() => {
-        this.$nextTick(() => {
-          this.checkArr[this.currentPage - 1] = val;
-        });
-      });
-    },
+		selected(val, row) {
+			if (val.filter((r) => r.id === row.id).length) {
+				// 证明是选中
+				this.checkArr.push(row);
+			} else {
+				let index = this.checkArr.findIndex((r) => r.id === row.id);
+				this.checkArr.splice(index, 1);
+			}
+		},
+		selectedAll(val) {
+			this.tableData.map(row => {
+				let index = this.checkArr.findIndex((r) => r.id === row.id);
+				if (index > -1) this.checkArr.splice(index, 1);
+			})
+			if (val.length) {
+				val.map(r => {
+					this.checkArr.push(r);
+				})
+			}
+		},
     async currentChange(val) {
       this.currentPage = val;
       await this.query();
       this.$nextTick(() => {
         this.tableData.map((r) => {
-          if (
-            this.$common
-              .getSelection(this.checkArr)
+          if (this.checkArr
               .map((n) => n.delivery_product_id)
               .includes(r.delivery_product_id)
           ) {
             this.$refs.firstTable.toggleRowSelection(r);
           }
         });
-      });
+      })
     },
     cancel(type) {
       if (type) {
+        this.checkArr = []
         this.currentPage = 1;
         this.query();
       }
@@ -197,7 +208,7 @@ export default {
       }
     },
     async moreDel() {
-      let arr = this.$common.getSelection(this.checkArr);
+      let arr = this.checkArr;
       if (!arr.length) {
         this.$notify({
           title: "警告",
@@ -235,7 +246,7 @@ export default {
       });
     },
     copyAdd() {
-      if (!this.$common.getSelection(this.checkArr).length) {
+      if (!this.checkArr.length) {
         this.$notify({
           title: "警告",
           message: "最少选择一条数据!",

@@ -141,6 +141,8 @@ export default {
 				if (!val.length) return;
 				this.arr[2].data = val;
 				this.arr[2].model = val[0].id;
+				this.arr[3].model = val[0].name;
+				this.arr[4].model = val[0].address;
 				this.arr[6].data = val;
 			},
 			immediate: true,
@@ -160,6 +162,11 @@ export default {
 			this.onChange(this.arr[2], val);
 		},
 		onChange(val, index) {
+			if (val.id === 'customer_id') {
+				let data = val.data.filter(r => r.id === val.model)[0];
+				this.arr[3].model = data.name;
+				this.arr[4].model = data.address;
+			}
 			this.currentPage = index ? index : 1;
 			let arr = ['customer_id', 'abc', 'product_name'];
 			let obj = {};

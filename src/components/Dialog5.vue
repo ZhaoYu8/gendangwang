@@ -1,5 +1,12 @@
 <template>
-  <el-dialog title="" :visible.sync="dialogVisible" width="90%" top="10vh" class="dialog" @close="cancel(false)">
+  <el-dialog
+    title
+    :visible.sync="dialogVisible"
+    width="90%"
+    top="10vh"
+    class="dialog"
+    @close="cancel(false)"
+  >
     <!-- 头部查询条件 -->
     <div id="printMe" ref="printMe">
       <ul class="top">
@@ -38,7 +45,7 @@
 					<el-col :span="3">配货员</el-col>
 					<el-col :span="3">李锐华</el-col>
 				</el-row>
-			</div> -->
+      </div>-->
       <table border="1" cellspacing="0">
         <tr>
           <td style="width: 50px">行号</td>
@@ -54,20 +61,27 @@
           <td>库位</td>
           <td style="width:10%">备注</td>
         </tr>
-        <tr v-for="(item, index) in tableData" :key="item + index">
-          <td>{{ index + 1 }}</td>
-          <td>{{ item.delivery_route }}</td>
-          <td>{{ item.delivery_shifts }}</td>
-          <td>{{ item.receiving_unit }}</td>
-          <td>{{ item.product_name }}</td>
-          <td>{{ item.product_price }}</td>
-          <td>{{ item.order_member }}</td>
-          <td>{{ item.delivery_number }}</td>
-          <td>{{ item.sparetime }}</td>
-          <td>{{ item.order_serial }}</td>
-          <td>{{ item.warehouse_name }}</td>
-          <td>{{ item.note }}</td>
-        </tr>
+        <template v-for="(item, index) in tableData">
+          <tr
+            v-if="index > 1 && tableData[index - 1].receiving_unit !== tableData[index].receiving_unit"
+            :key="item.product_name + index"
+            style="height: 10px;"
+          ></tr>
+          <tr :key="item.receiving_unit + index">
+            <td>{{ index + 1 }}</td>
+            <td>{{ item.delivery_route }}</td>
+            <td>{{ item.delivery_shifts }}</td>
+            <td>{{ item.receiving_unit }}</td>
+            <td>{{ item.product_name }}</td>
+            <td>{{ item.product_price }}</td>
+            <td>{{ item.order_member }}</td>
+            <td>{{ item.delivery_number }}</td>
+            <td>{{ item.sparetime }}</td>
+            <td>{{ item.order_serial }}</td>
+            <td>{{ item.warehouse_name }}</td>
+            <td>{{ item.note }}</td>
+          </tr>
+        </template>
       </table>
 
       <ul class="bottom">
@@ -90,25 +104,25 @@ export default {
       type: Boolean,
       default: () => {
         return false;
-      },
+      }
     },
     detailData: {
       type: Object,
       default: () => {
         return {};
-      },
+      }
     },
     print: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   computed: {},
   data: () => {
     return {
       dialogVisible: false,
       tableData: [],
-      headerData: {},
+      headerData: {}
     };
   },
   watch: {
@@ -131,14 +145,14 @@ export default {
           this.$refs.printButton.$el.click();
         });
       }
-    },
+    }
   },
   methods: {
     cancel(type = false) {
       this.$emit("cancel", type);
       this.dialogVisible = false;
-    },
-  },
+    }
+  }
 };
 </script>
 

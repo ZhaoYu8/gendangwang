@@ -55,7 +55,7 @@ instance.interceptors.response.use(
 );
 const request = {
 	post(url, params = {}) {
-    params = { ...params, ...{ current_org: '423', current_member: '1092' } };
+	params = { ...params, ...{ current_org: this.$route.query.current_org || '423', current_member: this.$route.query.current_member || '1092' } };
 		if (process.env.NODE_ENV === 'development') {
 			params.testing_mode = 1;
 		}

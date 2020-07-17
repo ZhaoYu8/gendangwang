@@ -73,6 +73,10 @@ export default {
       type: String,
       default: "first",
     },
+    user: {
+      type: Array,
+      default: () => []
+    }
   },
   components: {
     Dialog1,
@@ -108,7 +112,6 @@ export default {
       currentPage: 1, // 第一个表格分页
       tableData: [], // 表格数据
       checkArr: [], // 已经勾选了选项合集
-      user: [],
     };
   },
   watch: {
@@ -121,6 +124,14 @@ export default {
       },
       immediate: true,
     },
+    user: {
+      handler(val) {
+        if (val.length) {
+          this.arr[0].data = val;
+        }
+      },
+      immediate: true,
+    }
   },
   computed: {
     tableHeader() {
@@ -239,13 +250,6 @@ export default {
     },
   },
   mounted() {
-    // 取user数据
-    this.$post("/delivery_plans/new_plan", {}).then((res) => {
-      res.data.data.customer_options.map((r, i) => {
-        this.$set(this.user, i, r);
-      });
-      this.arr[0].data = this.user;
-    });
   },
 };
 </script>

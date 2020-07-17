@@ -3,7 +3,7 @@
 		<el-tabs v-model="activeName" class="p-t-5" type="border-card" @tab-click="chenge">
 			<!-- 第一个tab页 -->
 			<el-tab-pane label="送货计划单" name="first">
-				<First :activeName="activeName" />
+				<First :activeName="activeName" :user="user"/>
 			</el-tab-pane>
 			<el-tab-pane label="送货派货单" name="second">
 				<Second v-if="secondShow" :user="user" :activeName="activeName" />

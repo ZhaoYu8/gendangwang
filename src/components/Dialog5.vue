@@ -141,7 +141,6 @@ export default {
       if (val) {
         this.dialogVisible = true;
         this.$nextTick(() => {
-          console.log(this.$refs.printButton.$el);
           this.$refs.printButton.$el.click();
         });
       }

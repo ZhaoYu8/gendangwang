@@ -6,9 +6,24 @@
         <el-form label-position="left" :inline="true">
           <el-col :span="6" v-for="(item, index) in arr" :key="item.label + index">
             <el-form-item :label="item.label" class="form-item">
-              <el-input v-model="item.model" :placeholder="item.placeholder || '请输入'" v-if="!item.type"></el-input>
-              <el-select v-model="item.model" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'" clearable style="width: 100%;">
-                <el-option v-for="(list, d) in item.data" :key="d" :label="list.name" :value="list.id"> </el-option>
+              <el-input
+                v-model="item.model"
+                :placeholder="item.placeholder || '请输入'"
+                v-if="!item.type"
+              ></el-input>
+              <el-select
+                v-model="item.model"
+                :placeholder="item.placeholder || '请选择'"
+                v-if="item.type === 'select'"
+                clearable
+                style="width: 100%;"
+              >
+                <el-option
+                  v-for="(list, d) in item.data"
+                  :key="d"
+                  :label="list.name"
+                  :value="list.id"
+                ></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -26,8 +41,7 @@
                     this.query();
                   }
                 "
-                >查询</el-button
-              >
+              >查询</el-button>
               <el-button type="warning" @click="dialog1 = true">新增</el-button>
             </el-form-item>
           </el-col>
@@ -36,27 +50,65 @@
     </el-card>
     <!-- 表格 -->
     <div class="p-t-10">
-      <el-table :data="tableData" style="width: 100%;" border  ref="firstTable" @select="selected" @select-all="selectedAll" >
-        <el-table-column type="selection" width="50" align="center"> </el-table-column>
+      <el-table
+        :data="tableData"
+        style="width: 100%;"
+        border
+        ref="firstTable"
+        @select="selected"
+        @select-all="selectedAll"
+      >
+        <el-table-column type="selection" width="50" align="center"></el-table-column>
         <el-table-column label="操作" width="80" align="center">
           <div slot-scope="scope" style="display: flex; justify-content: space-around;">
             <el-link :underline="false" type="danger" @click="del(scope)">删除</el-link>
           </div>
         </el-table-column>
-        <el-table-column :label="item.label" :width="item.width || 180" v-for="(item, index) in tableHeader" :key="item.label + index">
+        <el-table-column
+          :label="item.label"
+          :width="item.width || 180"
+          v-for="(item, index) in tableHeader"
+          :key="item.label + index"
+        >
           <template slot-scope="scope">
-            <el-date-picker :clearable="false" v-model="scope.row[item.id]" type="date" :placeholder="item.placeholder || '请选择'" style="width: 100%;" v-if="item.type === 'date'" @change="tableChange(scope.row, item)"> </el-date-picker>
-            <el-input v-model="scope.row[item.id]" v-else-if="item.type === 'input'" @change="tableChange(scope.row, item)" v-focus />
+            <el-date-picker
+              :clearable="false"
+              v-model="scope.row[item.id]"
+              type="date"
+              :placeholder="item.placeholder || '请选择'"
+              style="width: 100%;"
+              v-if="item.type === 'date'"
+              @change="tableChange(scope.row, item)"
+            ></el-date-picker>
+            <el-input
+              v-model="scope.row[item.id]"
+              v-else-if="item.type === 'input'"
+              @change="tableChange(scope.row, item)"
+              v-focus
+            />
             <div v-else>{{ scope.row[item.id] }}</div>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <!--表格分页 -->
-    <el-pagination background layout="total, prev, pager, next, jumper" :total="paginate_meta.total_count" class="pagination" :current-page.sync="currentPage" @current-change="currentChange"> </el-pagination>
-    <Dialog1 :dialogVisibl="dialog1" :user="user" @cancel="cancel" />
-    <Dialog2 :dialogVisibl="dialog2" :selectArr="checkArr" :user="user" @cancel="cancel" />
-    <Dialog3 :dialogVisibl="dialog3" :user="user" @cancel="cancel" />
+    <el-pagination
+      background
+      layout="total, prev, pager, next, jumper"
+      :total="paginate_meta.total_count"
+      class="pagination"
+      :current-page.sync="currentPage"
+      @current-change="currentChange"
+    ></el-pagination>
+    <Dialog1 :dialogVisibl="dialog1" :user="user" :delivery="delivery" @cancel="cancel" />
+    <Dialog2
+      :dialogVisibl="dialog2"
+      :delivery="delivery"
+      :selectArr="checkArr"
+      :user="user"
+      @cancel="cancel"
+    />
+    <Dialog3 :dialogVisibl="dialog3" :delivery="delivery" :user="user" @cancel="cancel" />
   </div>
 </template>
 
@@ -70,9 +122,13 @@ export default {
   props: {
     activeName: {
       type: String,
-      default: "first",
+      default: "first"
     },
     user: {
+      type: Array,
+      default: () => []
+    },
+    delivery: {
       type: Array,
       default: () => []
     }
@@ -80,7 +136,7 @@ export default {
   components: {
     Dialog1,
     Dialog2,
-    Dialog3,
+    Dialog3
   },
   data: () => {
     return {
@@ -96,7 +152,7 @@ export default {
           placeholder: "",
           type: "select",
           data: [],
-          id: "customer_id",
+          id: "customer_id"
         },
         // 头部查询条件
         {
@@ -104,13 +160,13 @@ export default {
           model: "",
           placeholder: "",
           data: [],
-          id: "receiving_unit",
+          id: "receiving_unit"
         },
-        { label: "产品名称：", model: "", placeholder: "", id: "product_name" },
+        { label: "产品名称：", model: "", placeholder: "", id: "product_name" }
       ],
       currentPage: 1, // 第一个表格分页
       tableData: [], // 表格数据
-      checkArr: [], // 已经勾选了选项合集
+      checkArr: [] // 已经勾选了选项合集
     };
   },
   watch: {
@@ -121,7 +177,7 @@ export default {
           this.query();
         }
       },
-      immediate: true,
+      immediate: true
     },
     user: {
       handler(val) {
@@ -129,66 +185,72 @@ export default {
           this.arr[0].data = val;
         }
       },
-      immediate: true,
+      immediate: true
     }
   },
   computed: {
     tableHeader() {
       return this.$common.tableHeader;
-    },
+    }
   },
   methods: {
-		selected(val, row) {
-			if (val.filter((r) => r.id === row.id).length) {
-				// 证明是选中
-				this.checkArr.push(row);
-			} else {
-				let index = this.checkArr.findIndex((r) => r.id === row.id);
-				this.checkArr.splice(index, 1);
-			}
-		},
-		selectedAll(val) {
-			this.tableData.map(row => {
-				let index = this.checkArr.findIndex((r) => r.id === row.id);
-				if (index > -1) this.checkArr.splice(index, 1);
-			})
-			if (val.length) {
-				val.map(r => {
-					this.checkArr.push(r);
-				})
-			}
-		},
+    selected(val, row) {
+      if (val.filter(r => r.id === row.id).length) {
+        // 证明是选中
+        this.checkArr.push(row);
+      } else {
+        let index = this.checkArr.findIndex(r => r.id === row.id);
+        this.checkArr.splice(index, 1);
+      }
+    },
+    selectedAll(val) {
+      this.tableData.map(row => {
+        let index = this.checkArr.findIndex(r => r.id === row.id);
+        if (index > -1) this.checkArr.splice(index, 1);
+      });
+      if (val.length) {
+        val.map(r => {
+          this.checkArr.push(r);
+        });
+      }
+    },
     async currentChange(val) {
       this.currentPage = val;
       await this.query();
       this.$nextTick(() => {
-        this.tableData.map((r) => {
-          if (this.checkArr
-              .map((n) => n.delivery_product_id)
+        this.tableData.map(r => {
+          if (
+            this.checkArr
+              .map(n => n.delivery_product_id)
               .includes(r.delivery_product_id)
           ) {
             this.$refs.firstTable.toggleRowSelection(r);
           }
         });
-      })
+      });
     },
     cancel(type) {
       if (type) {
-        this.checkArr = []
+        this.checkArr = [];
         this.currentPage = 1;
         this.query();
       }
       this.dialog3 = this.dialog2 = this.dialog1 = false;
     },
     async query() {
-      let obj = { ...this.$common.querySql.call(this, this.arr), ...{ page: this.currentPage } };
-      await this.$post("/delivery_plans/list_plan", obj).then((res) => {
+      let obj = {
+        ...this.$common.querySql.call(this, this.arr),
+        ...{ page: this.currentPage }
+      };
+      await this.$post("/delivery_plans/list_plan", obj).then(res => {
         let data = res.data.data;
-        data.map((r) => {
+        data.map(r => {
           if (!Number(r.delivery_number) && !Number(r.sparetime_percent)) {
             r.sparetime = 0;
           } else {
-            r.sparetime = Math.ceil((Number(r.delivery_number) * Number(r.sparetime_percent)) / 100);
+            r.sparetime = Math.ceil(
+              (Number(r.delivery_number) * Number(r.sparetime_percent)) / 100
+            );
           }
         });
         this.tableData = [];
@@ -213,20 +275,22 @@ export default {
         this.$notify({
           title: "警告",
           message: "你必须选择数据，才能进行多选删除!",
-          type: "warning",
+          type: "warning"
         });
         return;
       }
       this.$confirm(`确定删除么？本次删除 ${arr.length} 条数据！`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       }).then(() => {
-        this.$post("/delivery_plans/batch_delete", { delivery_product_ids: arr.map((r) => r.delivery_product_id) }).then(() => {
+        this.$post("/delivery_plans/batch_delete", {
+          delivery_product_ids: arr.map(r => r.delivery_product_id)
+        }).then(() => {
           // 删除之后查询，并且提示删除成功!
           this.$message({
             type: "success",
-            message: "删除成功!",
+            message: "删除成功!"
           });
           let _this = this;
           setTimeout(() => {
@@ -242,7 +306,7 @@ export default {
       this.$notify({
         title: "警告",
         message: "等接口!",
-        type: "warning",
+        type: "warning"
       });
     },
     copyAdd() {
@@ -250,7 +314,7 @@ export default {
         this.$notify({
           title: "警告",
           message: "最少选择一条数据!",
-          type: "warning",
+          type: "warning"
         });
         return;
       }
@@ -258,10 +322,9 @@ export default {
     },
     special() {
       this.dialog3 = true;
-    },
+    }
   },
-  mounted() {
-  },
+  mounted() {}
 };
 </script>
 

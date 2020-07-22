@@ -139,7 +139,6 @@ export default {
 	},
 	methods: {
 		del(val) {
-			console.log(val.row.delivery_product_id);
 			let index = 0;
 			this.tableData.map((r, i) => {
 				if (r.delivery_product_id === val.row.delivery_product_id) {

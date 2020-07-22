@@ -120,6 +120,7 @@ export default {
           this.query();
           this.queryTwo();
           this.arr[3].data = this.user;
+          this.getData();
         }
       },
       immediate: true,
@@ -141,6 +142,7 @@ export default {
       if (obj)
         setTimeout(() => {
           _this.query();
+          _this.getData();
         }, 300);
     },
     async delTwo(val) {
@@ -163,8 +165,11 @@ export default {
       });
     },
     // 表格里修改
-    tableChange(val, item) {
-      this.$common.tableChange.call(this, val, item);
+    async tableChange(val, item) {
+      await this.$common.tableChange.call(this, val, item);
+      // 如果是修改送货班次。或者送货路线。需要重新更新一下这二个data
+      if (!['delivery_shifts', 'delivery_route'].includes(item.id)) return;
+      this.getData();
     },
     onAdd() {
       let arr = this.checkArr;
@@ -189,6 +194,7 @@ export default {
         this.currentPage2 = 1;
         this.query();
         this.queryTwo();
+        this.getData();
       }
     },
     currentChange2(val) {
@@ -237,6 +243,14 @@ export default {
         this.isPrint = true;
       });
     },
+    getData() {
+      // 取user数据
+      this.$post("/delivery_plans/list_plan_options", {}).then((res) => {
+        let obj = res.data.data;
+        this.arr[1].data = obj.delivery_shift_options;
+        this.arr[2].data = obj.delivery_route_options;
+      });
+    }
   },
   mounted() {
     // 取user数据
@@ -247,12 +261,6 @@ export default {
           this.$set(this.users, key, obj[key]);
         }
       }
-    });
-    // 取user数据
-    this.$post("/delivery_plans/list_plan_options", {}).then((res) => {
-      let obj = res.data.data;
-      this.arr[1].data = obj.delivery_shift_options;
-      this.arr[2].data = obj.delivery_route_options;
     });
   },
 };

@@ -55,7 +55,7 @@ let obj = {
 			}
 			let obj = { delivery_product: {}, delivery_product_id: val.delivery_product_id };
 			obj.delivery_product[item.id] = _val;
-			this.$post('/delivery_plans/update_plan', obj).then(() => {
+			let count = await this.$post('/delivery_plans/update_plan', obj).then(() => {
 				this.$notify({
 					title: '提示',
 					message: '更新成功!',
@@ -66,6 +66,7 @@ let obj = {
 			if (arr.includes(item.id)) {
 				val.sparetime = Math.ceil((Number(val.delivery_number) * Number(val.sparetime_percent)) / 100);
 			}
+			return count;
 		} catch (error) {}
 	},
 	querySql(arr) {

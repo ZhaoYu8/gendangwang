@@ -254,7 +254,6 @@ export default {
 		reqeat() {
 			this.$nextTick(() => {
 				this.tableData.map((r) => {
-					console.log(this.checkArr, r);
 					if (this.checkArr.map((n) => n.delivery_product_id).includes(r.delivery_product_id)) {
 						this.$refs.dialog2Table.toggleRowSelection(r);
 					}

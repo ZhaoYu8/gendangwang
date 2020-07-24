@@ -91,20 +91,20 @@ export default {
       type: Boolean,
       default: () => {
         return false;
-      }
+      },
     },
     user: {
       type: Array,
       default: () => {
         return [];
-      }
+      },
     },
     delivery: {
       type: Array,
       default: () => {
         return [];
-      }
-    }
+      },
+    },
   },
   data: () => {
     return {
@@ -119,7 +119,7 @@ export default {
           placeholder: "",
           id: "delivery_date",
           type: "date",
-          data: []
+          data: [],
         },
         {
           label: "送货班次",
@@ -127,7 +127,7 @@ export default {
           placeholder: "",
           id: "delivery_shifts",
           type: "select",
-          data: []
+          data: [],
         },
         {
           label: "下单客户",
@@ -135,21 +135,21 @@ export default {
           placeholder: "",
           id: "customer_id",
           type: "select",
-          data: []
+          data: [],
         },
         { label: "收货单位", model: "", placeholder: "", id: "receiving_unit" },
         {
           label: "送货路线",
           model: "",
           placeholder: "请输入送货路线",
-          id: "delivery_route"
+          id: "delivery_route",
         },
         {
           label: "产品名称",
           model: "",
           placeholder: "请输入产品名称",
           id: "product_name",
-          noHttp: true
+          noHttp: true,
         },
         {
           label: "产品所属",
@@ -158,7 +158,7 @@ export default {
           id: "abc",
           type: "select",
           data: [],
-          noHttp: true
+          noHttp: true,
         },
         {
           label: "特殊事宜",
@@ -168,18 +168,18 @@ export default {
           type: "select",
           data: [
             { name: "是", id: "是" },
-            { name: "否", id: "否" }
-          ]
+            { name: "否", id: "否" },
+          ],
         },
         {
           label: "交代说明",
           model: "",
           placeholder: "输入备注说明或需要交代的事项",
           id: "note",
-          span: 24
-        }
+          span: 24,
+        },
       ],
-      checkArr: []
+      checkArr: [],
     };
   },
   watch: {
@@ -199,40 +199,43 @@ export default {
         this.arr[4].model = val[0].address;
         this.arr[6].data = val;
       },
-      immediate: true
-		},
-		delivery: {
+      immediate: true,
+    },
+    delivery: {
       handler(val) {
-				if (!val.length) return;
+        if (!val.length) return;
         this.arr[1].data = val;
       },
-      immediate: true
-		},
+      immediate: true,
+    },
   },
   methods: {
     queryProduct(obj = {}) {
       obj.page = this.currentPage;
-      this.$post("/delivery_plans/order_products", obj).then(res => {
+      this.$post("/delivery_plans/order_products", obj).then((res) => {
         this.tableData = res.data.data;
         this.total = res.data.paginate_meta.total_count;
         this.reqeat();
       });
     },
-    currentChange(val) {
+    currentChange(index) {
       // 点击分页
-      this.onChange(this.arr[2], val);
+      this.commonQuery(this.arr[2], index);
     },
     onChange(val, index) {
       if (val.id === "customer_id") {
-        let data = val.data.filter(r => r.id === val.model)[0];
+        let data = val.data.filter((r) => r.id === val.model)[0];
         this.arr[3].model = data.name;
         this.arr[4].model = data.address;
       }
+      this.commonQuery(val, index);
+    },
+    commonQuery(val, index) {
       this.currentPage = index ? index : 1;
       let arr = ["customer_id", "abc", "product_name"];
       let obj = {};
       if (!arr.includes(val.id)) return;
-      this.arr.map(r => {
+      this.arr.map((r) => {
         if (arr.includes(r.id) && r.model !== "") {
           obj[r.id] = r.model;
         }
@@ -241,9 +244,9 @@ export default {
       let _obj = {
         arr: [obj.customer_id || 0, obj.abc || 0],
         customer_ids: [],
-        product_name: obj.product_name
+        product_name: obj.product_name,
       };
-      _obj.arr.map(r => {
+      _obj.arr.map((r) => {
         if (r) {
           _obj.customer_ids.push(r);
         }
@@ -258,17 +261,17 @@ export default {
     onOk() {
       if (this.checkArr.length) {
         let obj = {};
-        this.arr.map(r => {
+        this.arr.map((r) => {
           if (!r.model || r.noHttp) return;
           obj[r.id] = r.model;
         });
-        obj.product_ids = this.checkArr.map(r => r.id);
+        obj.product_ids = this.checkArr.map((r) => r.id);
         obj.delivery_date = this.$common.format(obj.delivery_date);
-        this.$post("/delivery_plans/batch_create", obj).then(res => {
+        this.$post("/delivery_plans/batch_create", obj).then((res) => {
           this.$notify({
             title: "提示",
             message: "新增工作计划成功!",
-            type: "success"
+            type: "success",
           });
           this.cancel(true);
         });
@@ -276,40 +279,40 @@ export default {
         this.$notify({
           title: "警告",
           message: "最少选择一条产品数据!",
-          type: "warning"
+          type: "warning",
         });
       }
     },
     reqeat() {
       this.$nextTick(() => {
-        this.tableData.map(r => {
-          if (this.checkArr.map(n => n.id).includes(r.id)) {
+        this.tableData.map((r) => {
+          if (this.checkArr.map((n) => n.id).includes(r.id)) {
             this.$refs.dialog1Table.toggleRowSelection(r);
           }
         });
       });
     },
     selected(val, row) {
-      if (val.filter(r => r.id === row.id).length) {
+      if (val.filter((r) => r.id === row.id).length) {
         // 证明是选中
-        this.checkArr.push(row);
+        this.checkArr.push({name: row.product_name, id: row.id});
       } else {
-        let index = this.checkArr.findIndex(r => r.id === row.id);
+        let index = this.checkArr.findIndex((r) => r.id === row.id);
         this.checkArr.splice(index, 1);
       }
     },
     selectedAll(val) {
-      this.tableData.map(row => {
-        let index = this.checkArr.findIndex(r => r.id === row.id);
+      this.tableData.map((row) => {
+        let index = this.checkArr.findIndex((r) => r.id === row.id);
         if (index > -1) this.checkArr.splice(index, 1);
       });
       if (val.length) {
-        val.map(r => {
-          this.checkArr.push(r);
+        val.map((r) => {
+          this.checkArr.push({name: r.product_name, id: r.id});
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

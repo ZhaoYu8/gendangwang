@@ -103,8 +103,7 @@ export default {
 
     go(val) {
       this.$post("/delivery_plans/detail", { delivery_good_id: val.row.delivery_good_id }).then((res) => {
-        let data = res.data.data;
-        this.detailData = data;
+        this.detailData = res.data;
       });
       this.centerDialogVisible = true;
       // window.open(`https://gendanwang.com/v1/delivery_goods/${val.row.delivery_good_id}`);

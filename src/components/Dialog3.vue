@@ -2,7 +2,7 @@
   <el-dialog
     title="新增特殊计划"
     :visible.sync="dialogVisible"
-    width="85%"
+    width="96%"
     top="5vh"
     class="dialog"
     @close="cancel(false)"
@@ -77,7 +77,7 @@ export default {
       dialogVisible: false,
       arr: [
         {
-          label: "送货日期",
+          label: "日期",
           model: new Date(),
           placeholder: "",
           id: "delivery_date",
@@ -85,7 +85,7 @@ export default {
           data: []
         },
         {
-          label: "送货班次",
+          label: "班次",
           model: "",
           placeholder: "",
           id: "delivery_shifts",
@@ -102,9 +102,9 @@ export default {
         },
         { label: "收货单位", model: "", placeholder: "", id: "receiving_unit" },
         {
-          label: "送货路线",
+          label: "路线",
           model: "",
-          placeholder: "请输入送货路线",
+          placeholder: "请输入路线",
           id: "delivery_route"
         },
         {

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { Loading, Notification } from 'element-ui';
 let baseURL = 'https://www.gendanwang.com/v1/api';
 if (process.env.NODE_ENV === 'development') {

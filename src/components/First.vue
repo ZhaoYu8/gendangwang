@@ -58,15 +58,16 @@
         @select="selected"
         @select-all="selectedAll"
       >
-        <el-table-column type="selection" width="50" align="center"></el-table-column>
-        <el-table-column label="操作" width="80" align="center">
+        <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
+        <el-table-column label="操作" width="50" align="center" header-align="center">
           <div slot-scope="scope" style="display: flex; justify-content: space-around;">
             <el-link :underline="false" type="danger" @click="del(scope)">删除</el-link>
           </div>
         </el-table-column>
         <el-table-column
+          header-align="center"
           :label="item.label"
-          :width="item.width || 180"
+          :width="item.width"
           v-for="(item, index) in tableHeader"
           :key="item.label + index"
         >
@@ -122,21 +123,21 @@ export default {
   props: {
     activeName: {
       type: String,
-      default: "first"
+      default: "first",
     },
     user: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     delivery: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   components: {
     Dialog1,
     Dialog2,
-    Dialog3
+    Dialog3,
   },
   data: () => {
     return {
@@ -152,7 +153,7 @@ export default {
           placeholder: "",
           type: "select",
           data: [],
-          id: "customer_id"
+          id: "customer_id",
         },
         // 头部查询条件
         {
@@ -160,13 +161,13 @@ export default {
           model: "",
           placeholder: "",
           data: [],
-          id: "receiving_unit"
+          id: "receiving_unit",
         },
-        { label: "产品名称：", model: "", placeholder: "", id: "product_name" }
+        { label: "产品名称：", model: "", placeholder: "", id: "product_name" },
       ],
       currentPage: 1, // 第一个表格分页
       tableData: [], // 表格数据
-      checkArr: [] // 已经勾选了选项合集
+      checkArr: [], // 已经勾选了选项合集
     };
   },
   watch: {
@@ -177,7 +178,7 @@ export default {
           this.query();
         }
       },
-      immediate: true
+      immediate: true,
     },
     user: {
       handler(val) {
@@ -185,31 +186,31 @@ export default {
           this.arr[0].data = val;
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   computed: {
     tableHeader() {
       return this.$common.tableHeader;
-    }
+    },
   },
   methods: {
     selected(val, row) {
-      if (val.filter(r => r.id === row.id).length) {
+      if (val.filter((r) => r.id === row.id).length) {
         // 证明是选中
         this.checkArr.push(row);
       } else {
-        let index = this.checkArr.findIndex(r => r.id === row.id);
+        let index = this.checkArr.findIndex((r) => r.id === row.id);
         this.checkArr.splice(index, 1);
       }
     },
     selectedAll(val) {
-      this.tableData.map(row => {
-        let index = this.checkArr.findIndex(r => r.id === row.id);
+      this.tableData.map((row) => {
+        let index = this.checkArr.findIndex((r) => r.id === row.id);
         if (index > -1) this.checkArr.splice(index, 1);
       });
       if (val.length) {
-        val.map(r => {
+        val.map((r) => {
           this.checkArr.push(r);
         });
       }
@@ -218,10 +219,10 @@ export default {
       this.currentPage = val;
       await this.query();
       this.$nextTick(() => {
-        this.tableData.map(r => {
+        this.tableData.map((r) => {
           if (
             this.checkArr
-              .map(n => n.delivery_product_id)
+              .map((n) => n.delivery_product_id)
               .includes(r.delivery_product_id)
           ) {
             this.$refs.firstTable.toggleRowSelection(r);
@@ -240,11 +241,11 @@ export default {
     async query() {
       let obj = {
         ...this.$common.querySql.call(this, this.arr),
-        ...{ page: this.currentPage }
+        ...{ page: this.currentPage },
       };
-      await this.$post("/delivery_plans/list_plan", obj).then(res => {
+      await this.$post("/delivery_plans/list_plan", obj).then((res) => {
         let data = res.data.data;
-        data.map(r => {
+        data.map((r) => {
           if (!Number(r.delivery_number) && !Number(r.sparetime_percent)) {
             r.sparetime = 0;
           } else {
@@ -275,22 +276,22 @@ export default {
         this.$notify({
           title: "警告",
           message: "你必须选择数据，才能进行多选删除!",
-          type: "warning"
+          type: "warning",
         });
         return;
       }
       this.$confirm(`确定删除么？本次删除 ${arr.length} 条数据！`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       }).then(() => {
         this.$post("/delivery_plans/batch_delete", {
-          delivery_product_ids: arr.map(r => r.delivery_product_id)
+          delivery_product_ids: arr.map((r) => r.delivery_product_id),
         }).then(() => {
           // 删除之后查询，并且提示删除成功!
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
           let _this = this;
           setTimeout(() => {
@@ -306,7 +307,7 @@ export default {
       this.$notify({
         title: "警告",
         message: "等接口!",
-        type: "warning"
+        type: "warning",
       });
     },
     copyAdd() {
@@ -314,7 +315,7 @@ export default {
         this.$notify({
           title: "警告",
           message: "最少选择一条数据!",
-          type: "warning"
+          type: "warning",
         });
         return;
       }
@@ -322,9 +323,9 @@ export default {
     },
     special() {
       this.dialog3 = true;
-    }
+    },
   },
-  mounted() {}
+  mounted() {},
 };
 </script>
 

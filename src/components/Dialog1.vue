@@ -59,13 +59,13 @@
         @select-all="selectedAll"
         ref="dialog1Table"
       >
-        <el-table-column type="selection" width="50" align="center"></el-table-column>
-        <el-table-column label="产品名称" align="center" prop="product_name"></el-table-column>
-        <el-table-column label="产品编号" align="center" prop="product_serial"></el-table-column>
-        <el-table-column label="所属客户" align="center" prop="customer_name"></el-table-column>
-        <el-table-column label="订单编号" align="center" prop="order_serial"></el-table-column>
-        <el-table-column label="订单数量" align="center" prop="order_quantity"></el-table-column>
-        <el-table-column label="总库存数量" align="center" prop="storage_quantity"></el-table-column>
+        <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
+        <el-table-column label="产品名称" align="center" prop="product_name" header-align="center"></el-table-column>
+        <el-table-column label="产品编号" align="center" prop="product_serial" header-align="center"></el-table-column>
+        <el-table-column label="所属客户" align="center" prop="customer_name" header-align="center"></el-table-column>
+        <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center"></el-table-column>
+        <el-table-column label="订单数量" align="center" prop="order_quantity" header-align="center"></el-table-column>
+        <el-table-column label="总库存数量" align="center" prop="storage_quantity" header-align="center"></el-table-column>
       </el-table>
       <!-- 第一个表格分页 -->
       <el-pagination
@@ -114,7 +114,7 @@ export default {
       tableData: [],
       arr: [
         {
-          label: "送货日期",
+          label: "日期",
           model: new Date(),
           placeholder: "",
           id: "delivery_date",
@@ -122,7 +122,7 @@ export default {
           data: [],
         },
         {
-          label: "送货班次",
+          label: "班次",
           model: "",
           placeholder: "",
           id: "delivery_shifts",
@@ -139,9 +139,9 @@ export default {
         },
         { label: "收货单位", model: "", placeholder: "", id: "receiving_unit" },
         {
-          label: "送货路线",
+          label: "路线",
           model: "",
-          placeholder: "请输入送货路线",
+          placeholder: "请输入路线",
           id: "delivery_route",
         },
         {
@@ -295,7 +295,7 @@ export default {
     selected(val, row) {
       if (val.filter((r) => r.id === row.id).length) {
         // 证明是选中
-        this.checkArr.push({name: row.product_name, id: row.id});
+        this.checkArr.push({ name: row.product_name, id: row.id });
       } else {
         let index = this.checkArr.findIndex((r) => r.id === row.id);
         this.checkArr.splice(index, 1);
@@ -308,7 +308,7 @@ export default {
       });
       if (val.length) {
         val.map((r) => {
-          this.checkArr.push({name: r.product_name, id: r.id});
+          this.checkArr.push({ name: r.product_name, id: r.id });
         });
       }
     },

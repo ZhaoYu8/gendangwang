@@ -68,4 +68,16 @@ li {
 	background-color: #fff;
 	border-radius: 10px;
 }
+.el-input--suffix .el-input__inner{
+	padding-right: 0 !important;
+}
+.el-table__row .el-input__inner {
+	padding-right: 0 !important;
+}
+.el-table .cell, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell {
+	padding-left: 6px;
+}
+.el-table .cell {
+	padding-right: 6px;
+}
 </style>

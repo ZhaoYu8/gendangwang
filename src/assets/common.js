@@ -1,19 +1,19 @@
 let obj = {
 	tableHeader: [
 		// 类型、跟单编号、产品名称、提交人、跟单员   这些不可改
-		{ label: '送货日期', id: 'delivery_date', type: 'date' },
-		{ label: '送货班次', id: 'delivery_shifts', type: 'input' },
-		{ label: '送货路线', id: 'delivery_route', type: 'input' },
+		{ label: '日期', id: 'delivery_date', type: 'date', width: 130 },
+		{ label: '班次', id: 'delivery_shifts', type: 'input', width: 70 },
+		{ label: '路线', id: 'delivery_route', type: 'input', width: 70 },
 		{ label: '下单客户', id: 'customer_name', disabled: true },
-		{ label: '收货单位', id: 'receiving_unit', type: 'input' },
+		{ label: '收货单位', id: 'receiving_unit', type: 'input', width: 140 },
 		{ label: '产品名称', id: 'product_name', disabled: true },
-		{ label: '数量', id: 'delivery_number', type: 'input' },
-		{ label: '备次', id: 'sparetime' },
-		{ label: '备次率(%)', id: 'sparetime_percent', disabled: true, type: 'input' },
-		{ label: '跟单员', id: 'tracking_member', disabled: true },
+		{ label: '数量', id: 'delivery_number', type: 'input', width: 80 },
+		{ label: '备次', id: 'sparetime', width: 70 },
+		{ label: '备次率(%)', id: 'sparetime_percent', disabled: true, type: 'input', width: 90 },
+		{ label: '跟单员', id: 'tracking_member', disabled: true, width: 70 },
 		{ label: '订单编号', id: 'order_serial', disabled: true },
-		{ label: '库位', id: 'warehouse_name', type: 'input' },
-		{ label: '备注', id: 'note', type: 'input' },
+		{ label: '库位', id: 'warehouse_name', type: 'input', width: 130 },
+		{ label: '备注', id: 'note', type: 'input', width: 180 }
 	],
 	format(date) {
 		date = new Date(date);
@@ -32,14 +32,14 @@ let obj = {
 			let data = await this.$confirm('确定删除么?', '提示', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
-				type: 'warning',
+				type: 'warning'
 			});
 			if (data === 'confirm') {
 				this.$post('/delivery_plans/delete_plan', { delivery_product_id: val.row.delivery_product_id || 0 }).then(() => {
 					// 删除之后查询，并且提示删除成功!
 					this.$message({
 						type: 'success',
-						message: '删除成功!',
+						message: '删除成功!'
 					});
 				});
 			}
@@ -59,12 +59,12 @@ let obj = {
 				this.$notify({
 					title: '提示',
 					message: '更新成功!',
-					type: 'success',
+					type: 'success'
 				});
 			});
-			let arr = ['delivery_number', 'sparetime_percent'];
+			let arr = [ 'delivery_number', 'sparetime_percent' ];
 			if (arr.includes(item.id)) {
-				val.sparetime = Math.ceil((Number(val.delivery_number) * Number(val.sparetime_percent)) / 100);
+				val.sparetime = Math.ceil(Number(val.delivery_number) * Number(val.sparetime_percent) / 100);
 			}
 			return count;
 		} catch (error) {}
@@ -83,7 +83,7 @@ let obj = {
 		return obj;
 	},
 	getSelection(val) {
-    // 二维数组转一维
+		// 二维数组转一维
 		let arr = [];
 		val.map((r) => {
 			r.map((n) => {
@@ -99,6 +99,6 @@ let obj = {
 			obj[next.id] ? '' : (obj[next.id] = true && cur.push(next));
 			return cur;
 		}, []);
-	},
+	}
 };
 export default obj;

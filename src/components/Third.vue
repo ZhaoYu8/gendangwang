@@ -7,20 +7,20 @@
     <!-- 第二个 表格 -->
     <div class="p-t-10">
       <el-table :data="tableData" style="width: 100%;" border ref="multipleTable_b">
-        <el-table-column label="操作" width="170" align="center">
+        <el-table-column label="操作" width="170" align="center" header-align="center">
           <div slot-scope="scope" style="display: flex; justify-content: space-around;">
             <el-link :underline="false" type="primary" @click="edit(scope)">修改状态</el-link>
             <el-link :underline="false" type="primary" @click="go(scope)">详情</el-link>
           </div>
         </el-table-column>
-        <el-table-column label="配货员" prop="allocate_member" />
-        <el-table-column label="跟车员" prop="with_member" />
-        <el-table-column label="派货员" prop="delivery_member" />
-        <el-table-column label="车号" prop="delivery_train" />
-        <el-table-column label="派货单数据ID" prop="delivery_good_id" />
-        <el-table-column label="状态" prop="status_name" />
-        <el-table-column label="更新时间" prop="updated_at" />
-        <el-table-column label="备注" prop="note" />
+        <el-table-column label="配货员" prop="allocate_member" header-align="center"/>
+        <el-table-column label="跟车员" prop="with_member" header-align="center"/>
+        <el-table-column label="派货员" prop="delivery_member" header-align="center"/>
+        <el-table-column label="车号" prop="delivery_train" header-align="center"/>
+        <el-table-column label="派货单数据ID" prop="delivery_good_id" header-align="center"/>
+        <el-table-column label="状态" prop="status_name" header-align="center"/>
+        <el-table-column label="更新时间" prop="updated_at" header-align="center"/>
+        <el-table-column label="备注" prop="note" header-align="center"/>
       </el-table>
     </div>
     <!-- 第二个表格分页 -->

@@ -91,8 +91,8 @@ export default {
 			total: 1,
 			tableData: [],
 			arr: [
-				{ label: '送货日期', model: new Date(), placeholder: '', id: 'delivery_date', type: 'date', data: [] },
-				{ label: '送货班次', model: '', placeholder: '', id: 'delivery_shifts' },
+				{ label: '日期', model: new Date(), placeholder: '', id: 'delivery_date', type: 'date', data: [] },
+				{ label: '班次', model: '', placeholder: '', id: 'delivery_shifts' },
 				{
 					label: '下单客户',
 					model: '',
@@ -102,7 +102,7 @@ export default {
 					data: [],
 				},
 				{ label: '收货单位', model: '', placeholder: '', id: 'receiving_unit' },
-				{ label: '送货路线', model: '', placeholder: '请输入送货路线', id: 'delivery_route' },
+				{ label: '路线', model: '', placeholder: '请输入路线', id: 'delivery_route' },
 				{
 					label: '产品名称',
 					model: '',

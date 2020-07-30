@@ -2,35 +2,35 @@
   <el-dialog
     title
     :visible.sync="dialogVisible"
-    width="90%"
+    width="96%"
     top="10vh"
     class="dialog"
     @close="cancel(false)"
   >
     <!-- 头部查询条件 -->
-    <div id="printMe" ref="printMe">
+    <div id="printMe" ref="printMe" :style="{fontSize: fontSize + 'px'}">
       <ul class="top">
-        <li>送货日期 : {{ headerData.delivery_date }}</li>
+        <li>日期 : {{ headerData.delivery_date }}</li>
         <li>车号 : {{ headerData.delivery_train }}</li>
         <li>司机 : {{ headerData.delivery_member }}</li>
         <li>跟车 : {{ headerData.with_member }}</li>
         <li>配货员 : {{ headerData.allocate_member }}</li>
-        <li>送货单号 : {{ headerData.delivery_serial }}</li>
+        <li>单号 : {{ headerData.delivery_serial }}</li>
       </ul>
       <table border="1" cellspacing="0" class="table">
         <tr>
-          <td style="width: 35px">行号</td>
-          <td>路线</td>
-          <td>班次</td>
-          <td>收货单位</td>
-          <td style="width:20%">商品全名</td>
-          <td>代码</td>
-          <td>跟单员</td>
-          <td>数量</td>
-          <td>备次</td>
-          <td>订单编号</td>
-          <td>库位</td>
-          <td style="width:15%">备注</td>
+          <td style="width: 30px">行号</td>
+          <td style="width: 30px">路线</td>
+          <td style="width: 30px">班次</td>
+          <td style="width: 100px">收货单位</td>
+          <td style="width: 16%">商品全名</td>
+          <td style="width: 50px">代码</td>
+          <td style="width: 50px">跟单员</td>
+          <td style="width: 50px">数量</td>
+          <td style="width: 30px">备次</td>
+          <td style="width: 100px">订单编号</td>
+          <td style="width: 100px">库位</td>
+          <td style="width: 10%">备注</td>
         </tr>
         <template v-for="(item, index) in tableData">
           <tr
@@ -61,6 +61,8 @@
       </ul>
     </div>
     <span slot="footer">
+      <el-link :underline="false" type="primary" style="margin-right: 20px" @click="fontSize--">A-</el-link>
+      <el-link :underline="false" type="primary" style="margin-right: 20px" @click="fontSize++">A+</el-link>
       <el-button type="primary" ref="daochu" @click="exports">导出</el-button>
       <el-button type="primary" v-print="'#printMe'" ref="printButton">打印</el-button>
       <el-button @click="cancel(false)">取消</el-button>
@@ -93,6 +95,7 @@ export default {
   computed: {},
   data: () => {
     return {
+      fontSize: 14,
       dialogVisible: false,
       tableData: [],
       headerData: {},
@@ -201,7 +204,7 @@ export default {
         "N",
       ];
       let header = [
-        "送货日期:",
+        "日期:",
         data.delivery_date,
         "车号:",
         data.delivery_train,
@@ -211,7 +214,7 @@ export default {
         data.with_member,
         "配货员:",
         data.allocate_member,
-        "送货单号:",
+        "单号:",
         data.delivery_serial,
       ];
       arr.unshift(
@@ -350,7 +353,6 @@ export default {
   }
 }
 #printMe {
-  font-size: 10px;
   color: #000;
   .border {
     .el-row {

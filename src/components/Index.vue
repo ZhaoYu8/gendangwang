@@ -9,7 +9,7 @@
         <Second v-if="secondShow" :user="user" :activeName="activeName" />
       </el-tab-pane>
       <el-tab-pane label="送货单列表" name="third">
-        <Third v-if="thirdShow" :activeName="activeName" />
+        <Third v-if="thirdShow" :user="user" :activeName="activeName" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -26,7 +26,7 @@ export default {
   components: {
     Second,
     First,
-    Third
+    Third,
   },
   data: () => {
     return {
@@ -34,7 +34,7 @@ export default {
       secondShow: false,
       thirdShow: false,
       user: [],
-      delivery: []
+      delivery: [],
     };
   },
   methods: {
@@ -45,11 +45,11 @@ export default {
       if (this.activeName === "third" && !this.thirdShow) {
         this.thirdShow = true;
       }
-    }
+    },
   },
   mounted() {
     // 取user数据
-    this.$post("/delivery_plans/new_plan", {}).then(res => {
+    this.$post("/delivery_plans/new_plan", {}).then((res) => {
       res.data.data.customer_options.map((r, i) => {
         this.$set(this.user, i, r);
       });
@@ -57,7 +57,7 @@ export default {
         this.$set(this.delivery, i, r);
       });
     });
-  }
+  },
 };
 </script>
 

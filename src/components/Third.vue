@@ -1,9 +1,34 @@
 <template>
   <div class="second">
     <!-- 头部查询条件 -->
-    <div style="overflow: hidden;">
-      <el-button type="primary" class="f-r" @click="query">查询</el-button>
-    </div>
+    <el-card>
+      <el-row :gutter="20">
+        <el-form label-position="left" :inline="true">
+          <el-col :span="6" v-for="(item, index) in arr" :key="item.label + index">
+            <el-form-item :label="item.label" class="form-item">
+              <el-input v-model="item.model" :placeholder="item.placeholder || '请输入'" v-if="!item.type"></el-input>
+              <el-select v-model="item.model" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'" clearable style="width: 100%;">
+                <el-option v-for="(list, d) in item.data" :key="d" :label="list.name" :value="list.id"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item class="f-r">
+              <el-button
+                type="primary"
+                @click="
+                  () => {
+                    this.checkArr = [];
+                    this.query();
+                  }
+                "
+                >查询</el-button
+              >
+            </el-form-item>
+          </el-col>
+        </el-form>
+      </el-row>
+    </el-card>
     <!-- 第二个 表格 -->
     <div class="p-t-10">
       <el-table :data="tableData" style="width: 100%;" border ref="multipleTable_b">
@@ -13,14 +38,14 @@
             <el-link :underline="false" type="primary" @click="go(scope)">详情</el-link>
           </div>
         </el-table-column>
-        <el-table-column label="配货员" prop="allocate_member" header-align="center"/>
-        <el-table-column label="跟车员" prop="with_member" header-align="center"/>
-        <el-table-column label="派货员" prop="delivery_member" header-align="center"/>
-        <el-table-column label="车号" prop="delivery_train" header-align="center"/>
-        <el-table-column label="派货单数据ID" prop="delivery_good_id" header-align="center"/>
-        <el-table-column label="状态" prop="status_name" header-align="center"/>
-        <el-table-column label="更新时间" prop="updated_at" header-align="center"/>
-        <el-table-column label="备注" prop="note" header-align="center"/>
+        <el-table-column label="配货员" prop="allocate_member" header-align="center" />
+        <el-table-column label="跟车员" prop="with_member" header-align="center" />
+        <el-table-column label="派货员" prop="delivery_member" header-align="center" />
+        <el-table-column label="车号" prop="delivery_train" header-align="center" />
+        <el-table-column label="派货单数据ID" prop="delivery_good_id" header-align="center" />
+        <el-table-column label="状态" prop="status_name" header-align="center" />
+        <el-table-column label="更新时间" prop="updated_at" header-align="center" />
+        <el-table-column label="备注" prop="note" header-align="center" />
       </el-table>
     </div>
     <!-- 第二个表格分页 -->
@@ -38,13 +63,36 @@ export default {
       type: String,
       default: "third",
     },
+    user: {
+      type: Array,
+      default: () => [],
+    },
   },
   components: { Dialog },
   data: () => {
     return {
+      arr: [
+        // 头部查询条件
+        {
+          label: "下单客户：",
+          model: "",
+          placeholder: "",
+          type: "select",
+          data: [],
+          id: "customer_id",
+        },
+        // 头部查询条件
+        {
+          label: "收货单位：",
+          model: "",
+          placeholder: "",
+          data: [],
+          id: "receiving_unit",
+        },
+        { label: "产品名称：", model: "", placeholder: "", id: "product_name" },
+      ],
       detailData: {},
       centerDialogVisible: false, // 第一个dialog
-      user: [],
       paginate_meta: {},
       tableData: [],
       currentPage: 1,
@@ -56,6 +104,14 @@ export default {
         if (val === "third") {
           this.currentPage = 1;
           this.query();
+        }
+      },
+      immediate: true,
+    },
+    user: {
+      handler(val) {
+        if (val.length) {
+          this.arr[0].data = val;
         }
       },
       immediate: true,
@@ -93,7 +149,10 @@ export default {
       this.query();
     },
     query() {
-      let obj = { page: this.currentPage };
+      let obj = {
+        ...this.$common.querySql.call(this, this.arr),
+        ...{ page: this.currentPage },
+      };
       this.$post("/delivery_plans/list_schedule", obj).then((res) => {
         let data = res.data.data;
         this.tableData = data;

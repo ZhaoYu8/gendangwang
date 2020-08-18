@@ -70,7 +70,11 @@
               style="width: 100%;"
               v-if="item.type === 'date'"
             ></el-date-picker>
-            <el-input v-model="scope.row[item.id]" v-else-if="item.type === 'input'" />
+            <el-input
+              v-model="scope.row[item.id]"
+              v-else-if="item.type === 'input'"
+              @change="tableChange(scope.row, item)"
+            />
             <div v-else>{{ scope.row[item.id] }}</div>
           </template>
         </el-table-column>
@@ -194,6 +198,14 @@ export default {
     },
   },
   methods: {
+    tableChange(val, item) {
+      let arr = ["delivery_number", "sparetime_percent"];
+      if (arr.includes(item.id)) {
+        val.sparetime = Math.ceil(
+          (Number(val.delivery_number) * Number(val.sparetime_percent)) / 100
+        );
+      }
+    },
     del(val) {
       let index = 0;
       this.tableData.map((r, i) => {

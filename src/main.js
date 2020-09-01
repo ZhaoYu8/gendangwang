@@ -5,6 +5,7 @@ import common from "./assets/common";
 import Print from "vue-print-nb";
 import global from "./assets/global";
 import store from "./store";
+import "./assets/common.scss";
 Vue.config.productionTip = false;
 let arr = [];
 Object.assign(Vue.prototype, {

@@ -66,20 +66,20 @@
       <i class="el-icon-refresh refresh" @click="queryTwo"></i>
     </div>
     <Dialog :centerDialogVisible="centerDialogVisible" :checkArrOk="checkArrOk" :user="users" @cancel="cancel" />
-    <Dialog5 ref="printMe" :print="isPrint" :centerDialogVisible="centerDialogVisible1" @cancel="cancel" :detailData="detailData" />
+    <Detail ref="printMe" :print="isPrint" :centerDialogVisible="centerDialogVisible1" @cancel="cancel" :detailData="detailData" />
   </div>
 </template>
 
 <script>
-import Dialog from "../components/Dialog4";
-import Dialog5 from "../components/Dialog5";
+import Dialog from "../components/DeliverGoodsDialog4";
+import Detail from "../components/Detail";
 
 export default {
   name: "DeliverGoods",
   props: {},
   components: {
     Dialog,
-    Dialog5,
+    Detail,
   },
   data: () => {
     return {
@@ -89,45 +89,11 @@ export default {
       centerDialogVisible1: false,
       paginate_meta2: {},
       arr: [
-        {
-          label: "日期",
-          model: "",
-          placeholder: "",
-          id: "delivery_date",
-          type: "date",
-          data: [],
-        },
-        {
-          label: "班次",
-          model: "",
-          placeholder: "",
-          id: "delivery_shifts",
-          type: "select",
-          data: [],
-        },
-        {
-          label: "路线",
-          model: "",
-          placeholder: "请输入路线",
-          id: "delivery_route",
-          type: "select",
-          data: [],
-          multiple: true,
-        },
-        {
-          label: "下单客户",
-          model: "",
-          placeholder: "",
-          id: "customer_id",
-          type: "select",
-          data: [],
-        },
-        {
-          label: "产品名称",
-          model: "",
-          placeholder: "请输入产品名称",
-          id: "product_name",
-        },
+        { label: "日期", model: "", placeholder: "", id: "delivery_date", type: "date", data: [] },
+        { label: "班次", model: "", placeholder: "", id: "delivery_shifts", type: "select", data: [] },
+        { label: "路线", model: "", placeholder: "请输入路线", id: "delivery_route", type: "select", data: [], multiple: true },
+        { label: "下单客户", model: "", placeholder: "", id: "customer_id", type: "select", data: [] },
+        { label: "产品名称", model: "", placeholder: "请输入产品名称", id: "product_name" },
       ],
       tableData1: [],
       tableData2: [],
@@ -154,7 +120,7 @@ export default {
       if (obj)
         setTimeout(() => {
           _this.query();
-          _this.getData();
+          _this.Update();
         }, 300);
     },
     async delTwo(val) {
@@ -183,7 +149,7 @@ export default {
       await this.$common.tableChange.call(this, val, item);
       // 如果是修改班次。或者路线。需要重新更新一下这二个data
       if (!["delivery_shifts", "delivery_route"].includes(item.id)) return;
-      this.getData();
+      this.Update();
     },
     onAdd() {
       let arr = this.checkArr;
@@ -208,7 +174,7 @@ export default {
         this.currentPage2 = 1;
         this.query();
         this.queryTwo();
-        this.getData();
+        this.Update();
       }
     },
     currentChange2(val) {
@@ -262,7 +228,7 @@ export default {
         this.isPrint = true;
       });
     },
-    getData() {
+    Update() {
       // 取user数据
       this.$post("/delivery_plans/list_plan_options", {}).then((res) => {
         let obj = res.data.data;
@@ -280,7 +246,7 @@ export default {
     this.currentPage2 = 1;
     this.query();
     this.queryTwo();
-    this.getData();
+    this.Update();
     this.$post("/delivery_plans/new_schedule", {}).then((res) => {
       let obj = res.data.data;
       for (const key in obj) {
@@ -294,28 +260,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.f-r {
-  float: right;
-}
-.p-t-10 {
-  padding-top: 10px;
-}
-.pagination {
-  padding: 10px 0;
-  text-align: right;
-}
 .refresh {
   cursor: pointer;
   position: absolute;
-  right: 18%;
+  right: 50%;
   top: 50%;
   transform: translateY(-50%);
   font-size: 30px;
-}
-</style>
-<style lang="scss">
-.form-item {
-  width: 100%;
-  display: inline-flex !important;
 }
 </style>

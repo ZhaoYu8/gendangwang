@@ -50,12 +50,12 @@
     </div>
     <!-- 第二个表格分页 -->
     <el-pagination background layout="total, prev, pager, next, jumper" :total="paginate_meta.total_count" class="pagination" :current-page.sync="currentPage" @current-change="currentChange"> </el-pagination>
-    <Dialog :centerDialogVisible="centerDialogVisible" @cancel="cancel" :detailData="detailData" />
+    <Detail :centerDialogVisible="centerDialogVisible" @cancel="cancel" :detailData="detailData" />
   </div>
 </template>
 
 <script>
-import Dialog from "../components/Dialog5";
+import Detail from "../components/Detail";
 export default {
   name: "DeliveryList",
   props: {
@@ -68,27 +68,13 @@ export default {
       default: () => [],
     },
   },
-  components: { Dialog },
+  components: { Detail },
   data: () => {
     return {
       arr: [
         // 头部查询条件
-        {
-          label: "下单客户：",
-          model: "",
-          placeholder: "",
-          type: "select",
-          data: [],
-          id: "customer_id",
-        },
-        // 头部查询条件
-        {
-          label: "收货单位：",
-          model: "",
-          placeholder: "",
-          data: [],
-          id: "receiving_unit",
-        },
+        { label: "下单客户：", model: "", placeholder: "", type: "select", data: [], id: "customer_id" },
+        { label: "收货单位：", model: "", placeholder: "", data: [], id: "receiving_unit" },
         { label: "产品名称：", model: "", placeholder: "", id: "product_name" },
       ],
       detailData: {},
@@ -160,21 +146,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.f-r {
-  float: right;
-}
-.p-t-10 {
-  padding-top: 10px;
-}
-.pagination {
-  padding: 10px 0;
-  text-align: right;
-}
-</style>
-<style lang="scss">
-.form-item {
-  width: 100%;
-  display: inline-flex !important;
-}
-</style>
+<style lang="scss" scoped></style>

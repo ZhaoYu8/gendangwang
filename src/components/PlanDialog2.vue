@@ -179,28 +179,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dialogthree {
-  ::v-deep .el-dialog__body {
-    padding: 10px 20px;
-  }
-  ::v-deep .el-card__body {
-    padding: 10px 20px;
-  }
-  .mb-10 {
-    margin-bottom: 10px;
-  }
-  .dialog-footer {
-    text-align: center;
-    display: block;
-    width: 200px;
-    margin: 0 auto;
-    ::v-deep .el-button {
-      width: 100%;
-    }
-  }
-  .pagination {
-    text-align: right;
-    margin-top: 20px;
-  }
-}
 </style>

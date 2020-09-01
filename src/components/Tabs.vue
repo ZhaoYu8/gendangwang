@@ -1,9 +1,6 @@
 <template>
   <el-tabs v-model="activeName" class="p-t-5" type="border-card" @tab-click="chenge">
-    <!-- 第一个tab页 -->
-    <el-tab-pane label="送货计划单" name="plan"></el-tab-pane>
-    <el-tab-pane label="送货派货单" name="deliverGoods"> </el-tab-pane>
-    <el-tab-pane label="送货单列表" name="deliveryList"> </el-tab-pane>
+    <el-tab-pane :label="item.label" :name="item.key" v-for="(item, index) in tabs" :key="item.key + index"></el-tab-pane>
   </el-tabs>
 </template>
 
@@ -12,7 +9,13 @@ export default {
   name: "tabs",
   data() {
     return {
-      activeName: "plan", // 切换页model
+      tabs: [
+        { label: "出库管理", key: "outDepot" },
+        { label: "送货计划单", key: "plan" },
+        { label: "送货派货单", key: "deliverGoods" },
+        { label: "送货单列表", key: "deliveryList" },
+      ],
+      activeName: "outDepot", // 切换页model
       user: [],
       delivery: [],
     };

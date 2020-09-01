@@ -43,7 +43,7 @@
 
     <!-- 第二个 表格 -->
     <div class="p-t-10">
-      <el-table :data="tableData2" style="width: 100%;" border height="300" ref="multipleTable_b">
+      <el-table :data="tableData2" style="width: 100%;" border height="350" ref="multipleTable_b">
         <el-table-column label="操作" width="150" align="center" header-align="center">
           <div slot-scope="scope" style="display: flex; justify-content: space-around;">
             <el-link :underline="false" type="danger" @click="delTwo(scope)">删除</el-link>

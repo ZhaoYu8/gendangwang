@@ -337,21 +337,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dialog {
-  ::v-deep .el-dialog__body {
-    padding: 10px 20px;
-  }
-  ::v-deep .el-card__body {
-    padding: 10px 20px;
-  }
-  .mb-10 {
-    margin-bottom: 10px;
-  }
-  .pagination {
-    padding: 10px 0 0 0;
-    text-align: center;
-  }
-}
 #printMe {
   color: #000;
   .border {

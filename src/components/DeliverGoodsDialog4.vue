@@ -1,46 +1,16 @@
 <template>
-  <el-dialog
-    title="新增工作计划"
-    :visible.sync="dialogVisible"
-    width="96%"
-    top="5vh"
-    class="dialog"
-    @close="cancel(false)"
-  >
+  <el-dialog title="新增工作计划" :visible.sync="dialogVisible" width="96%" top="5vh" class="dialog" @close="cancel(false)">
     <!-- 头部查询条件 -->
     <el-card class="mb-10">
       <el-row :gutter="20">
         <el-form label-position="left" :inline="true">
           <el-col :span="item.span || 6" v-for="(item, index) in arr" :key="item.label + index">
             <el-form-item :label="item.label + '：'" class="form-item">
-              <el-input
-                v-model="item.model"
-                :placeholder="item.placeholder || '请输入'"
-                v-if="!item.type"
-              ></el-input>
-              <el-select
-                :disabled="item.disabled"
-                v-model="item.model"
-                :placeholder="item.placeholder || '请选择'"
-                v-if="item.type === 'select'"
-                style="width: 100%;"
-                filterable
-              >
-                <el-option
-                  v-for="(list, d) in item.data"
-                  :key="d"
-                  :label="list.name"
-                  :value="list.id"
-                ></el-option>
+              <el-input v-model="item.model" :placeholder="item.placeholder || '请输入'" v-if="!item.type"></el-input>
+              <el-select :disabled="item.disabled" v-model="item.model" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'" style="width: 100%;" filterable>
+                <el-option v-for="(list, d) in item.data" :key="d" :label="list.name" :value="list.id"></el-option>
               </el-select>
-              <el-date-picker
-                v-model="item.model"
-                type="date"
-                :placeholder="item.placeholder || '请选择'"
-                v-if="item.type === 'date'"
-                style="width: 100%;"
-                :clearable="false"
-              ></el-date-picker>
+              <el-date-picker v-model="item.model" type="date" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'date'" style="width: 100%;" :clearable="false"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-form>
@@ -54,27 +24,10 @@
             <el-link :underline="false" type="danger" @click="del(scope)">删除</el-link>
           </div>
         </el-table-column>
-        <el-table-column
-          :label="item.label"
-          :width="item.width"
-          v-for="(item, index) in tableHeader"
-          :key="item.label + index "
-          header-align="center"
-        >
+        <el-table-column :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index" header-align="center">
           <template slot-scope="scope">
-            <el-date-picker
-              :clearable="false"
-              v-model="scope.row[item.id]"
-              type="date"
-              :placeholder="item.placeholder || '请选择'"
-              style="width: 100%;"
-              v-if="item.type === 'date'"
-            ></el-date-picker>
-            <el-input
-              v-model="scope.row[item.id]"
-              v-else-if="item.type === 'input'"
-              @change="tableChange(scope.row, item)"
-            />
+            <el-date-picker :clearable="false" v-model="scope.row[item.id]" type="date" :placeholder="item.placeholder || '请选择'" style="width: 100%;" v-if="item.type === 'date'"></el-date-picker>
+            <el-input v-model="scope.row[item.id]" v-else-if="item.type === 'input'" @change="tableChange(scope.row, item)" />
             <div v-else>{{ scope.row[item.id] }}</div>
           </template>
         </el-table-column>
@@ -201,9 +154,7 @@ export default {
     tableChange(val, item) {
       let arr = ["delivery_number", "sparetime_percent"];
       if (arr.includes(item.id)) {
-        val.sparetime = Math.ceil(
-          (Number(val.delivery_number) * Number(val.sparetime_percent)) / 100
-        );
+        val.sparetime = Math.ceil((Number(val.delivery_number) * Number(val.sparetime_percent)) / 100);
       }
     },
     del(val) {
@@ -243,19 +194,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dialog {
-  ::v-deep .el-dialog__body {
-    padding: 10px 20px;
-  }
-  ::v-deep .el-card__body {
-    padding: 10px 20px;
-  }
-  .mb-10 {
-    margin-bottom: 10px;
-  }
-  .pagination {
-    padding: 10px 0 0 0;
-    text-align: center;
-  }
-}
 </style>

@@ -22,6 +22,7 @@ module.exports = {
 	configureWebpack: (config) => {
 		config['externals'] = {
 			vue: 'Vue',
+      vuex: 'Vuex',
 			axios: 'axios',
 			'vue-router': 'VueRouter',
 			'element-ui': 'ELEMENT'

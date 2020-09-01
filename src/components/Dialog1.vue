@@ -1,48 +1,16 @@
 <template>
-  <el-dialog
-    title="新增工作计划"
-    :visible.sync="dialogVisible"
-    width="85%"
-    top="5vh"
-    class="dialog"
-    @close="cancel(false)"
-  >
+  <el-dialog title="新增工作计划" :visible.sync="dialogVisible" width="85%" top="5vh" class="dialog" @close="cancel(false)">
     <!-- 头部查询条件 -->
     <el-card class="mb-10">
       <el-row :gutter="20">
         <el-form label-position="left" :inline="true">
           <el-col :span="item.span || 6" v-for="(item, index) in arr" :key="item.label + index">
             <el-form-item :label="item.label + '：'" class="form-item">
-              <el-input
-                v-model="item.model"
-                :placeholder="item.placeholder || '请输入'"
-                v-if="!item.type"
-                @change="onChange(item)"
-              ></el-input>
-              <el-select
-                v-model="item.model"
-                filterable
-                :placeholder="item.placeholder || '请选择'"
-                v-if="item.type === 'select'"
-                style="width: 100%;"
-                @change="onChange(item)"
-                clearable
-              >
-                <el-option
-                  v-for="(list, d) in item.data"
-                  :key="d"
-                  :label="list.name"
-                  :value="list.id"
-                ></el-option>
+              <el-input v-model="item.model" :placeholder="item.placeholder || '请输入'" v-if="!item.type" @change="onChange(item)"></el-input>
+              <el-select v-model="item.model" filterable :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'" style="width: 100%;" @change="onChange(item)" clearable>
+                <el-option v-for="(list, d) in item.data" :key="d" :label="list.name" :value="list.id"></el-option>
               </el-select>
-              <el-date-picker
-                v-model="item.model"
-                type="date"
-                :placeholder="item.placeholder || '请选择'"
-                v-if="item.type === 'date'"
-                style="width: 100%;"
-                :clearable="false"
-              ></el-date-picker>
+              <el-date-picker v-model="item.model" type="date" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'date'" style="width: 100%;" :clearable="false"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-form>
@@ -50,15 +18,7 @@
     </el-card>
     <!-- 第一个表格 -->
     <div class="p-t-10">
-      <el-table
-        :data="tableData"
-        style="width: 100%;"
-        border
-        height="400"
-        @select="selected"
-        @select-all="selectedAll"
-        ref="dialog1Table"
-      >
+      <el-table :data="tableData" style="width: 100%;" border height="400" @select="selected" @select-all="selectedAll" ref="dialog1Table">
         <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
         <el-table-column label="产品名称" align="center" prop="product_name" header-align="center"></el-table-column>
         <el-table-column label="产品编号" align="center" prop="product_serial" header-align="center"></el-table-column>
@@ -68,14 +28,7 @@
         <el-table-column label="总库存数量" align="center" prop="storage_quantity" header-align="center"></el-table-column>
       </el-table>
       <!-- 第一个表格分页 -->
-      <el-pagination
-        background
-        layout="total, prev, pager, next, jumper"
-        :total="total"
-        class="pagination"
-        :current-page.sync="currentPage"
-        @current-change="currentChange"
-      ></el-pagination>
+      <el-pagination background layout="total, prev, pager, next, jumper" :total="total" class="pagination" :current-page.sync="currentPage" @current-change="currentChange"></el-pagination>
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button type="primary" @click="onOk" round>提交计划</el-button>
@@ -91,18 +44,6 @@ export default {
       type: Boolean,
       default: () => {
         return false;
-      },
-    },
-    user: {
-      type: Array,
-      default: () => {
-        return [];
-      },
-    },
-    delivery: {
-      type: Array,
-      default: () => {
-        return [];
       },
     },
   },
@@ -186,27 +127,14 @@ export default {
     dialogVisibl(val) {
       if (val) {
         this.dialogVisible = true;
+        this.arr[6].data = this.arr[2].data = this.$vuexData.x.user;
+        this.arr[2].model = this.$vuexData.x.user[0].id;
+        this.arr[3].model = this.$vuexData.x.user[0].name;
+        this.arr[4].model = this.$vuexData.x.user[0].address;
+        this.arr[1].data = this.$vuexData.x.delivery;
         this.onChange(this.arr[2]);
         this.checkArr = [];
       }
-    },
-    user: {
-      handler(val) {
-        if (!val.length) return;
-        this.arr[2].data = val;
-        this.arr[2].model = val[0].id;
-        this.arr[3].model = val[0].name;
-        this.arr[4].model = val[0].address;
-        this.arr[6].data = val;
-      },
-      immediate: true,
-    },
-    delivery: {
-      handler(val) {
-        if (!val.length) return;
-        this.arr[1].data = val;
-      },
-      immediate: true,
     },
   },
   methods: {

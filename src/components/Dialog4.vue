@@ -143,7 +143,7 @@ export default {
           data: [],
         },
         {
-          label: "员",
+          label: "派货员",
           model: "",
           placeholder: "",
           id: "delivery_member_id",

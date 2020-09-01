@@ -6,34 +6,11 @@
         <el-form label-position="left" :inline="true">
           <el-col :span="6" v-for="(item, index) in arr" :key="item.label + index">
             <el-form-item :label="item.label + '：'" class="form-item">
-              <el-input
-                v-model="item.model"
-                :placeholder="item.placeholder || '请输入'"
-                v-if="!item.type"
-              ></el-input>
-              <el-select
-                v-model="item.model"
-                filterable
-                :placeholder="item.placeholder || '请选择'"
-                v-if="item.type === 'select'"
-                style="width: 100%;"
-                :multiple="item.multiple"
-                clearable
-              >
-                <el-option
-                  v-for="(list, d) in item.data"
-                  :key="d"
-                  :label="list.name"
-                  :value="list.id"
-                ></el-option>
+              <el-input v-model="item.model" :placeholder="item.placeholder || '请输入'" v-if="!item.type"></el-input>
+              <el-select v-model="item.model" filterable :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'" style="width: 100%;" :multiple="item.multiple" clearable>
+                <el-option v-for="(list, d) in item.data" :key="d" :label="list.name" :value="list.id"></el-option>
               </el-select>
-              <el-date-picker
-                v-model="item.model"
-                type="date"
-                :placeholder="item.placeholder || '请选择'"
-                v-if="item.type === 'date'"
-                style="width: 100%;"
-              ></el-date-picker>
+              <el-date-picker v-model="item.model" type="date" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'date'" style="width: 100%;"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="18">
@@ -47,43 +24,17 @@
     </el-card>
     <!-- 第一个表格 -->
     <div class="p-t-10">
-      <el-table
-        :data="tableData1"
-        style="width: 100%;"
-        border
-        height="300"
-        @selection-change="handleSelectionChange"
-        ref="secondTable"
-      >
+      <el-table :data="tableData1" style="width: 100%;" border height="300" @selection-change="handleSelectionChange" ref="secondTable">
         <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
         <el-table-column label="操作" width="80" align="center" header-align="center">
           <div slot-scope="scope" style="display: flex; justify-content: space-around;">
             <el-link :underline="false" type="danger" @click="del(scope)">删除</el-link>
           </div>
         </el-table-column>
-        <el-table-column
-          :label="item.label"
-          :width="item.width"
-          v-for="(item, index) in tableHeader"
-          :key="item.label + index"
-          header-align="center"
-        >
+        <el-table-column :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index" header-align="center">
           <template slot-scope="scope">
-            <el-date-picker
-              :clearable="false"
-              v-model="scope.row[item.id]"
-              type="date"
-              :placeholder="item.placeholder || '请选择'"
-              style="width: 100%;"
-              v-if="item.type === 'date'"
-              @change="tableChange(scope.row, item)"
-            ></el-date-picker>
-            <el-input
-              v-model="scope.row[item.id]"
-              v-else-if="item.type === 'input'"
-              @change="tableChange(scope.row, item)"
-              v-focus
-            />
+            <el-date-picker :clearable="false" v-model="scope.row[item.id]" type="date" :placeholder="item.placeholder || '请选择'" style="width: 100%;" v-if="item.type === 'date'" @change="tableChange(scope.row, item)"></el-date-picker>
+            <el-input v-model="scope.row[item.id]" v-else-if="item.type === 'input'" @change="tableChange(scope.row, item)" v-focus />
             <div v-else>{{ scope.row[item.id] }}</div>
           </template>
         </el-table-column>
@@ -111,48 +62,21 @@
     </div>
     <!-- 第二个表格分页 -->
     <div style="position:relative">
-      <el-pagination
-        background
-        layout="total, prev, pager, next, jumper"
-        :total="paginate_meta2.total_count"
-        class="pagination"
-        :current-page.sync="currentPage2"
-        @current-change="currentChange2"
-      ></el-pagination>
+      <el-pagination background layout="total, prev, pager, next, jumper" :total="paginate_meta2.total_count" class="pagination" :current-page.sync="currentPage2" @current-change="currentChange2"></el-pagination>
       <i class="el-icon-refresh refresh" @click="queryTwo"></i>
     </div>
-    <Dialog
-      :centerDialogVisible="centerDialogVisible"
-      :checkArrOk="checkArrOk"
-      :user="users"
-      @cancel="cancel"
-    />
-    <Dialog5
-      ref="printMe"
-      :print="isPrint"
-      :centerDialogVisible="centerDialogVisible1"
-      @cancel="cancel"
-      :detailData="detailData"
-    />
+    <Dialog :centerDialogVisible="centerDialogVisible" :checkArrOk="checkArrOk" :user="users" @cancel="cancel" />
+    <Dialog5 ref="printMe" :print="isPrint" :centerDialogVisible="centerDialogVisible1" @cancel="cancel" :detailData="detailData" />
   </div>
 </template>
 
 <script>
-import Dialog from "./Dialog4.vue";
-import Dialog5 from "./Dialog5.vue";
+import Dialog from "../components/Dialog4";
+import Dialog5 from "../components/Dialog5";
 
 export default {
-  name: "Second",
-  props: {
-    activeName: {
-      type: String,
-      default: "second",
-    },
-    user: {
-      type: Array,
-      default: [],
-    },
-  },
+  name: "DeliverGoods",
+  props: {},
   components: {
     Dialog,
     Dialog5,
@@ -213,20 +137,7 @@ export default {
       isPrint: false,
     };
   },
-  watch: {
-    activeName: {
-      handler(val) {
-        if (val === "second") {
-          this.currentPage2 = 1;
-          this.query();
-          this.queryTwo();
-          this.arr[3].data = this.user;
-          this.getData();
-        }
-      },
-      immediate: true,
-    },
-  },
+  watch: {},
   computed: {},
   computed: {
     tableHeader() {
@@ -316,9 +227,7 @@ export default {
           if (!Number(r.delivery_number) && !Number(r.sparetime_percent)) {
             r.sparetime = 0;
           } else {
-            r.sparetime = Math.ceil(
-              (Number(r.delivery_number) * Number(r.sparetime_percent)) / 100
-            );
+            r.sparetime = Math.ceil((Number(r.delivery_number) * Number(r.sparetime_percent)) / 100);
           }
         });
         this.tableData1 = [];
@@ -364,6 +273,14 @@ export default {
   },
   mounted() {
     // 取user数据
+    this.arr[3].data = this.$vuexData.x.user;
+    this.$bus.$on("user", () => {
+      this.arr[3].data = this.$vuexData.x.user;
+    });
+    this.currentPage2 = 1;
+    this.query();
+    this.queryTwo();
+    this.getData();
     this.$post("/delivery_plans/new_schedule", {}).then((res) => {
       let obj = res.data.data;
       for (const key in obj) {

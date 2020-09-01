@@ -55,9 +55,9 @@
 </template>
 
 <script>
-import Dialog from "./Dialog5.vue";
+import Dialog from "../components/Dialog5";
 export default {
-  name: "third",
+  name: "DeliveryList",
   props: {
     activeName: {
       type: String,
@@ -98,26 +98,15 @@ export default {
       currentPage: 1,
     };
   },
-  watch: {
-    activeName: {
-      handler(val) {
-        if (val === "third") {
-          this.currentPage = 1;
-          this.query();
-        }
-      },
-      immediate: true,
-    },
-    user: {
-      handler(val) {
-        if (val.length) {
-          this.arr[0].data = val;
-        }
-      },
-      immediate: true,
-    },
-  },
+  watch: {},
   computed: {},
+  mounted() {
+    this.arr[0].data = this.$vuexData.x.user;
+    this.$bus.$on("user", () => {
+      this.arr[0].data = this.$vuexData.x.user;
+    });
+    this.query();
+  },
   methods: {
     cancel(type) {
       this.centerDialogVisible = false;

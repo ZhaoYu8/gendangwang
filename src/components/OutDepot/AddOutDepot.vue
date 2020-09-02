@@ -2,12 +2,12 @@
   <el-card class="h-100">
     <div class="d-f-c-s-b">
       <span class="f-20"> 新建送货计划单</span>
-      <el-button type="text" @click="cancel"> {{ "< 返回出库管理" }}</el-button>
+      <el-button type="text" @click="cancel"> {{ "&lt; 返回出库管理" }}</el-button>
     </div>
     <Panel :arr="arr" :special="'w-20'" />
     <!-- 第一个表格 -->
     <div class="d-f-s-b p-t-10">
-      <el-button type="primary" size="large">选择出库产品</el-button>
+      <el-button type="primary" size="large" @click="changeDialog">选择出库产品</el-button>
       <div>
         <el-button size="large">取消</el-button>
         <el-button type="primary" size="large">保存</el-button>
@@ -29,15 +29,21 @@
         <el-table-column label="操作" align="center" header-align="center"></el-table-column>
       </el-table>
     </div>
+    <AddDialog :dialogVisibl="dialogShow" @cancel="cancel" />
   </el-card>
 </template>
 
 <script>
+import AddDialog from "@/components/OutDepot/AddDialog";
 export default {
   name: "add",
   props: {},
+  components: {
+    AddDialog,
+  },
   data: () => {
     return {
+      dialogShow: false,
       tableData: [],
       arr: [
         { label: "下单客户", model: "", placeholder: "", id: "customer_id", type: "select", data: [] },
@@ -66,8 +72,20 @@ export default {
   },
   methods: {
     cancel() {
-      this.$emit("cancel");
+      this.dialogShow = false;
     },
+    changeDialog() {
+      this.dialogShow = true;
+      this.$bus.$emit("AddOutDepot", this.arr[0].model);
+    },
+  },
+  mounted() {
+    this.arr[0].data = this.$vuexData.x.customer;
+    this.arr[0].model = this.$vuexData.x.customer.length && this.$vuexData.x.customer[0].id;
+    this.$bus.$on("user", () => {
+      this.arr[0].data = this.$vuexData.x.customer;
+      this.arr[0].model = this.$vuexData.x.customer[0].id;
+    });
   },
 };
 </script>

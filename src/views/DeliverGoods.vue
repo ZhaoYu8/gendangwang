@@ -239,9 +239,9 @@ export default {
   },
   mounted() {
     // 取user数据
-    this.arr[3].data = this.$vuexData.x.user;
+    this.arr[3].data = this.$vuexData.x.customer;
     this.$bus.$on("user", () => {
-      this.arr[3].data = this.$vuexData.x.user;
+      this.arr[3].data = this.$vuexData.x.customer;
     });
     this.currentPage2 = 1;
     this.query();

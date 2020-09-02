@@ -17,7 +17,6 @@ export default {
       ],
       activeName: "outDepot", // 切换页model
       user: [],
-      delivery: [],
     };
   },
   methods: {

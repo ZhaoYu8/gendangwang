@@ -6,7 +6,7 @@ if (process.env.NODE_ENV === "development") {
 }
 let instance = axios.create({
   baseURL: baseURL,
-  timeout: 10000,
+  timeout: 50000,
   responseType: "json",
   validateStatus(status) {
     return status === 200;
@@ -16,7 +16,7 @@ let loading;
 // 拦截请求
 instance.interceptors.request.use(
   (config) => {
-    let params = { current_org: vm.$route.query.current_org || "423", current_member: vm.$route.query.current_member || "1092" };
+    let params = { current_org: vm.$route.query.current_org || "11112", current_member: vm.$route.query.current_member || "1" };
     config.data = { ...params, ...config.data };
     if (loading) loading.close();
     loading = Loading.service({
@@ -43,9 +43,9 @@ instance.interceptors.response.use(
     setTimeout(() => {
       loading.close();
     }, 300);
-    let errorMessage = "系统内部异常，请联系网站管理员";
+    let errorMessage = "请求超时！请刷新页面再试！";
     if (error.response) {
-      errorMessage = error.response.data === null ? "系统内部异常，请联系网站管理员" : error.response.data.message;
+      errorMessage = error.response.data === null ? errorMessage : error.response.data.message;
     }
     Notification.error({
       title: "系统提示",

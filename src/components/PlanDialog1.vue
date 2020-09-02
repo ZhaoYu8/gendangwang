@@ -20,7 +20,7 @@
     <div class="p-t-10">
       <el-table :data="tableData" style="width: 100%;" border height="400" @select="selected" @select-all="selectedAll" ref="dialog1Table">
         <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
-        <el-table-column label="产品名称" align="center" prop="product_name" header-align="center"></el-table-column>
+        <el-table-column label="产品名称" align="center" prop="product_name" header-align="center" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="产品编号" align="center" prop="product_serial" header-align="center"></el-table-column>
         <el-table-column label="所属客户" align="center" prop="customer_name" header-align="center"></el-table-column>
         <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center"></el-table-column>
@@ -127,10 +127,10 @@ export default {
     dialogVisibl(val) {
       if (val) {
         this.dialogVisible = true;
-        this.arr[6].data = this.arr[2].data = this.$vuexData.x.user;
-        this.arr[2].model = this.$vuexData.x.user[0].id;
-        this.arr[3].model = this.$vuexData.x.user[0].name;
-        this.arr[4].model = this.$vuexData.x.user[0].address;
+        this.arr[6].data = this.arr[2].data = this.$vuexData.x.customer;
+        this.arr[2].model = this.$vuexData.x.customer[0].id;
+        this.arr[3].model = this.$vuexData.x.customer[0].name;
+        this.arr[4].model = this.$vuexData.x.customer[0].address;
         this.arr[1].data = this.$vuexData.x.delivery;
         this.onChange(this.arr[2]);
         this.checkArr = [];

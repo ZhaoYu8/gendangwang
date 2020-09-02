@@ -109,8 +109,8 @@ export default {
     dialogVisibl(val) {
       if (val) {
         this.dialogVisible = true;
-        this.arr[6].data = this.arr[2].data = this.$vuexData.x.user;
-        this.arr[2].model = this.$vuexData.x.user[0].id;
+        this.arr[6].data = this.arr[2].data = this.$vuexData.x.customer;
+        this.arr[2].model = this.$vuexData.x.customer[0].id;
         this.arr[1].data = this.$vuexData.x.delivery;
       }
     },

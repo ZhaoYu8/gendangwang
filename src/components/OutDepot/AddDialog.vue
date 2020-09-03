@@ -45,23 +45,19 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column label="当前库存" align="center" prop="storage_quantity" header-align="center"></el-table-column>
-        <el-table-column label="出库数量" align="center" header-align="center">
+        <el-table-column label="当前库存" align="center" prop="storage_quantity" header-align="center" width="100"></el-table-column>
+        <el-table-column label="出库数量" align="center" header-align="center" width="100">
           <template slot-scope="scope">
             <el-input v-model="scope.row['product_number']" placeholder="" @change="tableChange(scope.row)"></el-input>
           </template>
         </el-table-column>
-        <el-table-column label="备次" align="center" prop="sparetime" header-align="center"> </el-table-column>
-        <el-table-column label="备次率(%)" align="center" header-align="center">
+        <el-table-column label="备次" align="center" prop="sparetime" header-align="center" width="100"> </el-table-column>
+        <el-table-column label="备次率(%)" align="center" header-align="center" width="100">
           <template slot-scope="scope">
             <el-input v-model="scope.row['sparetime_percent']" placeholder="" @change="tableChange(scope.row)"></el-input>
           </template>
         </el-table-column>
-        <el-table-column label="产品单价" align="center" header-align="center">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row['price']" placeholder=""></el-input>
-          </template>
-        </el-table-column>
+        <el-table-column label="产品单价" align="center" header-align="center" prop="price" width="100"> </el-table-column>
         <el-table-column label="备注" align="center" header-align="center">
           <template slot-scope="scope"> <el-input v-model="scope.row['note']" placeholder=""></el-input> </template>
         </el-table-column>
@@ -101,10 +97,7 @@ export default {
   },
   methods: {
     tableChange(val) {
-      val.sparetime = Math.ceil((Number(val.product_number) * Number(val.sparetime_percent)) / 100);
-      this.$nextTick(() => {
-        val.sparetime = val.sparetime;
-      })
+      val.sparetime = Math.ceil((Number(val.product_number) * Number(val.sparetime_percent)) / 100) || 0;
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -122,8 +115,17 @@ export default {
         return { ...r, ...{ sparetime: 0 } };
       });
     },
-    async save() {
-      console.log(this.multipleSelection);
+    save() {
+      if (!this.multipleSelection.length) {
+        this.$notify({
+          title: "警告",
+          message: "你未选中任何一条数据，请检查！",
+          type: "warning",
+        });
+        return;
+      }
+      this.$emit("save", this.multipleSelection);
+      this.cancel();
     },
   },
   beforeDestroy() {

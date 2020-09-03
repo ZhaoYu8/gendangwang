@@ -87,7 +87,6 @@ export default {
   watch: {},
   computed: {},
   mounted() {
-    this.arr[0].data = this.$vuexData.x.customer;
     this.$bus.$on("user", () => {
       this.arr[0].data = this.$vuexData.x.customer;
     });

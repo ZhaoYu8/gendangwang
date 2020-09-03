@@ -37,53 +37,13 @@ export default {
     return {
       dialogVisible: false,
       arr: [
-        {
-          label: "日期",
-          model: new Date(),
-          placeholder: "",
-          id: "delivery_date",
-          type: "date",
-          data: [],
-        },
-        {
-          label: "班次",
-          model: "",
-          placeholder: "",
-          id: "delivery_shifts",
-          type: "select",
-          data: [],
-        },
-        {
-          label: "下单客户",
-          model: "",
-          placeholder: "",
-          id: "customer_id",
-          type: "select",
-          data: [],
-        },
+        { label: "日期", model: new Date(), placeholder: "", id: "delivery_date", type: "date", data: [] },
+        { label: "班次", model: "", placeholder: "", id: "delivery_shifts", type: "select", data: [] },
+        { label: "下单客户", model: "", placeholder: "", id: "customer_id", type: "select", data: [] },
         { label: "收货单位", model: "", placeholder: "", id: "receiving_unit" },
-        {
-          label: "路线",
-          model: "",
-          placeholder: "请输入路线",
-          id: "delivery_route",
-        },
-        {
-          label: "产品名称",
-          model: "",
-          placeholder: "请输入产品名称",
-          id: "product_name",
-          noHttp: true,
-        },
-        {
-          label: "产品所属",
-          model: "",
-          placeholder: "",
-          id: "abc",
-          type: "select",
-          data: [],
-          noHttp: true,
-        },
+        { label: "路线", model: "", placeholder: "请输入路线", id: "delivery_route" },
+        { label: "产品名称", model: "", placeholder: "请输入产品名称", id: "product_name", noHttp: true },
+        { label: "产品所属", model: "", placeholder: "", id: "abc", type: "select", data: [], noHttp: true },
         {
           label: "特殊事宜",
           model: "",
@@ -95,13 +55,7 @@ export default {
             { name: "否", id: "否" },
           ],
         },
-        {
-          label: "交代说明",
-          model: "",
-          placeholder: "输入备注说明或需要交代的事项",
-          id: "note",
-          span: 24,
-        },
+        { label: "交代说明", model: "", placeholder: "输入备注说明或需要交代的事项", id: "note", span: 24 },
       ],
     };
   },
@@ -111,7 +65,7 @@ export default {
         this.dialogVisible = true;
         this.arr[6].data = this.arr[2].data = this.$vuexData.x.customer;
         this.arr[2].model = this.$vuexData.x.customer[0].id;
-        this.arr[1].data = this.$vuexData.x.delivery;
+        this.arr[1].data = this.$vuexData.x.delivery_shift;
       }
     },
   },
@@ -142,5 +96,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

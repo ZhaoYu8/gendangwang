@@ -78,47 +78,11 @@ export default {
       total: 1,
       tableData: [],
       arr: [
-        {
-          label: "单号",
-          model: "",
-          placeholder: "",
-          id: "delivery_shifts",
-          type: "select",
-          disabled: true,
-          data: [],
-        },
-        {
-          label: "车号",
-          model: "",
-          placeholder: "",
-          id: "delivery_train",
-          type: "select",
-          data: [],
-        },
-        {
-          label: "派货员",
-          model: "",
-          placeholder: "",
-          id: "delivery_member_id",
-          type: "select",
-          data: [],
-        },
-        {
-          label: "跟车员",
-          model: "",
-          placeholder: "",
-          id: "with_member_id",
-          type: "select",
-          data: [],
-        },
-        {
-          label: "配货员",
-          model: "",
-          placeholder: "",
-          id: "allocate_member_id",
-          type: "select",
-          data: [],
-        },
+        { label: "单号", model: "", placeholder: "", id: "delivery_shifts", type: "select", disabled: true, data: [] },
+        { label: "车号", model: "", placeholder: "", id: "delivery_train", type: "select", data: [] },
+        { label: "派货员", model: "", placeholder: "", id: "delivery_member_id", type: "select", data: [] },
+        { label: "跟车员", model: "", placeholder: "", id: "with_member_id", type: "select", data: [] },
+        { label: "配货员", model: "", placeholder: "", id: "allocate_member_id", type: "select", data: [] },
         { label: "备注说明", model: "", placeholder: "", id: "note", span: 18 },
       ],
       selectChangeData: [],
@@ -133,10 +97,6 @@ export default {
     user: {
       handler(val) {
         if (!Object.keys(val).length) return;
-        this.arr[1].data = val.delivery_train_options;
-        this.arr[2].data = val.delivery_member_options;
-        this.arr[3].data = val.with_member_options;
-        this.arr[4].data = val.allocate_member_options;
       },
       immediate: true,
     },
@@ -149,6 +109,15 @@ export default {
       },
       immediate: true,
     },
+  },
+  mounted() {
+    this.$bus.$on("user", () => {
+      let x = this.$vuexData.x;
+      this.arr[1].data = x.delivery_train;
+      this.arr[2].data = x.delivery_member;
+      this.arr[3].data = x.with_member;
+      this.arr[4].data = x.allocate_member;
+    });
   },
   methods: {
     tableChange(val, item) {
@@ -193,5 +162,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -1,14 +1,7 @@
 <template>
-  <el-dialog
-    title
-    :visible.sync="dialogVisible"
-    width="96%"
-    top="10vh"
-    class="dialog"
-    @close="cancel(false)"
-  >
+  <el-dialog title :visible.sync="dialogVisible" width="96%" top="10vh" class="dialog" @close="cancel(false)">
     <!-- 头部查询条件 -->
-    <div id="printMe" ref="printMe" :style="{fontSize: fontSize + 'px'}">
+    <div id="printMe" ref="printMe" :style="{ fontSize: fontSize + 'px' }">
       <ul class="top">
         <li>日期 : {{ headerData.delivery_date }}</li>
         <li>车号 : {{ headerData.delivery_train }}</li>
@@ -33,11 +26,7 @@
           <td style="width: 10%">备注</td>
         </tr>
         <template v-for="(item, index) in tableData">
-          <tr
-            v-if="index > 0 && tableData[index - 1].receiving_unit !== tableData[index].receiving_unit"
-            :key="item.product_name + index"
-            style="height: 10px;"
-          ></tr>
+          <tr v-if="index > 0 && tableData[index - 1].receiving_unit !== tableData[index].receiving_unit" :key="item.product_name + index" style="height: 10px;"></tr>
           <tr :key="item.receiving_unit + index">
             <td>{{ index + 1 }}</td>
             <td>{{ item.delivery_route }}</td>
@@ -127,7 +116,7 @@ export default {
   methods: {
     exports() {
       //表格标题
-      var dataTitle = "用户统计2020-01-10-2020-01-12";
+      let dataTitle = "用户统计2020-01-10-2020-01-12";
       // 配置文件类型
       const wopts = {
         bookType: "xlsx",
@@ -148,7 +137,7 @@ export default {
     },
     // 下载功能
     saveAs(obj, fileName) {
-      var tmpa = document.createElement("a");
+      let tmpa = document.createElement("a");
       tmpa.download = fileName || "未命名";
       // 兼容ie
       if ("msSaveOrOpenBlob" in navigator) {
@@ -157,20 +146,20 @@ export default {
         tmpa.href = URL.createObjectURL(obj);
       }
       tmpa.click();
-      setTimeout(function () {
+      setTimeout(function() {
         URL.revokeObjectURL(obj);
       }, 100);
     },
 
     downloadExl(json, type, dataTitle) {
-      var tmpdata = json[0];
+      let tmpdata = json[0];
       json.unshift({});
-      var keyMap = []; //获取keys
-      for (var k in tmpdata) {
+      let keyMap = []; //获取keys
+      for (let k in tmpdata) {
         keyMap.push(k);
         json[0][k] = k;
       }
-      var tmpdata = []; //用来保存转换好的json
+      tmpdata = []; //用来保存转换好的json
       let arr = json.map((v, i) => {
         let data = keyMap.map((k, j) => {
           // console.log(k,this.getCharCol(j));
@@ -178,45 +167,15 @@ export default {
             {},
             {
               v: v[k],
-              position:
-                (j > 25 ? this.getCharCol(j) : String.fromCharCode(65 + j)) +
-                (i + 2),
+              position: (j > 25 ? this.getCharCol(j) : String.fromCharCode(65 + j)) + (i + 2),
             }
           );
         });
         return data;
       });
       let data = this.headerData;
-      let letter = [
-        "A",
-        "B",
-        "C",
-        "D",
-        "E",
-        "F",
-        "G",
-        "H",
-        "I",
-        "J",
-        "K",
-        "L",
-        "M",
-        "N",
-      ];
-      let header = [
-        "日期:",
-        data.delivery_date,
-        "车号:",
-        data.delivery_train,
-        "司机:",
-        data.delivery_member,
-        "跟车:",
-        data.with_member,
-        "配货员:",
-        data.allocate_member,
-        "单号:",
-        data.delivery_serial,
-      ];
+      let letter = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"];
+      let header = ["日期:", data.delivery_date, "车号:", data.delivery_train, "司机:", data.delivery_member, "跟车:", data.with_member, "配货员:", data.allocate_member, "单号:", data.delivery_serial];
       arr.unshift(
         header.map((r, j) => {
           return {
@@ -225,7 +184,6 @@ export default {
           };
         })
       );
-      console.log(arr);
       arr
         .reduce((prev, next) => prev.concat(next))
         .forEach(
@@ -234,14 +192,17 @@ export default {
               v: v.v,
             })
         );
-      var outputPos = Object.keys(tmpdata); //设置区域,比如表格从A1到D10
+      let outputPos = Object.keys(tmpdata); //设置区域,比如表格从A1到D10
       // tmpdata["A1"] = { v: 1 };
       // outputPos = ["A1"].concat(outputPos);
-      // tmpdata["A1"].s = {
-      //   font: { sz: 14, bold: true, vertAlign: true },
-      //   alignment: { vertical: "center", horizontal: "center" },
-      //   fill: { bgColor: { rgb: "E8E8E8" }, fgColor: { rgb: "E8E8E8" } },
-      // }; //<====设置xlsx单元格样式
+      ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"].map((r) => {
+        tmpdata[`${r}2`].s = {
+          font: { sz: 14, bold: true, vertAlign: true },
+          alignment: { vertical: "center", horizontal: "center" },
+          fill: { bgColor: { rgb: "5491ff" }, fgColor: { rgb: "5491ff" } },
+        };
+      });
+      //<====设置xlsx单元格样式
       // tmpdata["!merges"] = [
       //   {
       //     s: { c: 0, r: 0 },
@@ -253,22 +214,9 @@ export default {
       //   },
       // ]; //<====合并单元格
 
-      tmpdata["!cols"] = [
-        { wpx: 50 },
-        { wpx: 100 },
-        { wpx: 100 },
-        { wpx: 200 },
-        { wpx: 240 },
-        { wpx: 50 },
-        { wpx: 100 },
-        { wpx: 100 },
-        { wpx: 240 },
-        { wpx: 100 },
-        { wpx: 100 },
-        { wpx: 200 },
-      ]; //<====设置一列宽度
+      tmpdata["!cols"] = [{ wpx: 50 }, { wpx: 100 }, { wpx: 100 }, { wpx: 200 }, { wpx: 240 }, { wpx: 50 }, { wpx: 100 }, { wpx: 100 }, { wpx: 240 }, { wpx: 100 }, { wpx: 100 }, { wpx: 200 }]; //<====设置一列宽度
 
-      var tmpWB = {
+      let tmpWB = {
         SheetNames: ["mySheet"], //保存的表标题
         Sheets: {
           mySheet: Object.assign(
@@ -280,7 +228,7 @@ export default {
           ),
         },
       };
-      var tmpDown = new Blob(
+      let tmpDown = new Blob(
         [
           this.s2ab(
             XLSX.write(
@@ -297,12 +245,7 @@ export default {
           type: "",
         }
       );
-      this.saveAs(
-        tmpDown,
-        `${new Date()}` +
-          "." +
-          (type.bookType == "biff2" ? "xls" : type.bookType)
-      );
+      this.saveAs(tmpDown, `${new Date()}` + "." + (type.bookType == "biff2" ? "xls" : type.bookType));
     },
     // 获取26个英文字母用来表示excel的列
     getCharCol(n) {
@@ -318,13 +261,13 @@ export default {
     },
     s2ab(s) {
       if (typeof ArrayBuffer !== "undefined") {
-        var buf = new ArrayBuffer(s.length);
-        var view = new Uint8Array(buf);
-        for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
+        let buf = new ArrayBuffer(s.length);
+        let view = new Uint8Array(buf);
+        for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
         return buf;
       } else {
-        var buf = new Array(s.length);
-        for (var i = 0; i != s.length; ++i) buf[i] = s.charCodeAt(i) & 0xff;
+        let buf = new Array(s.length);
+        for (let i = 0; i != s.length; ++i) buf[i] = s.charCodeAt(i) & 0xff;
         return buf;
       }
     },
@@ -370,6 +313,7 @@ export default {
       td {
         padding: 8px;
         border: 1px solid #ddd;
+        white-space: nowrap;
       }
     }
     tr:first-child {

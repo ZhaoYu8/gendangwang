@@ -13,6 +13,7 @@ let instance = axios.create({
   },
 });
 let loading;
+let _error;
 // 拦截请求
 instance.interceptors.request.use(
   (config) => {
@@ -43,14 +44,19 @@ instance.interceptors.response.use(
     setTimeout(() => {
       loading.close();
     }, 300);
-    let errorMessage = "请求超时！请刷新页面再试！";
+    let errorMessage = "请求错误！请刷新页面再试！";
     if (error.response) {
       errorMessage = error.response.data === null ? errorMessage : error.response.data.message;
     }
+    if (_error) return;
+    _error = true;
     Notification.error({
       title: "系统提示",
       message: errorMessage,
-      duration: 4000,
+      duration: 2000,
+      onClose: () => {
+        _error = false;
+      },
     });
     return Promise.reject(error);
   }

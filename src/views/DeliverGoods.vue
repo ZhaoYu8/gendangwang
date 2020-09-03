@@ -61,11 +61,11 @@
       </el-table>
     </div>
     <!-- 第二个表格分页 -->
-    <div style="position:relative">
+    <div style="position:relative" class="m-r-10">
       <el-pagination background layout="total, prev, pager, next, jumper" :total="paginate_meta2.total_count" class="pagination" :current-page.sync="currentPage2" @current-change="currentChange2"></el-pagination>
       <i class="el-icon-refresh refresh" @click="queryTwo"></i>
     </div>
-    <Dialog :centerDialogVisible="centerDialogVisible" :checkArrOk="checkArrOk" :user="users" @cancel="cancel" />
+    <Dialog :centerDialogVisible="centerDialogVisible" :checkArrOk="checkArrOk" @cancel="cancel" />
     <Detail ref="printMe" :print="isPrint" :centerDialogVisible="centerDialogVisible1" @cancel="cancel" :detailData="detailData" />
   </div>
 </template>
@@ -83,7 +83,6 @@ export default {
   },
   data: () => {
     return {
-      users: {},
       detailData: {},
       centerDialogVisible: false, // 第一个dialog
       centerDialogVisible1: false,
@@ -230,31 +229,22 @@ export default {
     },
     Update() {
       // 取user数据
-      this.$post("/delivery_plans/list_plan_options", {}).then((res) => {
-        let obj = res.data.data;
-        this.arr[1].data = obj.delivery_shift_options;
-        this.arr[2].data = obj.delivery_route_options;
+      this.$vuexFn.getUser().then(() => {
+        this.arr[1].data = obj.delivery_shift;
+        this.arr[2].data = obj.delivery_route;
       });
     },
   },
   mounted() {
     // 取user数据
-    this.arr[3].data = this.$vuexData.x.customer;
     this.$bus.$on("user", () => {
+      this.arr[1].data = this.$vuexData.x.delivery_shift;
+      this.arr[2].data = this.$vuexData.x.delivery_route;
       this.arr[3].data = this.$vuexData.x.customer;
     });
     this.currentPage2 = 1;
     this.query();
     this.queryTwo();
-    this.Update();
-    this.$post("/delivery_plans/new_schedule", {}).then((res) => {
-      let obj = res.data.data;
-      for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          this.$set(this.users, key, obj[key]);
-        }
-      }
-    });
   },
 };
 </script>

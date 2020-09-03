@@ -6,6 +6,8 @@ import Print from "vue-print-nb";
 import global from "./assets/global";
 import store from "./store";
 import "./assets/common.scss";
+import Element from "element-ui";
+Vue.use(Element, { size: "medium" });
 Vue.config.productionTip = false;
 let arr = [];
 Object.assign(Vue.prototype, {

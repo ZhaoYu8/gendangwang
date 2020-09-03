@@ -1,5 +1,5 @@
 <template>
-  <div class="h-100">
+  <div class="outdepot">
     <transition :name="!panelShow ? '' : 'el-zoom-in-bottom'">
       <div v-show="panelShow" class="h-100">
         <Panel :arr="arr">
@@ -43,13 +43,13 @@ export default {
       total: 1,
       panelShow: true,
       arr: [
-        { label: "仓库", model: "", placeholder: "", type: "select", data: [], id: "customer_id" },
-        { label: "仓位", model: "", placeholder: "", type: "select", data: [], id: "receiving_unit" },
-        { label: "客户", model: "", placeholder: "", type: "select", data: [], id: "product_name" },
-        { label: "销售", model: "", placeholder: "", type: "select", data: [], id: "product_name" },
-        { label: "负责人", model: "", placeholder: "", type: "select", data: [], id: "product_name" },
-        { label: "发货时间", model: "", placeholder: "", type: "daterange", span: 8, id: "product_name" },
-        { label: "关键字", model: "", placeholder: "", id: "product_name" },
+        { label: "仓库", model: "", placeholder: "", type: "select", data: [], id: "inbound_warehouse_id" },
+        { label: "仓位", model: "", placeholder: "", type: "select", data: [], id: "warehouse_location_id" },
+        { label: "客户", model: "", placeholder: "", type: "select", data: [], id: "customer_id" },
+        { label: "销售", model: "", placeholder: "", type: "select", data: [], id: "saler_id" },
+        { label: "负责人", model: "", placeholder: "", type: "select", data: [], id: "member_id" },
+        { label: "发货时间", model: "", placeholder: "", type: "daterange", span: 8, id: "delivery_date_min" },
+        { label: "关键字", model: "", placeholder: "", id: "query_key" },
       ],
       tableData: [],
       tableHeader: [
@@ -74,7 +74,15 @@ export default {
       this.panelShow = true;
     },
     async init() {
-      let res = await this.$post("outbound_tasks/list", { page: this.currentPage });
+      let obj = {
+        ...this.$common.querySql.call(this, this.arr),
+        ...{ page: this.currentPage },
+      };
+      if (obj.delivery_date_min) {
+        obj.delivery_date_max = moment(obj.delivery_date_min[1]).format("YYYY-MM-DD");
+        obj.delivery_date_min = moment(obj.delivery_date_min[0]).format("YYYY-MM-DD");
+      }
+      let res = await this.$post("outbound_tasks/list", obj);
       this.tableData = res.data.data.items;
       this.total = res.data.data.paginate_meta.total_count;
     },
@@ -85,8 +93,22 @@ export default {
   },
   mounted() {
     this.init();
+    this.$bus.$on("user", () => {
+      this.arr[0].data = this.$vuexData.x.warehouse;
+      this.arr[1].data = this.$vuexData.x.location;
+      this.arr[2].data = this.$vuexData.x.customer;
+      [3, 4].map((r) => {
+        this.arr[r].data = this.$vuexData.x.member;
+      });
+    });
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.outdepot {
+  height: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+</style>

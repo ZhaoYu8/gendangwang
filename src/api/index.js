@@ -17,7 +17,7 @@ let _error;
 // 拦截请求
 instance.interceptors.request.use(
   (config) => {
-    let params = { current_org: vm.$route.query.current_org || "11112", current_member: vm.$route.query.current_member || "1" };
+    let params = { current_org: vm.$route.query.current_org || "423", current_member: vm.$route.query.current_member || "1092" };
     config.data = { ...params, ...config.data };
     if (loading) loading.close();
     loading = Loading.service({

@@ -113,7 +113,9 @@ export default {
       this.tableData = this.tableData.concat(val);
     },
     tableChange(val) {
-      val.sparetime = Math.ceil((Number(val.product_number) * Number(val.sparetime_percent)) / 100) || 0;
+      val.product_number = Number(val.product_number) || 0;
+      val.sparetime_percent = Number(val.sparetime_percent) || 0;
+      val.sparetime = Math.ceil((val.product_number * val.sparetime_percent) / 100) || 0;
     },
     del(val) {
       this.tableData.splice(val, 1);
@@ -135,24 +137,28 @@ export default {
       });
       // 日期单独处理一下
       outbound_task.delivery_date = moment(outbound_task.delivery_date).format("YYYY-MM-DD");
+      let arr = this.tableData.map((r) => {
+        return {
+          ...{
+            inbound_warehouse_id: null,
+            warehouse_location_id: null,
+            storage_quantity: null,
+            product_number: null,
+            sparetime: null,
+            sparetime_percent: null,
+            note: null,
+          },
+          ...r,
+        };
+      });
+      let obj = {};
+      arr.map((r, i) => {
+        obj[i] = r;
+      });
       let res = await this.$post("outbound_tasks/for_create", {
         outbound_task,
-        products: this.tableData.map((r) => {
-          return {
-            ...{
-              inbound_warehouse_id: null,
-              warehouse_location_id: null,
-              storage_quantity: null,
-              product_number: null,
-              sparetime: null,
-              sparetime_percent: null,
-              note: null,
-            },
-            ...r,
-          };
-        }),
+        products: obj,
       });
-      console.log(res);
     },
   },
   mounted() {

@@ -14,10 +14,15 @@
           <el-table :data="tableData" style="width: 100%;" border ref="firstTable" stripe>
             <el-table-column header-align="center" :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index">
               <template slot-scope="scope">
-                <el-date-picker :clearable="false" v-model="scope.row[item.id]" type="date" :placeholder="item.placeholder || '请选择'" style="width: 100%;" v-if="item.type === 'date'" @change="tableChange(scope.row, item)"></el-date-picker>
-                <el-input v-model="scope.row[item.id]" v-else-if="item.type === 'input'" @change="tableChange(scope.row, item)" v-focus />
-                <div v-else-if="item.type === 'serial'" class="t-c">{{ scope.$index + 1 }}</div>
-                <div v-else>{{ scope.row[item.id] }}</div>
+                <template v-if="item.id === 'outbound_task_serial'">
+                  <el-link v-if="item.id === 'outbound_task_serial'" type="primary">{{ scope.row[item.id] }}</el-link>
+                </template>
+                <template v-else>
+                  <el-date-picker :clearable="false" v-model="scope.row[item.id]" type="date" :placeholder="item.placeholder || '请选择'" style="width: 100%;" v-if="item.type === 'date'" @change="tableChange(scope.row, item)"></el-date-picker>
+                  <el-input v-model="scope.row[item.id]" v-else-if="item.type === 'input'" @change="tableChange(scope.row, item)" v-focus />
+                  <div v-else-if="item.type === 'serial'" class="t-c">{{ scope.$index + 1 }}</div>
+                  <div v-else>{{ scope.row[item.id] }}</div>
+                </template>
               </template>
             </el-table-column>
           </el-table>
@@ -85,6 +90,10 @@ export default {
       let res = await this.$post("outbound_tasks/list", obj);
       this.tableData = res.data.data.items;
       this.total = res.data.data.paginate_meta.total_count;
+      let now = await this.$post("outbound_tasks/for_show", {
+        id: this.tableData[0].id,
+      });
+      console.log(now);
     },
     currentChange(index) {
       this.currentPage = index;

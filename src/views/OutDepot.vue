@@ -1,38 +1,46 @@
 <template>
   <div class="outdepot">
-    <transition :name="!panelShow ? '' : 'el-zoom-in-bottom'">
-      <div v-show="panelShow" class="h-100">
-        <Panel :arr="arr">
-          <el-col :span="4" class="d-f-e">
-            <el-button type="primary" @click="init">查询</el-button>
-            <el-button type="warning" @click="panelShow = false">新增</el-button>
-          </el-col>
-        </Panel>
-
-        <!-- 表格 -->
-        <div class="p-t-10">
-          <el-table :data="tableData" style="width: 100%;" border ref="firstTable" stripe>
-            <el-table-column header-align="center" :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index">
-              <template slot-scope="scope">
-                <template v-if="item.id === 'outbound_task_serial'">
-                  <el-link v-if="item.id === 'outbound_task_serial'" type="primary">{{ scope.row[item.id] }}</el-link>
-                </template>
-                <template v-else>
-                  <el-date-picker :clearable="false" v-model="scope.row[item.id]" type="date" :placeholder="item.placeholder || '请选择'" style="width: 100%;" v-if="item.type === 'date'" @change="tableChange(scope.row, item)"></el-date-picker>
-                  <el-input v-model="scope.row[item.id]" v-else-if="item.type === 'input'" @change="tableChange(scope.row, item)" v-focus />
-                  <div v-else-if="item.type === 'serial'" class="t-c">{{ scope.$index + 1 }}</div>
-                  <div v-else>{{ scope.row[item.id] }}</div>
-                </template>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-        <el-pagination background layout="total, prev, pager, next, jumper" :total="total" :page-size="20" class="pagination m-r-10" :current-page.sync="currentPage" @current-change="currentChange"></el-pagination>
+    <transition :name="detailShow ? '' : 'el-zoom-in-bottom'">
+      <div v-show="!detailShow">
+        <transition :name="panelShow ? '' : 'el-zoom-in-bottom'">
+          <div v-show="!panelShow" class="h-100">
+            <Panel :arr="arr">
+              <el-col :span="4" class="d-f-e">
+                <el-button type="primary" @click="init">查询</el-button>
+                <el-button type="warning" @click="panelChange">新增</el-button>
+              </el-col>
+            </Panel>
+            <!-- 表格 -->
+            <div class="p-t-10">
+              <el-table :data="tableData" style="width: 100%;" border ref="firstTable" stripe>
+                <el-table-column header-align="center" :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index">
+                  <template slot-scope="scope">
+                    <template v-if="item.id === 'customer_name'">
+                      <el-link v-if="item.id === 'customer_name'" type="primary" @click="detailChange(scope.row)">{{ scope.row[item.id] }}</el-link>
+                    </template>
+                    <template v-else>
+                      <el-date-picker :clearable="false" v-model="scope.row[item.id]" type="date" :placeholder="item.placeholder || '请选择'" style="width: 100%;" v-if="item.type === 'date'" @change="tableChange(scope.row, item)"></el-date-picker>
+                      <el-input v-model="scope.row[item.id]" v-else-if="item.type === 'input'" @change="tableChange(scope.row, item)" v-focus />
+                      <div v-else-if="item.type === 'serial'" class="t-c">{{ scope.$index + 1 }}</div>
+                      <div v-else>{{ scope.row[item.id] }}</div>
+                    </template>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+            <el-pagination background layout="total, prev, pager, next, jumper" :total="total" :page-size="20" class="pagination m-r-10" :current-page.sync="currentPage" @current-change="currentChange"></el-pagination>
+          </div>
+        </transition>
+        <transition :name="!panelShow ? '' : 'el-zoom-in-top'">
+          <div v-show="panelShow" class="h-100" style=" box-sizing: border-box;overflow: hidden;">
+            <AddOutDepot @cancel="cancel" v-if="firstPanel" />
+          </div>
+        </transition>
       </div>
     </transition>
-    <transition :name="panelShow ? '' : 'el-zoom-in-top'">
-      <div v-show="!panelShow" class="h-100" style=" box-sizing: border-box;overflow: hidden;">
-        <AddOutDepot @cancel="cancel" />
+    <transition :name="!detailShow ? '' : 'el-zoom-in-top'">
+      <div v-show="detailShow">
+        <DetailOutDepot />
       </div>
     </transition>
   </div>
@@ -40,13 +48,16 @@
 
 <script>
 import AddOutDepot from "../components/OutDepot/AddOutDepot";
+import DetailOutDepot from "../components/OutDepot/DetailOutDepot";
 export default {
   name: "outDepot",
   data() {
     return {
       currentPage: 1,
       total: 1,
-      panelShow: true,
+      firstPanel: false, // 首次加载新增，这样的话，避免首次需要加载的页面太多。
+      detailShow: false,
+      panelShow: false,
       arr: [
         { label: "仓库", model: "", placeholder: "", type: "select", data: [], id: "inbound_warehouse_id" },
         { label: "仓位", model: "", placeholder: "", type: "select", data: [], id: "warehouse_location_id" },
@@ -73,10 +84,24 @@ export default {
   },
   components: {
     AddOutDepot,
+    DetailOutDepot,
   },
   methods: {
+    detailChange(val) {
+      this.detailShow = true;
+      this.$nextTick(() => {
+        this.$bus.$emit("detailShow", val);
+      });
+    },
+    panelChange() {
+      if (!this.firstPanel) this.firstPanel = true;
+      this.$nextTick(() => {
+        this.panelShow = true;
+        this.$bus.$emit("panelShow");
+      });
+    },
     cancel() {
-      this.panelShow = true;
+      this.panelShow = false;
     },
     async init() {
       let obj = {
@@ -90,10 +115,6 @@ export default {
       let res = await this.$post("outbound_tasks/list", obj);
       this.tableData = res.data.data.items;
       this.total = res.data.data.paginate_meta.total_count;
-      let now = await this.$post("outbound_tasks/for_show", {
-        id: this.tableData[0].id,
-      });
-      console.log(now);
     },
     currentChange(index) {
       this.currentPage = index;

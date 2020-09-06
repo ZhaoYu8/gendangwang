@@ -161,8 +161,11 @@ export default {
       });
     },
   },
+  beforeDestroy() {
+    this.$bus.$off("panelShow");
+  },
   mounted() {
-    this.$bus.$on("user", () => {
+    this.$bus.$on("panelShow", () => {
       let x = this.$vuexData.x;
       this.arr[0].data = x.customer;
       this.arr[0].model = x.customer[0].id;

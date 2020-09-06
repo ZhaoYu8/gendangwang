@@ -1,4 +1,7 @@
-import { Loading, Notification } from "element-ui";
+import {
+  Loading,
+  Notification
+} from "element-ui";
 let baseURL = "https://www.gendanwang.com/v1/api";
 import vm from "../main";
 if (process.env.NODE_ENV === "development") {
@@ -17,8 +20,14 @@ let _error;
 // 拦截请求
 instance.interceptors.request.use(
   (config) => {
-    let params = { current_org: vm.$route.query.current_org || "423", current_member: vm.$route.query.current_member || "1092" };
-    config.data = { ...params, ...config.data };
+    let params = {
+      current_org: vm.$route.query.current_org || "423",
+      current_member: vm.$route.query.current_member || "1092"
+    };
+    config.data = {
+      ...params,
+      ...config.data
+    };
     if (loading) loading.close();
     loading = Loading.service({
       lock: true,
@@ -35,15 +44,11 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => {
-    setTimeout(() => {
-      loading.close();
-    }, 300);
+    loading.close();
     return response;
   },
   (error) => {
-    setTimeout(() => {
-      loading.close();
-    }, 300);
+    loading.close();
     let errorMessage = "请求错误！请刷新页面再试！";
     if (error.response) {
       errorMessage = error.response.data === null ? errorMessage : error.response.data.message;

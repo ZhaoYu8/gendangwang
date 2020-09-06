@@ -46,7 +46,9 @@
         </el-table-column>
         <el-table-column label="产品单价" align="center" header-align="center" prop="price" width="100"> </el-table-column>
         <el-table-column label="备注" align="center" header-align="center">
-          <template slot-scope="scope"> <el-input v-model="scope.row['note']" placeholder=""></el-input> </template>
+          <template slot-scope="scope">
+            <el-input v-model="scope.row['note']" placeholder=""></el-input>
+          </template>
         </el-table-column>
         <el-table-column label="操作" align="center" header-align="center" width="80">
           <template slot-scope="scope">
@@ -122,7 +124,9 @@ export default {
     },
     async custChange(val) {
       if (val.id !== "customer_id") return;
-      let res = await this.$post("outbound_tasks/switch_customer", { customer_id: val.model });
+      let res = await this.$post("outbound_tasks/switch_customer", {
+        customer_id: val.model,
+      });
       let data = res.data.data;
       this.arr[3].model = data.tracking_member_id; // 跟单员
       this.arr[4].model = data.saler_member_id; // 业务员

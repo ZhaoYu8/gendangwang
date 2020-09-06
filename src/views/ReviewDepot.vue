@@ -50,7 +50,7 @@
 import AddOutDepot from "../components/OutDepot/AddOutDepot";
 import DetailOutDepot from "../components/OutDepot/DetailOutDepot";
 export default {
-  name: "outDepot",
+  name: "ReviewDepot",
   data() {
     return {
       currentPage: 1,

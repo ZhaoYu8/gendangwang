@@ -15,6 +15,7 @@ Object.assign(Vue.prototype, {
   $get: http.get,
   $bus: new Vue(),
   $common: common,
+  $print: Print
 });
 Vue.directive("focus", {
   inserted: function(el) {

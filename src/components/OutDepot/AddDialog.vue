@@ -18,7 +18,7 @@
           </el-col>
           <el-col span="15">
             <el-form-item label="" class="form-item">
-              <el-button type="primary" class="f-r m-l-10" @click="save">保存</el-button>
+              <el-button type="primary" class="f-r ml-10" @click="save">保存</el-button>
               <el-button type="warning" class="f-r" @click="query">查询</el-button>
             </el-form-item>
           </el-col>

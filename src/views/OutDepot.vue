@@ -25,7 +25,7 @@
       </el-table>
     </div>
     <el-pagination background layout="total, prev, pager, next, jumper" :total="total" :page-size="20" class="pagination mr-10" :current-page.sync="currentPage" @current-change="currentChange"></el-pagination>
-    <el-dialog title="" :visible="dialogVisible" width="85%" top="5vh" class="dialog" @close="dialogVisible = false" :close-on-click-modal="false">
+    <el-dialog title="" :visible="dialogVisible" width="95%" top="5vh" class="dialog" @close="dialogVisible = false" :close-on-click-modal="false">
       <AddOutDepot v-show="addOrDeatil" @cancel="cancel" @detail="detail"/>
       <DetailOutDepot v-show="!addOrDeatil" :detailData="detailData" @update="update" @cancel="cancel" />
     </el-dialog>

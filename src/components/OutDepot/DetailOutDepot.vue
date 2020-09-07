@@ -11,15 +11,15 @@
           <el-button slot="reference" type="primary" size="small" class="mr-10">审核出库</el-button>
         </el-popover>
 
-        <el-button type="primary" size="small" v-print="'#detailOutDepot'" @click="printReceipt" icon="el-icon-printer">打印单据</el-button>
+        <el-button type="primary" size="small" v-print="'#receipt'" @click="printReceipt" icon="el-icon-printer">打印单据</el-button>
         <el-button type="primary" size="small" icon="el-icon-printer" @click="print">打印单据(无金额)</el-button>
-        <el-button type="primary" size="small" icon="el-icon-printer" v-print="'#detailOutDepot'">打印流程单</el-button>
+        <el-button type="primary" size="small" icon="el-icon-printer" v-print="'#detailOutDepot'" @click="flowPrint">打印流程单</el-button>
         <el-button type="warning" size="small" @click="updateDetail">复制</el-button>
         <el-button type="primary" size="small" @click="updateDetail(editID)">修改</el-button>
       </el-col>
     </el-row>
-    <div class="pt-10 " id="detailOutDepot" ref="detailOutDepot">
-      <div class="f-24 t-c mb-20">发货流程单</div>
+    <div class="pt-10 " id="detailOutDepot" ref="detailOutDepot" v-show="receiptShow">
+      <div class="header">发货流程单</div>
       <ul class="d-f-s-b">
         <li>发货单号 : {{ outbound_task.outbound_task_serial }}</li>
         <li>配货员 : {{ outbound_task.delivery_member_name }}</li>
@@ -75,6 +75,68 @@
         </template>
       </table>
     </div>
+    <div id="receipt" v-show="!receiptShow">
+      <div class="header">江苏源艺包装送货单</div>
+      <ul class="d-f-s-b mb-10 mt-10">
+        <li>公司地址：江苏省常熟市尚湖镇练塘颜巷工业区</li>
+        <li>电话：18261793098</li>
+        <li>传真：52746532</li>
+      </ul>
+      <div class="mb-10 mt-10">发货日期：2020-09-07</div>
+      <div class="mb-10 mt-10">购买单位：2020-09-07</div>
+      <table border="1" cellspacing="0" class="table">
+        <tr style="height: 32px;background-color: #E9EDF5;font-weight: bold;">
+          <td style="width: 6%;">商品编号</td>
+          <td style="width: 44%;">商品全名</td>
+          <td style="width: 8%;">单位</td>
+          <td style="width: 8%;">数量</td>
+          <td style="width: 8%;">单价</td>
+          <td style="width: 8%;">金额</td>
+          <td style="width: 18%;">备注</td>
+        </tr>
+        <template v-for="(item, index) in tableData">
+          <tr :key="'nvb' + index">
+            <td>{{ index + 1 }}</td>
+            <td>{{ item.product_name }}</td>
+            <td>{{ item.product_serial }}</td>
+            <td>{{ item.product_number }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.note }}</td>
+          </tr>
+        </template>
+        <tr>
+          <td>合计</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+
+      <ul>
+        <li class="mt-10 mb-10">
+          注：1. 需方在签收货物前对货物数量、规格、包装进行核对检验，核对无异后签收，签收后视为数量、规格、包装无异议；
+        </li>
+        <li class="mb-10">
+          2. 质量异议期：如有异议，需方自签收之日起三日内向供方提出书面异议并需妥善保管货物不得使用货物；逾期未提异议或已使用货物的视为货物质量合格；
+        </li>
+        <li class="mb-10">3. 油质，染料，化学剂，高温烫气及其他造成色纱，退色或污染，均非本公司产品瑕疵，需方使用前，请自行彻底测试。</li>
+        <li class="mb-10">4. 货物交付履行地：常熟。</li>
+      </ul>
+      <el-row class="d-f-s-b mb-10 mt-10">
+        <el-col :span="8">制单人：赵宇</el-col>
+        <el-col :span="8">销售：阿吧</el-col>
+        <el-col :span="8">收货单位及经手人（签字）：</el-col>
+      </el-row>
+      <el-row class="d-f-s-b mb-10 mt-10">
+        <el-col :span="8">送货人（签字）：主仓库</el-col>
+        <el-col :span="8">负责人： 张少文</el-col>
+        <el-col :span="8"></el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -93,6 +155,7 @@ export default {
   },
   data: () => {
     return {
+      receiptShow: false, // 确定是流程图，还是单据
       visible: false,
       noShow: false,
       outbound_task: {},
@@ -138,6 +201,7 @@ export default {
     },
     printReceipt() {
       // 打印单据前
+      this.receiptShow = false;
     },
     print() {
       this.noShow = true;
@@ -145,6 +209,9 @@ export default {
       setTimeout(() => {
         this.noShow = false;
       });
+    },
+    flowPrint() {
+      this.receiptShow = true;
     },
     // 审核出库
     async audit() {
@@ -181,9 +248,50 @@ export default {
 
 <style lang="scss" scoped>
 .detail {
-  font-size: 14px;
+  font-size: 15px;
+}
+#receipt {
+  .header {
+    text-align: center;
+    font-size: 44px;
+    font-family: "楷体";
+    margin-bottom: 20px;
+  }
+  .table {
+    border: 1px solid #ddd;
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+    tr {
+      height: 48px;
+      th,
+      td {
+        padding: 8px;
+        border: 1px solid #ddd;
+        white-space: nowrap;
+      }
+    }
+    tr:first-child {
+      background-color: #e3e9f6;
+      color: #000;
+    }
+    ::v-deep th {
+      border-bottom: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+    }
+    ::v-deep td {
+      border-bottom: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+    }
+  }
 }
 #detailOutDepot {
+  .header {
+    text-align: center;
+    font-size: 44px;
+    font-family: "楷体";
+    margin-bottom: 20px;
+  }
   .table {
     margin-top: 10px;
     border: 1px solid #ddd;

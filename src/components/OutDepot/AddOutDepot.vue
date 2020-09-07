@@ -96,6 +96,9 @@ export default {
   },
   methods: {
     init() {
+      this.arr.map((r) => {
+        r.model = "";
+      });
       let x = this.$vuexData.x;
       this.arr[0].data = x.customer;
       this.arr[0].model = x.customer[0].id;

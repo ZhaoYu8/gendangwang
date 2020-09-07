@@ -17,7 +17,7 @@
       </el-row>
     </el-card>
     <!-- 第一个表格 -->
-    <div class="p-t-10">
+    <div class="pt-10 ">
       <el-table :data="tableData" style="width: 100%;" border height="500">
         <el-table-column label="操作" width="50" align="center" header-align="center">
           <div slot-scope="scope" style="display: flex; justify-content: space-around;">
@@ -111,6 +111,11 @@ export default {
     },
   },
   mounted() {
+    let x = this.$vuexData.x;
+    this.arr[1].data = x.delivery_train;
+    this.arr[2].data = x.delivery_member;
+    this.arr[3].data = x.with_member;
+    this.arr[4].data = x.allocate_member;
     this.$bus.$on("user", () => {
       let x = this.$vuexData.x;
       this.arr[1].data = x.delivery_train;

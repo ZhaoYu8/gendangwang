@@ -35,7 +35,7 @@
       </el-row>
     </el-card>
     <!-- 表格 -->
-    <div class="p-t-10">
+    <div class="pt-10 ">
       <el-table :data="tableData" style="width: 100%;" border ref="firstTable" @select="selected" @select-all="selectedAll">
         <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
         <el-table-column label="操作" width="50" align="center" header-align="center">
@@ -225,6 +225,7 @@ export default {
     },
   },
   mounted() {
+    this.arr[0].data = this.$vuexData.x.customer;
     this.$bus.$on("user", () => {
       this.arr[0].data = this.$vuexData.x.customer;
     });
@@ -233,7 +234,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.plan {
-}
-</style>
+<style lang="scss" scoped></style>

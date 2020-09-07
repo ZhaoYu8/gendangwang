@@ -30,7 +30,7 @@
       </el-row>
     </el-card>
     <!-- 第二个 表格 -->
-    <div class="p-t-10">
+    <div class="pt-10 ">
       <el-table :data="tableData" style="width: 100%;" border ref="multipleTable_b">
         <el-table-column label="操作" width="170" align="center" header-align="center">
           <div slot-scope="scope" style="display: flex; justify-content: space-around;">
@@ -87,6 +87,7 @@ export default {
   watch: {},
   computed: {},
   mounted() {
+    this.arr[0].data = this.$vuexData.x.customer;
     this.$bus.$on("user", () => {
       this.arr[0].data = this.$vuexData.x.customer;
     });

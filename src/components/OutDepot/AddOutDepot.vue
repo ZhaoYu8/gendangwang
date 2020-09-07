@@ -1,63 +1,57 @@
 <template>
   <div class="add-outdepot">
-    <div class="d-f-c-s-b f-s">
-      <span class="f-20"> 新建送货计划单</span>
-      <el-button type="text" @click="back"> {{ "&lt; 返回出库管理" }}</el-button>
-    </div>
     <Panel :arr="arr" :special="'w-20'" @change="custChange" />
     <!-- 第一个表格 -->
-    <div class="d-f-s-b p-t-10">
+    <div class="d-f-s-b pt-10 pb-10">
       <el-button type="primary" size="large" @click="changeDialog">选择出库产品</el-button>
       <div>
         <el-button size="large">取消</el-button>
         <el-button type="primary" size="large" @click="save">保存</el-button>
       </div>
     </div>
-    <div class="table">
-      <el-table :data="tableData" border ref="dialog1Table">
-        <el-table-column label="序号" align="center" prop="product_name" header-align="center" type="index"></el-table-column>
-        <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center"></el-table-column>
-        <el-table-column label="产品名称" align="center" prop="product_name" header-align="center"></el-table-column>
-        <el-table-column label="仓库选择" align="center" header-align="center">
-          <template slot-scope="scope">
-            <el-select v-model="scope.row['inbound_warehouse_id']" placeholder="">
-              <el-option v-for="item in $vuexData.x.warehouse" :key="item.id" :label="item.name" :value="item.id"> </el-option>
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column label="仓位选择" align="center" header-align="center">
-          <template slot-scope="scope">
-            <el-select v-model="scope.row['warehouse_location_id']" placeholder="">
-              <el-option v-for="item in $vuexData.x.location" :key="item.id" :label="item.name" :value="item.id"> </el-option>
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column label="当前库存" align="center" prop="storage_quantity" header-align="center" width="100"></el-table-column>
-        <el-table-column label="出库数量" align="center" header-align="center" width="100">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row['product_number']" placeholder="" @change="tableChange(scope.row)"></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column label="备次" align="center" prop="sparetime" header-align="center" width="100"> </el-table-column>
-        <el-table-column label="备次率(%)" align="center" header-align="center" width="100">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row['sparetime_percent']" placeholder="" @change="tableChange(scope.row)"></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column label="产品单价" align="center" header-align="center" prop="price" width="100"> </el-table-column>
-        <el-table-column label="备注" align="center" header-align="center">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row['note']" placeholder=""></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" align="center" header-align="center" width="80">
-          <template slot-scope="scope">
-            <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="del(scope.$index)" class="m-r-3"></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
-    <AddDialog :dialogVisibl="dialogShow" @cancel="cancel" @save="dialogSave" />
+    <el-table :data="tableData" border ref="dialog1Table" height="310">
+      <el-table-column label="序号" align="center" prop="product_name" header-align="center" type="index"></el-table-column>
+      <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center"></el-table-column>
+      <el-table-column label="产品名称" align="center" prop="product_name" header-align="center"></el-table-column>
+      <el-table-column label="仓库选择" align="center" header-align="center">
+        <template slot-scope="scope">
+          <el-select v-model="scope.row['inbound_warehouse_id']" placeholder="">
+            <el-option v-for="item in $vuexData.x.warehouse" :key="item.id" :label="item.name" :value="item.id"> </el-option>
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column label="仓位选择" align="center" header-align="center">
+        <template slot-scope="scope">
+          <el-select v-model="scope.row['warehouse_location_id']" placeholder="">
+            <el-option v-for="item in $vuexData.x.location" :key="item.id" :label="item.name" :value="item.id"> </el-option>
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column label="当前库存" align="center" prop="storage_quantity" header-align="center" width="100"></el-table-column>
+      <el-table-column label="出库数量" align="center" header-align="center" width="100">
+        <template slot-scope="scope">
+          <el-input v-model="scope.row['product_number']" placeholder="" @change="tableChange(scope.row)"></el-input>
+        </template>
+      </el-table-column>
+      <el-table-column label="备次" align="center" prop="sparetime" header-align="center" width="100"> </el-table-column>
+      <el-table-column label="备次率(%)" align="center" header-align="center" width="100">
+        <template slot-scope="scope">
+          <el-input v-model="scope.row['sparetime_percent']" placeholder="" @change="tableChange(scope.row)"></el-input>
+        </template>
+      </el-table-column>
+      <el-table-column label="产品单价" align="center" header-align="center" prop="price" width="100"> </el-table-column>
+      <el-table-column label="备注" align="center" header-align="center">
+        <template slot-scope="scope">
+          <el-input v-model="scope.row['note']" placeholder=""></el-input>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" header-align="center" width="80">
+        <template slot-scope="scope">
+          <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="del(scope.$index)" class="mr-3"></el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <AddDialog :dialogVisibl="dialogShow" @cancel="dialogShow = false" @save="dialogSave" />
   </div>
 </template>
 
@@ -73,6 +67,7 @@ export default {
     return {
       dialogShow: false,
       tableData: [],
+      editId: 0,
       arr: [
         { label: "下单客户", model: "", placeholder: "", id: "customer_id", type: "select", data: [] },
         { label: "配货员", model: "", placeholder: "", id: "delivery_member_id", type: "select", data: [] },
@@ -89,7 +84,7 @@ export default {
         { label: "联系方式", model: "", placeholder: "收货人联系方式", id: "contact_way" },
         { label: "收货地址", model: "", placeholder: "", id: "delivery_address", class: "w-40" },
         { label: "发货单位", model: "", placeholder: "", id: "delivery_company" },
-        { label: "发货人", model: "", placeholder: "", id: "signment_member_id" },
+        { label: "发货人", model: "", placeholder: "", id: "signment_member_id", type: "select", data: [] },
         { label: "联系方式", model: "", placeholder: "发货人联系方式", id: "delivery_contact_way" },
         { label: "发货地址", model: "源艺自由贸易展示区", placeholder: "", id: "delivery_from", class: "w-40" },
         { label: "备注说明", model: "", placeholder: "", id: "desc_note", class: "w-60" },
@@ -100,11 +95,18 @@ export default {
     };
   },
   methods: {
-    back() {
-      this.$emit("cancel");
-    },
-    cancel() {
-      this.dialogShow = false;
+    init() {
+      let x = this.$vuexData.x;
+      this.arr[0].data = x.customer;
+      this.arr[0].model = x.customer[0].id;
+      this.arr[6].data = x.fangdanfangshi;
+      this.arr[7].data = x.fufeifangshi;
+      this.arr[8].data = x.huoyunfangshi;
+      [1, 2, 3, 4, 15].map((r) => {
+        this.arr[r].data = x.member;
+      });
+      this.custChange({ model: x.customer[0].id, id: "customer_id" });
+      this.tableData = [];
     },
     changeDialog() {
       this.dialogShow = true;
@@ -159,51 +161,38 @@ export default {
       arr.map((r, i) => {
         obj[i] = r;
       });
-      let res = await this.$post("outbound_tasks/for_create", {
+      let params = {
         outbound_task,
         products: obj,
+      };
+      if (this.editId) params.id = this.editId;
+      let res = await this.$post(`outbound_tasks/${this.editId ? "for_update" : "for_create"}`, params);
+      this.$notify({
+        title: "提示",
+        type: "success",
+        message: `${this.editId ? "修改" : "创建"}成功！`,
       });
+      this.$emit("cancel");
     },
   },
   beforeDestroy() {
     this.$bus.$off("panelShow");
   },
   mounted() {
-    this.$bus.$on("panelShow", () => {
-      let x = this.$vuexData.x;
-      this.arr[0].data = x.customer;
-      this.arr[0].model = x.customer[0].id;
-      this.arr[6].data = x.fangdanfangshi;
-      this.arr[7].data = x.fufeifangshi;
-      this.arr[8].data = x.huoyunfangshi;
-      [1, 2, 3, 4].map((r) => {
-        this.arr[r].data = x.member;
-      });
-      this.custChange({ model: x.customer[0].id, id: "customer_id" });
+    this.init();
+    this.$bus.$on("panelShow", (res) => {
+      if (res) {
+        this.tableData = res.tableData;
+        this.arr.map((r) => {
+          r.model = res.outbound_task[r.id];
+        });
+        this.editId = res.id;
+        return;
+      }
+      this.init();
     });
   },
 };
 </script>
 
-<style lang="scss" scoped>
-.add-outdepot {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  .table {
-    flex-grow: 1;
-    height: 0;
-    padding-top: 10px;
-    ::v-deep .el-table {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      .el-table__body-wrapper {
-        flex: 1;
-        overflow-y: scroll;
-      }
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>

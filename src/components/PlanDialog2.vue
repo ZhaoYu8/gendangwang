@@ -8,7 +8,7 @@
     @close="cancel(false)"
   >
     <!-- 第一个表格 -->
-    <div class="p-t-10">
+    <div class="pt-10 ">
       <el-table
         :data="tableData"
         style="width: 100%;"

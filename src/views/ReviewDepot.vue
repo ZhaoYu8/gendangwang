@@ -1,7 +1,7 @@
 <template>
   <div class="outdepot">
     <transition :name="detailShow ? '' : 'el-zoom-in-top'">
-      <div v-show="!detailShow">
+      <div v-show="!detailShow" class="h-100">
         <transition :name="panelShow ? '' : 'el-zoom-in-bottom'">
           <div v-show="!panelShow" class="h-100">
             <Panel :arr="arr">
@@ -11,7 +11,7 @@
               </el-col>
             </Panel>
             <!-- 表格 -->
-            <div class="p-t-10">
+            <div class="pt-10 ">
               <el-table :data="tableData" style="width: 100%;" border ref="firstTable" stripe>
                 <el-table-column header-align="center" :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index">
                   <template slot-scope="scope">
@@ -28,7 +28,7 @@
                 </el-table-column>
               </el-table>
             </div>
-            <el-pagination background layout="total, prev, pager, next, jumper" :total="total" :page-size="20" class="pagination m-r-10" :current-page.sync="currentPage" @current-change="currentChange"></el-pagination>
+            <el-pagination background layout="total, prev, pager, next, jumper" :total="total" :page-size="20" class="pagination mr-10" :current-page.sync="currentPage" @current-change="currentChange"></el-pagination>
           </div>
         </transition>
         <transition :name="!panelShow ? '' : 'el-zoom-in-top'">
@@ -39,7 +39,7 @@
       </div>
     </transition>
     <transition :name="!detailShow ? '' : 'el-zoom-in-bottom'">
-      <div v-show="detailShow">
+      <div v-show="detailShow" class="h-100">
         <DetailOutDepot @cancel="cancel(true)" />
       </div>
     </transition>
@@ -127,6 +127,12 @@ export default {
   },
   mounted() {
     this.init();
+    this.arr[0].data = this.$vuexData.x.warehouse;
+    this.arr[1].data = this.$vuexData.x.location;
+    this.arr[2].data = this.$vuexData.x.customer;
+    [3, 4].map((r) => {
+      this.arr[r].data = this.$vuexData.x.member;
+    });
     this.$bus.$on("user", () => {
       this.arr[0].data = this.$vuexData.x.warehouse;
       this.arr[1].data = this.$vuexData.x.location;

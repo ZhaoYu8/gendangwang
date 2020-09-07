@@ -13,7 +13,7 @@
               <el-date-picker v-model="item.model" type="date" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'date'" style="width: 100%;"></el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="18">
+          <el-col :span="6">
             <el-form-item class="f-r">
               <el-button type="primary" @click="query">查询</el-button>
               <el-button type="warning" @click="onAdd">新增</el-button>
@@ -23,10 +23,10 @@
       </el-row>
     </el-card>
     <!-- 第一个表格 -->
-    <div class="p-t-10">
-      <el-table :data="tableData1" style="width: 100%;" border height="300" @selection-change="handleSelectionChange" ref="secondTable">
+    <div class="pt-10 ">
+      <el-table :data="tableData1" style="width: 100%;" border height="400" @selection-change="handleSelectionChange" ref="secondTable">
         <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
-        <el-table-column label="操作" width="80" align="center" header-align="center">
+        <el-table-column label="操作" width="50" align="center" header-align="center">
           <div slot-scope="scope" style="display: flex; justify-content: space-around;">
             <el-link :underline="false" type="danger" @click="del(scope)">删除</el-link>
           </div>
@@ -42,8 +42,8 @@
     </div>
 
     <!-- 第二个 表格 -->
-    <div class="p-t-10">
-      <el-table :data="tableData2" style="width: 100%;" border height="350" ref="multipleTable_b">
+    <div class="pt-10 ">
+      <el-table :data="tableData2" style="width: 100%;" height="200" border ref="multipleTable_b">
         <el-table-column label="操作" width="150" align="center" header-align="center">
           <div slot-scope="scope" style="display: flex; justify-content: space-around;">
             <el-link :underline="false" type="danger" @click="delTwo(scope)">删除</el-link>
@@ -61,7 +61,7 @@
       </el-table>
     </div>
     <!-- 第二个表格分页 -->
-    <div style="position:relative" class="m-r-10">
+    <div style="position:relative" class="mr-10">
       <el-pagination background layout="total, prev, pager, next, jumper" :total="paginate_meta2.total_count" class="pagination" :current-page.sync="currentPage2" @current-change="currentChange2"></el-pagination>
       <i class="el-icon-refresh refresh" @click="queryTwo"></i>
     </div>
@@ -91,8 +91,8 @@ export default {
         { label: "日期", model: "", placeholder: "", id: "delivery_date", type: "date", data: [] },
         { label: "班次", model: "", placeholder: "", id: "delivery_shifts", type: "select", data: [] },
         { label: "路线", model: "", placeholder: "请输入路线", id: "delivery_route", type: "select", data: [], multiple: true },
-        { label: "下单客户", model: "", placeholder: "", id: "customer_id", type: "select", data: [] },
-        { label: "产品名称", model: "", placeholder: "请输入产品名称", id: "product_name" },
+        // { label: "下单客户", model: "", placeholder: "", id: "customer_id", type: "select", data: [] },
+        // { label: "产品名称", model: "", placeholder: "请输入产品名称", id: "product_name" },
       ],
       tableData1: [],
       tableData2: [],
@@ -237,10 +237,12 @@ export default {
   },
   mounted() {
     // 取user数据
+    this.arr[1].data = this.$vuexData.x.delivery_shift;
+    this.arr[2].data = this.$vuexData.x.delivery_route;
     this.$bus.$on("user", () => {
       this.arr[1].data = this.$vuexData.x.delivery_shift;
       this.arr[2].data = this.$vuexData.x.delivery_route;
-      this.arr[3].data = this.$vuexData.x.customer;
+      // this.arr[3].data = this.$vuexData.x.customer;
     });
     this.currentPage2 = 1;
     this.query();

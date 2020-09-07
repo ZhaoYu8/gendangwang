@@ -1,30 +1,28 @@
 <template>
   <div class="detail">
-    <el-row :gutter="10" type="flex" align="middle" justify="end" class="test">
-      <el-col :span="4" :xl="8" class="d-f-c-c f-20">送货计划单</el-col>
-      <el-col :span="8" :xs="12" :sm="10" :md="10" :lg="10" :xl="8" class="d-f-e">
-        <el-button type="primary" size="small">审核出库</el-button>
+    <el-row :gutter="10" type="flex" align="middle" justify="end">
+      <el-col :span="24" class="d-f-e">
+        <el-popover placement="top" width="160" v-model="visible">
+          <p>确定审核出库吗？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="audit">确定</el-button>
+          </div>
+          <el-button slot="reference" type="primary" size="small" class="mr-10">审核出库</el-button>
+        </el-popover>
+
         <el-button type="primary" size="small" v-print="'#detailOutDepot'" icon="el-icon-printer">打印单据</el-button>
-        <el-button type="primary" size="small" icon="el-icon-printer" v-print="'#detailOutDepot'" @click="print">打印单据(无金额)</el-button>
-        <el-button type="primary" size="small" icon="el-icon-printer">打印流程单</el-button>
-        <el-button type="warning" size="small">复制</el-button>
-        <el-button
-          type="success"
-          size="small"
-          icon="el-icon-caret-left"
-          circle
-          @click="
-            () => {
-              $emit('cancel');
-            }
-          "
-        ></el-button>
+        <el-button type="primary" size="small" icon="el-icon-printer" @click="print">打印单据(无金额)</el-button>
+        <el-button type="primary" size="small" icon="el-icon-printer" v-print="'#detailOutDepot'">打印流程单</el-button>
+        <el-button type="warning" size="small" @click="updateDetail">复制</el-button>
+        <el-button type="primary" size="small" @click="updateDetail(editID)">修改</el-button>
       </el-col>
     </el-row>
-    <div class="p-t-10" id="detailOutDepot" ref="detailOutDepot">
+    <div class="pt-10 " id="detailOutDepot" ref="detailOutDepot">
+      <div class="f-24 t-c mb-20">发货流程单</div>
       <ul class="d-f-s-b">
         <li>发货单号 : {{ outbound_task.outbound_task_serial }}</li>
-        <li>配货员 : {{ outbound_task.delivery_member_Name }}</li>
+        <li>配货员 : {{ outbound_task.delivery_member_name }}</li>
         <li>检验员 : {{ outbound_task.check_member_name }}</li>
         <li>运单号码 : {{ outbound_task.delivery_serial }}</li>
         <li></li>
@@ -41,7 +39,7 @@
         </tr>
         <tr>
           <td colspan="3">
-            <div class="W-80 t-j">备注:</div>
+            <div class="W-80 t-j">备注:{{ outbound_task.desc_note }}</div>
           </td>
         </tr>
       </table>
@@ -70,9 +68,9 @@
             <td>{{ item.sparetime }}</td>
             <td>{{ item.sparetime_percent }}</td>
             <td>{{ noShow ? "" : item.price }}</td>
-            <td>{{ item.outbound_warehouse }}</td>
+            <td>{{ item.inbound_warehouse }}</td>
             <td>{{ item.warehouse_location }}</td>
-            <td>{{ item.node }}</td>
+            <td>{{ item.note }}</td>
           </tr>
         </template>
       </table>
@@ -85,11 +83,21 @@ export default {
   name: "DetailOutDepot",
   props: {},
   components: {},
+  props: {
+    detailData: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
+  },
   data: () => {
     return {
+      visible: false,
       noShow: false,
       outbound_task: {},
       tableData: [],
+      editID: 0,
       arr: [
         [
           { label: "跟单员", width: "25", id: "tracking_member_name" },
@@ -126,6 +134,7 @@ export default {
       });
       this.tableData = res.data.data.products;
       this.outbound_task = res.data.data.outbound_task;
+      this.editID = val.id;
     },
     print() {
       this.noShow = true;
@@ -134,13 +143,33 @@ export default {
         this.noShow = false;
       });
     },
+    // 审核出库
+    async audit() {
+      this.visible = false;
+      let res = await this.$post("outbound_tasks/pass_audit", {
+        id: this.editID,
+      });
+      this.$notify({
+        title: "提示",
+        type: "success",
+        message: "审核出库成功！",
+      });
+      this.$emit("cancel");
+    },
+    updateDetail(id = 0) {
+      this.$emit("update", {
+        outbound_task: this.outbound_task,
+        tableData: this.tableData,
+        id: id,
+      });
+    },
   },
   beforeDestroy() {
     this.$bus.$off("detailShow");
   },
   mounted() {
+    if (this.detailData.id) this.init(this.detailData);
     this.$bus.$on("detailShow", (res) => {
-      console.log("你进来了小伙子", res);
       this.init(res);
     });
   },

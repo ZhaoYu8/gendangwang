@@ -17,7 +17,7 @@
       </el-row>
     </el-card>
     <!-- 第一个表格 -->
-    <div class="p-t-10">
+    <div class="pt-10 ">
       <el-table :data="tableData" style="width: 100%;" border height="400" @select="selected" @select-all="selectedAll" ref="dialog1Table">
         <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
         <el-table-column label="产品名称" align="center" prop="product_name" header-align="center" :show-overflow-tooltip="true"></el-table-column>

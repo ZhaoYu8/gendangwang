@@ -12,34 +12,12 @@
       </ul>
       <table border="1" cellspacing="0" class="table">
         <tr>
-          <td style="width: 30px">行号</td>
-          <td style="width: 30px">路线</td>
-          <td style="width: 30px">班次</td>
-          <td style="width: 100px">收货单位</td>
-          <td style="width: 16%">商品全名</td>
-          <td style="width: 50px">代码</td>
-          <td style="width: 50px">跟单员</td>
-          <td style="width: 50px">数量</td>
-          <td style="width: 30px">备次</td>
-          <td style="width: 100px">订单编号</td>
-          <td style="width: 100px">库位</td>
-          <td style="width: 10%">备注</td>
+          <td :style="{ width: item.width }" v-for="item in arr" :key="item.label">{{ item.label }}</td>
         </tr>
         <template v-for="(item, index) in tableData">
           <tr v-if="index > 0 && tableData[index - 1].receiving_unit !== tableData[index].receiving_unit" :key="item.product_name + index" style="height: 10px;"></tr>
           <tr :key="item.receiving_unit + index">
-            <td>{{ index + 1 }}</td>
-            <td>{{ item.delivery_route }}</td>
-            <td>{{ item.delivery_shifts }}</td>
-            <td>{{ item.receiving_unit }}</td>
-            <td>{{ item.product_name }}</td>
-            <td>{{ item.product_price }}</td>
-            <td>{{ item.order_member }}</td>
-            <td>{{ item.delivery_number }}</td>
-            <td>{{ item.sparetime }}</td>
-            <td>{{ item.order_serial }}</td>
-            <td>{{ item.warehouse_name }}</td>
-            <td>{{ item.note }}</td>
+            <td v-for="n in arr" :key="n.id">{{ n.id !== "index" ? item[n.id] : index + 1 }}</td>
           </tr>
         </template>
       </table>
@@ -88,7 +66,20 @@ export default {
       dialogVisible: false,
       tableData: [],
       headerData: {},
-      labels: [],
+      arr: [
+        { label: "行号", width: "30px", id: "index" },
+        { label: "路线", width: "30px", id: "delivery_route" },
+        { label: "班次", width: "30px", id: "delivery_shifts" },
+        { label: "收货单位", width: "100px", id: "receiving_unit" },
+        { label: "商品全名", width: "16%", id: "product_name" },
+        { label: "代码", width: "50px", id: "product_price" },
+        { label: "跟单员", width: "50px", id: "order_member" },
+        { label: "数量", width: "50px", id: "delivery_number" },
+        { label: "备次", width: "30px", id: "sparetime" },
+        { label: "订单编号", width: "100px", id: "order_serial" },
+        { label: "库位", width: "100px", id: "warehouse_name" },
+        { label: "备注", width: "10%", id: "note" },
+      ],
     };
   },
   watch: {
@@ -101,7 +92,6 @@ export default {
       if (val) {
         this.headerData = this.detailData.data.delivery_schedule;
         this.tableData = this.detailData.data.delivery_products;
-        this.labels = this.detailData.labels;
       }
     },
     print(val) {
@@ -128,10 +118,12 @@ export default {
       let arr = [];
       data.map((r, i) => {
         arr[i] = {};
-        arr[i]["行号"] = i + 1;
-        Object.keys(r).map((n) => {
-          arr[i][this.labels[n]] = r[n];
+        this.arr.map((n) => {
+          arr[i][n.label] = n.id === "index" ? i + 1 : r[n.id];
         });
+        // Object.keys(r).map((n) => {
+        //   arr[i][this.arr[n]] = r[n];
+        // });
       });
       this.downloadExl(arr, wopts, dataTitle);
     },
@@ -174,8 +166,21 @@ export default {
         return data;
       });
       let data = this.headerData;
-      let letter = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"];
-      let header = ["日期:", data.delivery_date, "车号:", data.delivery_train, "司机:", data.delivery_member, "跟车:", data.with_member, "配货员:", data.allocate_member, "单号:", data.delivery_serial];
+      let letter = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
+      let header = [
+        "日期:",
+        data.delivery_date,
+        "车号:",
+        data.delivery_train,
+        "司机:",
+        data.delivery_member,
+        "跟车:",
+        data.with_member,
+        "配货员:",
+        data.allocate_member,
+        "单号:",
+        data.delivery_serial,
+      ];
       arr.unshift(
         header.map((r, j) => {
           return {
@@ -214,7 +219,7 @@ export default {
       //   },
       // ]; //<====合并单元格
 
-      tmpdata["!cols"] = [{ wpx: 50 }, { wpx: 100 }, { wpx: 100 }, { wpx: 200 }, { wpx: 240 }, { wpx: 50 }, { wpx: 100 }, { wpx: 100 }, { wpx: 240 }, { wpx: 100 }, { wpx: 100 }, { wpx: 200 }]; //<====设置一列宽度
+      tmpdata["!cols"] = [{ wpx: 50 }, { wpx: 80 }, { wpx: 80 }, { wpx: 130 }, { wpx: 130 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 100 }, { wpx: 100 }]; //<====设置一列宽度
 
       let tmpWB = {
         SheetNames: ["mySheet"], //保存的表标题

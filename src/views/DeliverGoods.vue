@@ -7,10 +7,26 @@
           <el-col :span="6" v-for="(item, index) in arr" :key="item.label + index">
             <el-form-item :label="item.label + '：'" class="form-item">
               <el-input v-model="item.model" :placeholder="item.placeholder || '请输入'" v-if="!item.type"></el-input>
-              <el-select v-model="item.model" filterable :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'" style="width: 100%;" :multiple="item.multiple" clearable>
+              <el-select
+                v-model="item.model"
+                filterable
+                :placeholder="item.placeholder || '请选择'"
+                v-if="item.type === 'select'"
+                style="width: 100%;"
+                :multiple="item.multiple"
+                clearable
+                @change="headerChange(item)"
+              >
                 <el-option v-for="(list, d) in item.data" :key="d" :label="list.name" :value="list.id"></el-option>
               </el-select>
-              <el-date-picker v-model="item.model" type="date" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'date'" style="width: 100%;"></el-date-picker>
+              <el-date-picker
+                v-model="item.model"
+                type="date"
+                :placeholder="item.placeholder || '请选择'"
+                v-if="item.type === 'date'"
+                style="width: 100%;"
+                @change="headerChange(item)"
+              ></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -33,7 +49,15 @@
         </el-table-column>
         <el-table-column :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index" header-align="center">
           <template slot-scope="scope">
-            <el-date-picker :clearable="false" v-model="scope.row[item.id]" type="date" :placeholder="item.placeholder || '请选择'" style="width: 100%;" v-if="item.type === 'date'" @change="tableChange(scope.row, item)"></el-date-picker>
+            <el-date-picker
+              :clearable="false"
+              v-model="scope.row[item.id]"
+              type="date"
+              :placeholder="item.placeholder || '请选择'"
+              style="width: 100%;"
+              v-if="item.type === 'date'"
+              @change="tableChange(scope.row, item)"
+            ></el-date-picker>
             <el-input v-model="scope.row[item.id]" v-else-if="item.type === 'input'" @change="tableChange(scope.row, item)" v-focus />
             <div v-else>{{ scope.row[item.id] }}</div>
           </template>
@@ -44,9 +68,10 @@
     <!-- 第二个 表格 -->
     <div class="pt-10 ">
       <el-table :data="tableData2" style="width: 100%;" height="200" border ref="multipleTable_b">
-        <el-table-column label="操作" width="150" align="center" header-align="center">
+        <el-table-column label="操作" width="200" align="center" header-align="center">
           <div slot-scope="scope" style="display: flex; justify-content: space-around;">
             <el-link :underline="false" type="danger" @click="delTwo(scope)">删除</el-link>
+            <el-link :underline="false" type="primary" @click="edit(scope)">修改</el-link>
             <el-link :underline="false" type="primary" @click="go(scope)">详情</el-link>
             <el-link :underline="false" type="primary" @click="print(scope)">打印</el-link>
           </div>
@@ -62,10 +87,17 @@
     </div>
     <!-- 第二个表格分页 -->
     <div style="position:relative" class="mr-10">
-      <el-pagination background layout="total, prev, pager, next, jumper" :total="paginate_meta2.total_count" class="pagination" :current-page.sync="currentPage2" @current-change="currentChange2"></el-pagination>
+      <el-pagination
+        background
+        layout="total, prev, pager, next, jumper"
+        :total="paginate_meta2.total_count"
+        class="pagination"
+        :current-page.sync="currentPage2"
+        @current-change="currentChange2"
+      ></el-pagination>
       <i class="el-icon-refresh refresh" @click="queryTwo"></i>
     </div>
-    <Dialog :centerDialogVisible="centerDialogVisible" :checkArrOk="checkArrOk" @cancel="cancel" />
+    <Dialog :centerDialogVisible="centerDialogVisible" :checkArrOk="checkArrOk" @cancel="cancel" :editData="editData" />
     <Detail ref="printMe" :print="isPrint" :centerDialogVisible="centerDialogVisible1" @cancel="cancel" :detailData="detailData" />
   </div>
 </template>
@@ -83,6 +115,7 @@ export default {
   },
   data: () => {
     return {
+      editData: {},
       detailData: {},
       centerDialogVisible: false, // 第一个dialog
       centerDialogVisible1: false,
@@ -110,8 +143,24 @@ export default {
     },
   },
   methods: {
+    // 查询条件change事件
+    headerChange(val) {
+      let n = ["delivery_date", "delivery_shifts"].includes(val.id);
+      console.log(val);
+    },
+    // 选中数据
     handleSelectionChange(val) {
       this.checkArr = val;
+    },
+    // 点击修改触发
+    async edit(val) {
+      this.$post("/delivery_plans/detail", {
+        delivery_good_id: val.row.delivery_good_id,
+      }).then((res) => {
+        this.checkArrOk = res.data.data.delivery_products;
+        this.editData = { id: val.row.delivery_good_id, data: res.data.data.delivery_schedule, tableData: this.tableData1 };
+        this.centerDialogVisible = true;
+      });
     },
     async del(val) {
       let obj = await this.$common.del.call(this, val);

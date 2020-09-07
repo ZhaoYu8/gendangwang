@@ -1,5 +1,5 @@
 <template>
-  <el-tabs v-model="activeName" class="p-t-5" type="border-card" @tab-click="chenge">
+  <el-tabs v-model="activeName" type="border-card" @tab-click="chenge">
     <el-tab-pane :label="item.label" :name="item.key" v-for="(item, index) in tabs" :key="item.key + index"></el-tab-pane>
   </el-tabs>
 </template>

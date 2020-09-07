@@ -45,7 +45,15 @@
         </el-table-column>
         <el-table-column header-align="center" :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index">
           <template slot-scope="scope">
-            <el-date-picker :clearable="false" v-model="scope.row[item.id]" type="date" :placeholder="item.placeholder || '请选择'" style="width: 100%;" v-if="item.type === 'date'" @change="tableChange(scope.row, item)"></el-date-picker>
+            <el-date-picker
+              :clearable="false"
+              v-model="scope.row[item.id]"
+              type="date"
+              :placeholder="item.placeholder || '请选择'"
+              style="width: 100%;"
+              v-if="item.type === 'date'"
+              @change="tableChange(scope.row, item)"
+            ></el-date-picker>
             <el-input v-model="scope.row[item.id]" v-else-if="item.type === 'input'" @change="tableChange(scope.row, item)" v-focus />
             <div v-else>{{ scope.row[item.id] }}</div>
           </template>
@@ -53,7 +61,14 @@
       </el-table>
     </div>
     <!--表格分页 -->
-    <el-pagination background layout="total, prev, pager, next, jumper" :total="paginate_meta.total_count" class="pagination" :current-page.sync="currentPage" @current-change="currentChange"></el-pagination>
+    <el-pagination
+      background
+      layout="total, prev, pager, next, jumper"
+      :total="paginate_meta.total_count"
+      class="pagination"
+      :current-page.sync="currentPage"
+      @current-change="currentChange"
+    ></el-pagination>
     <Dialog1 :dialogVisibl="dialog1" @cancel="cancel" />
     <Dialog2 :dialogVisibl="dialog2" :selectArr="checkArr" @cancel="cancel" />
     <Dialog3 :dialogVisibl="dialog3" @cancel="cancel" />
@@ -133,6 +148,9 @@ export default {
         this.checkArr = [];
         this.currentPage = 1;
         this.query();
+        this.$vuexFn.getUser().then(() => {
+          this.$bus.$emit("user");
+        });
       }
       this.dialog3 = this.dialog2 = this.dialog1 = false;
     },

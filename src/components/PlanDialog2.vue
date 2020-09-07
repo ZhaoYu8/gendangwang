@@ -1,52 +1,18 @@
 <template>
-  <el-dialog
-    title="复制新建"
-    :visible.sync="dialogVisible"
-    width="96%"
-    top="5vh"
-    class="dialogthree"
-    @close="cancel(false)"
-  >
+  <el-dialog title="复制新建" :visible.sync="dialogVisible" width="96%" top="5vh" class="dialogthree" @close="cancel(false)">
     <!-- 第一个表格 -->
     <div class="pt-10 ">
-      <el-table
-        :data="tableData"
-        style="width: 100%;"
-        border
-        height="600"
-        ref="dialog2Table"
-        @select="selected"
-      >
+      <el-table :data="tableData" style="width: 100%;" border height="600" ref="dialog2Table" @select="selected">
         <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
-        <el-table-column
-          :label="item.label"
-          :width="item.width || 180"
-          v-for="(item, index) in tableHeader"
-          :key="item.label + index"
-          header-align="center"
-        >
+        <el-table-column :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index" header-align="center">
           <template slot-scope="scope">
-            <el-date-picker
-              :clearable="false"
-              v-model="scope.row[item.id]"
-              type="date"
-              :placeholder="item.placeholder || '请选择'"
-              style="width: 100%;"
-              v-if="item.type === 'date'"
-            ></el-date-picker>
+            <el-date-picker :clearable="false" v-model="scope.row[item.id]" type="date" :placeholder="item.placeholder || '请选择'" style="width: 100%;" v-if="item.type === 'date'"></el-date-picker>
             <div v-else>{{ scope.row[item.id] }}</div>
           </template>
         </el-table-column>
       </el-table>
       <!-- 第一个表格分页 -->
-      <el-pagination
-        background
-        layout="total, prev, pager, next, jumper"
-        :total="total"
-        class="pagination"
-        :current-page.sync="currentPage1"
-        @current-change="currentChange"
-      ></el-pagination>
+      <el-pagination background layout="total, prev, pager, next, jumper" :total="total" class="pagination" :current-page.sync="currentPage1" @current-change="currentChange"></el-pagination>
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button type="primary" @click="onOk" round>提交计划</el-button>
@@ -92,10 +58,7 @@ export default {
         this.currentPage1 = 1; // 重置为第一页
         this.checkArr = JSON.parse(JSON.stringify(this.selectArr));
         // 表格数据赋值，0~10
-        this.tableData = this.checkArr.slice(
-          (this.currentPage1 - 1) * 10,
-          (this.currentPage1 - 1) * 10 + 10
-        );
+        this.tableData = this.checkArr.slice((this.currentPage1 - 1) * 10, (this.currentPage1 - 1) * 10 + 10);
         // 总页数
         this.total = this.checkArr.length;
         this.$nextTick(() => {
@@ -110,10 +73,7 @@ export default {
       // 点击分页
       this.currentPage1 = val;
       let arr = this.selectArr;
-      this.tableData = arr.slice(
-        (this.currentPage1 - 1) * 10,
-        (this.currentPage1 - 1) * 10 + 10
-      );
+      this.tableData = arr.slice((this.currentPage1 - 1) * 10, (this.currentPage1 - 1) * 10 + 10);
       this.reqeat();
     },
     cancel(type = false) {
@@ -136,41 +96,30 @@ export default {
           delivery_date: this.$common.format(r.delivery_date),
         };
       });
-      this.$post("/delivery_plans/clone_plans", { clone_objects: arr }).then(
-        (res) => {
-          this.$notify({
-            title: "提示",
-            message: "新增工作计划成功!",
-            type: "success",
-          });
-          this.cancel(true);
-        }
-      );
+      this.$post("/delivery_plans/clone_plans", { clone_objects: arr }).then((res) => {
+        this.$notify({
+          title: "提示",
+          message: "新增工作计划成功!",
+          type: "success",
+        });
+        this.cancel(true);
+      });
     },
     reqeat() {
       this.$nextTick(() => {
         this.tableData.map((r) => {
-          if (
-            this.checkArr
-              .map((n) => n.delivery_product_id)
-              .includes(r.delivery_product_id)
-          ) {
+          if (this.checkArr.map((n) => n.delivery_product_id).includes(r.delivery_product_id)) {
             this.$refs.dialog2Table.toggleRowSelection(r);
           }
         });
       });
     },
     selected(val, row) {
-      if (
-        val.filter((r) => r.delivery_product_id === row.delivery_product_id)
-          .length
-      ) {
+      if (val.filter((r) => r.delivery_product_id === row.delivery_product_id).length) {
         // 证明是选中
         this.checkArr.push(row);
       } else {
-        let index = this.checkArr.findIndex(
-          (r) => r.delivery_product_id === row.delivery_product_id
-        );
+        let index = this.checkArr.findIndex((r) => r.delivery_product_id === row.delivery_product_id);
         this.checkArr.splice(index, 1);
       }
     },
@@ -178,5 +127,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

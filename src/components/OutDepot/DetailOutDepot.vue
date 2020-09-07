@@ -11,7 +11,7 @@
           <el-button slot="reference" type="primary" size="small" class="mr-10">审核出库</el-button>
         </el-popover>
 
-        <el-button type="primary" size="small" v-print="'#detailOutDepot'" icon="el-icon-printer">打印单据</el-button>
+        <el-button type="primary" size="small" v-print="'#detailOutDepot'" @click="printReceipt" icon="el-icon-printer">打印单据</el-button>
         <el-button type="primary" size="small" icon="el-icon-printer" @click="print">打印单据(无金额)</el-button>
         <el-button type="primary" size="small" icon="el-icon-printer" v-print="'#detailOutDepot'">打印流程单</el-button>
         <el-button type="warning" size="small" @click="updateDetail">复制</el-button>
@@ -135,6 +135,9 @@ export default {
       this.tableData = res.data.data.products;
       this.outbound_task = res.data.data.outbound_task;
       this.editID = val.id;
+    },
+    printReceipt() {
+      // 打印单据前
     },
     print() {
       this.noShow = true;

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增工作计划" :visible.sync="dialogVisible" width="96%" top="5vh" class="dialog" @close="cancel(false)">
+  <el-dialog :title="editData.id ? '修改工作计划' : '新增工作计划'" :visible.sync="dialogVisible" width="96%" top="5vh" class="dialog" @close="cancel(false)">
     <!-- 头部查询条件 -->
     <el-card class="mb-10">
       <el-row :gutter="20">
@@ -17,6 +17,7 @@
       </el-row>
     </el-card>
     <!-- 第一个表格 -->
+    <el-button type="primary" v-if="editData.id" class="f-r mb-10" @click="add">追加</el-button>
     <div class="pt-10 ">
       <el-table :data="tableData" style="width: 100%;" border height="500">
         <el-table-column label="操作" width="50" align="center" header-align="center">
@@ -37,26 +38,22 @@
       </el-pagination>-->
     </div>
     <span slot="footer">
-      <el-button type="primary" @click="ok">保存</el-button>
+      <el-button type="primary" @click="save">保存</el-button>
       <el-button @click="cancel(false)">取消</el-button>
     </span>
+    <AddProduct @goBack="setTableData" />
   </el-dialog>
 </template>
 
 <script>
+import AddProduct from "./DeliverGoods/AddProduct";
 export default {
-  name: "Dialog4",
+  name: "DeliverGoodsDialog4",
   props: {
     centerDialogVisible: {
       type: Boolean,
       default: () => {
         return false;
-      },
-    },
-    user: {
-      type: Object,
-      default: () => {
-        return {};
       },
     },
     checkArrOk: {
@@ -65,6 +62,15 @@ export default {
         return [];
       },
     },
+    editData: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
+  },
+  components: {
+    AddProduct,
   },
   computed: {
     tableHeader() {
@@ -92,13 +98,10 @@ export default {
     centerDialogVisible(val) {
       if (val) {
         this.dialogVisible = true;
+        this.arr.map((r) => {
+          r.model = this.editData.data[r.id];
+        });
       }
-    },
-    user: {
-      handler(val) {
-        if (!Object.keys(val).length) return;
-      },
-      immediate: true,
     },
     checkArrOk: {
       handler(val) {
@@ -125,10 +128,21 @@ export default {
     });
   },
   methods: {
+    setTableData(data) {
+      // 追加拿到的数据
+      this.tableData.push(...data);
+    },
+    // 点击追加
+    add() {
+      this.$bus.$emit("addProduct", {
+        tableData: this.editData.tableData,
+      });
+    },
     tableChange(val, item) {
       let arr = ["delivery_number", "sparetime_percent"];
       if (arr.includes(item.id)) {
-        val.sparetime = Math.ceil((Number(val.delivery_number) * Number(val.sparetime_percent)) / 100);
+        val[item.id] = Number(val[item.id] || 0);
+        val.sparetime = Math.ceil((Number(val.delivery_number) * Number(val.sparetime_percent)) / 100) || 0;
       }
     },
     del(val) {
@@ -144,7 +158,7 @@ export default {
       this.$emit("cancel", type);
       this.dialogVisible = false;
     },
-    ok() {
+    save() {
       let obj = {};
       this.arr.map((r) => {
         if (!r.model || r.noHttp) return;
@@ -154,7 +168,7 @@ export default {
       this.$post("/delivery_plans/batch_create_schedule", obj).then((res) => {
         this.$notify({
           title: "提示",
-          message: "新增工作计划成功!",
+          message: this.editData.id ? '修改' : '新增' + "工作计划成功!",
           type: "success",
         });
         this.cancel(true);

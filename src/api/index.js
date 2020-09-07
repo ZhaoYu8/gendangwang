@@ -21,8 +21,8 @@ let _error;
 instance.interceptors.request.use(
   (config) => {
     let params = {
-      current_org: vm.$route.query.current_org || "423",
-      current_member: vm.$route.query.current_member || "1092"
+      current_org: vm.$route.query.current_org || "423", // 11112 423
+      current_member: vm.$route.query.current_member || "1092" // 1 1092
     };
     config.data = {
       ...params,

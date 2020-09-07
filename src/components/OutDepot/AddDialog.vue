@@ -48,13 +48,13 @@
         <el-table-column label="当前库存" align="center" prop="storage_quantity" header-align="center" width="100"></el-table-column>
         <el-table-column label="出库数量" align="center" header-align="center" width="100">
           <template slot-scope="scope">
-            <el-input v-model="scope.row['product_number']" placeholder="" @change="tableChange(scope.row)"></el-input>
+            <el-input v-model="scope.row['product_number']" placeholder="" @change="numberChange(scope.row)"></el-input>
           </template>
         </el-table-column>
         <el-table-column label="备次" align="center" prop="sparetime" header-align="center" width="100"> </el-table-column>
         <el-table-column label="备次率(%)" align="center" header-align="center" width="100">
           <template slot-scope="scope">
-            <el-input v-model="scope.row['sparetime_percent']" placeholder="" @change="tableChange(scope.row)"></el-input>
+            <el-input v-model="scope.row['sparetime_percent']" placeholder="" @change="percentChange(scope.row)"></el-input>
           </template>
         </el-table-column>
         <el-table-column label="产品单价" align="center" header-align="center" prop="price" width="100"> </el-table-column>
@@ -96,9 +96,12 @@ export default {
     },
   },
   methods: {
-    tableChange(val) {
-      val.product_number = Number(val.product_number) || 0;
-      val.sparetime_percent = Number(val.sparetime_percent) || 0;
+    numberChange(val) {
+      val.product_number = Number(val.product_number || 0);
+      val.sparetime = Math.ceil((val.product_number * val.sparetime_percent) / 100) || 0;
+    },
+    percentChange(val) {
+      val.sparetime_percent = Number(val.sparetime_percent || 0);
       val.sparetime = Math.ceil((val.product_number * val.sparetime_percent) / 100) || 0;
     },
     handleSelectionChange(val) {

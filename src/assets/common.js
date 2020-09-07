@@ -69,7 +69,13 @@ let obj = {
       });
       let arr = ["delivery_number", "sparetime_percent"];
       if (arr.includes(item.id)) {
+        val[item.id] = Number(val[item.id] || 0);
         val.sparetime = Math.ceil((Number(val.delivery_number) * Number(val.sparetime_percent)) / 100);
+      }
+      if (["delivery_shifts", "delivery_route"].includes(item.id)) {
+        this.$vuexFn.getUser().then(() => {
+          this.$bus.$emit("user");
+        });
       }
       return count;
     } catch (error) {}

@@ -1,7 +1,4 @@
-import {
-  Loading,
-  Notification
-} from "element-ui";
+import { Loading, Notification } from "element-ui";
 let baseURL = "https://www.gendanwang.com/v1/api";
 import vm from "../main";
 if (process.env.NODE_ENV === "development") {
@@ -20,13 +17,25 @@ let _error;
 // 拦截请求
 instance.interceptors.request.use(
   (config) => {
-    let params = {
-      current_org: vm.$route.query.current_org || "423", // 11112 423
-      current_member: vm.$route.query.current_member || "1092" // 1 1092
+    let params = {};
+    let current_org;
+    let current_member;
+    if (vm.$route.query.current_org) {
+      localStorage.setItem("current_org", vm.$route.query.current_org);
+      localStorage.setItem("current_member", vm.$route.query.current_member);
+      current_org = vm.$route.query.current_org;
+      current_member = vm.$route.query.current_member;
+    } else {
+      current_org = localStorage.getItem("current_org") || "423"; // 11112 423
+      current_member = localStorage.getItem("current_member") || "1092"; // 1 1092
+    }
+    params = {
+      current_org: current_org, // 11112 423
+      current_member: current_member, // 1 1092
     };
     config.data = {
       ...params,
-      ...config.data
+      ...config.data,
     };
     if (loading) loading.close();
     loading = Loading.service({

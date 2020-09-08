@@ -15,8 +15,7 @@
               <el-link v-if="item.id === 'outbound_task_serial'" type="primary" @click="detailChange(scope.row)">{{ scope.row[item.id] }}</el-link>
             </template>
             <template v-else>
-              <el-date-picker :clearable="false" v-model="scope.row[item.id]" type="date" :placeholder="item.placeholder || '请选择'" style="width: 100%;" v-if="item.type === 'date'" @change="tableChange(scope.row, item)"></el-date-picker>
-              <el-input v-model="scope.row[item.id]" v-else-if="item.type === 'input'" @change="tableChange(scope.row, item)" v-focus />
+              <el-input v-model="scope.row[item.id]" v-if="item.type === 'input'" v-focus />
               <div v-else-if="item.type === 'serial'" class="t-c">{{ scope.$index + 1 }}</div>
               <div v-else>{{ scope.row[item.id] }}</div>
             </template>
@@ -24,9 +23,17 @@
         </el-table-column>
       </el-table>
     </div>
-    <el-pagination background layout="total, prev, pager, next, jumper" :total="total" :page-size="20" class="pagination mr-10" :current-page.sync="currentPage" @current-change="currentChange"></el-pagination>
+    <el-pagination
+      background
+      layout="total, prev, pager, next, jumper"
+      :total="total"
+      :page-size="20"
+      class="pagination mr-10"
+      :current-page.sync="currentPage"
+      @current-change="currentChange"
+    ></el-pagination>
     <el-dialog title="" :visible="dialogVisible" width="95%" top="5vh" class="dialog" @close="dialogVisible = false" :close-on-click-modal="false">
-      <AddOutDepot v-show="addOrDeatil" @cancel="cancel" @detail="detail"/>
+      <AddOutDepot v-show="addOrDeatil" @cancel="cancel" @detail="detail" />
       <DetailOutDepot v-show="!addOrDeatil" :detailData="detailData" @update="update" @cancel="cancel" />
     </el-dialog>
   </div>

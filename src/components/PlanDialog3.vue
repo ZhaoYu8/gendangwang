@@ -65,7 +65,11 @@ export default {
         this.dialogVisible = true;
         this.arr[6].data = this.arr[2].data = this.$vuexData.x.customer;
         this.arr[2].model = this.$vuexData.x.customer[0].id;
-        this.arr[1].data = this.$vuexData.x.delivery_shift;
+        this.arr[1].data = [
+          { name: "", id: "" },
+          { name: "早班", id: "早班" },
+          { name: "中班", id: "中班" },
+        ];
       }
     },
   },

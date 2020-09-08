@@ -155,7 +155,7 @@ export default {
           delivery_shifts: this.arr[1].model,
         });
         this.arr[2].data = res.data.data.delivery_route_options;
-        this.arr[2].model = '';
+        this.arr[2].model = "";
       }
     },
     // 选中数据
@@ -299,7 +299,8 @@ export default {
     },
   },
   mounted() {
-    // 取user数据this.init();
+    // 取user数据
+    this.init();
     this.$bus.$on("user", () => {
       this.init();
       // this.arr[3].data = this.$vuexData.x.customer;

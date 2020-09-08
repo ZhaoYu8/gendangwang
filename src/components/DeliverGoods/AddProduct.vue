@@ -28,7 +28,15 @@
           <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
           <el-table-column :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index" header-align="center">
             <template slot-scope="scope">
-              <el-date-picker :clearable="false" v-model="scope.row[item.id]" type="date" :placeholder="item.placeholder || '请选择'" style="width: 100%;" v-if="item.type === 'date'" @change="tableChange(scope.row, item)"></el-date-picker>
+              <el-date-picker
+                :clearable="false"
+                v-model="scope.row[item.id]"
+                type="date"
+                :placeholder="item.placeholder || '请选择'"
+                style="width: 100%;"
+                v-if="item.type === 'date'"
+                @change="tableChange(scope.row, item)"
+              ></el-date-picker>
               <el-input v-model="scope.row[item.id]" v-else-if="item.type === 'input'" @change="tableChange(scope.row, item)" v-focus />
               <div v-else>{{ scope.row[item.id] }}</div>
             </template>
@@ -76,6 +84,9 @@ export default {
       this.checkArr = [];
     },
     tableChange(val, item) {
+      if (item.type === "date") {
+        val[item.id] = this.$common.format(val[item.id]);
+      }
       let arr = ["delivery_number", "sparetime_percent"];
       if (arr.includes(item.id)) {
         val[item.id] = Number(val[item.id] || 0);

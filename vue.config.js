@@ -26,6 +26,7 @@ module.exports = {
       axios: "axios",
       "vue-router": "VueRouter",
       "element-ui": "ELEMENT",
+      xlsx: "xlsx",
     };
   },
 };

@@ -27,7 +27,15 @@
         </el-table-column>
         <el-table-column :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index" header-align="center">
           <template slot-scope="scope">
-            <el-date-picker :clearable="false" v-model="scope.row[item.id]" type="date" :placeholder="item.placeholder || '请选择'" style="width: 100%;" v-if="item.type === 'date'"></el-date-picker>
+            <el-date-picker
+              :clearable="false"
+              v-model="scope.row[item.id]"
+              type="date"
+              @change="tableChange(scope.row, item)"
+              :placeholder="item.placeholder || '请选择'"
+              style="width: 100%;"
+              v-if="item.type === 'date'"
+            ></el-date-picker>
             <el-input v-model="scope.row[item.id]" v-else-if="item.type === 'input'" @change="tableChange(scope.row, item)" />
             <div v-else>{{ scope.row[item.id] }}</div>
           </template>
@@ -98,8 +106,17 @@ export default {
     centerDialogVisible(val) {
       if (val) {
         this.dialogVisible = true;
-        this.arr.map((r) => {
+        this.arr.map((r, i) => {
           r.model = this.editData.data[r.id];
+          if (i === 2) {
+            r.model = this.editData.data.delivery_member;
+          }
+          if (i === 3) {
+            r.model = this.editData.data.with_member;
+          }
+          if (i === 4) {
+            r.model = this.editData.data.allocate_member;
+          }
         });
       }
     },
@@ -139,6 +156,10 @@ export default {
       });
     },
     tableChange(val, item) {
+      if (item.type === "date") {
+        // 日期
+        val[item.id] = this.$common.format(val[item.id]);
+      }
       let arr = ["delivery_number", "sparetime_percent"];
       if (arr.includes(item.id)) {
         val[item.id] = Number(val[item.id] || 0);
@@ -164,11 +185,12 @@ export default {
         if (!r.model || r.noHttp) return;
         obj[r.id] = r.model;
       });
+      obj.delivery_good_id = this.editData.id;
       obj.delivery_products = this.tableData;
-      this.$post("/delivery_plans/batch_create_schedule", obj).then((res) => {
+      this.$post(`/delivery_plans/${this.editData.id ? "for_update" : "batch_create_schedule"}`, obj).then((res) => {
         this.$notify({
           title: "提示",
-          message: this.editData.id ? '修改' : '新增' + "工作计划成功!",
+          message: this.editData.id ? "修改工作计划成功!" : "新增工作计划成功!",
           type: "success",
         });
         this.cancel(true);

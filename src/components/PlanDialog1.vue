@@ -54,7 +54,7 @@ export default {
       total: 1,
       tableData: [],
       arr: [
-        { label: "日期", model: new Date(), placeholder: "", id: "delivery_date", type: "date", data: [] },
+        { label: "日期", model: moment().format("YYYY-MM-DD"), placeholder: "", id: "delivery_date", type: "date", data: [] },
         { label: "班次", model: "", placeholder: "", id: "delivery_shifts", type: "select", data: [] },
         { label: "下单客户", model: "", placeholder: "", id: "customer_id", type: "select", data: [] },
         { label: "收货单位", model: "", placeholder: "", id: "receiving_unit" },

@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import XLSX from "xlsx-style";
 export default {
   name: "Dialog5",
   props: {

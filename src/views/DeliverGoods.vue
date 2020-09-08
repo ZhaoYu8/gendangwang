@@ -144,9 +144,19 @@ export default {
   },
   methods: {
     // 查询条件change事件
-    headerChange(val) {
-      let n = ["delivery_date", "delivery_shifts"].includes(val.id);
-      console.log(val);
+    async headerChange(val) {
+      if (val.id === "delivery_route") return;
+      if (this.arr[0].model) {
+        this.arr[0].model = this.$common.format(this.arr[0].model);
+      }
+      if (this.arr[0].model && this.arr[1].model) {
+        let res = await this.$post("/delivery_plans/get_routes", {
+          delivery_date: this.arr[0].model,
+          delivery_shifts: this.arr[1].model,
+        });
+        this.arr[2].data = res.data.data.delivery_route_options;
+        this.arr[2].model = '';
+      }
     },
     // 选中数据
     handleSelectionChange(val) {
@@ -279,18 +289,19 @@ export default {
     Update() {
       // 取user数据
       this.$vuexFn.getUser().then(() => {
-        this.arr[1].data = obj.delivery_shift;
-        this.arr[2].data = obj.delivery_route;
+        this.init();
       });
+      this.headerChange(this.arr[0]);
+    },
+    init() {
+      this.arr[1].data = this.$vuexData.x.delivery_shift;
+      this.arr[2].data = this.$vuexData.x.delivery_route;
     },
   },
   mounted() {
-    // 取user数据
-    this.arr[1].data = this.$vuexData.x.delivery_shift;
-    this.arr[2].data = this.$vuexData.x.delivery_route;
+    // 取user数据this.init();
     this.$bus.$on("user", () => {
-      this.arr[1].data = this.$vuexData.x.delivery_shift;
-      this.arr[2].data = this.$vuexData.x.delivery_route;
+      this.init();
       // this.arr[3].data = this.$vuexData.x.customer;
     });
     this.currentPage2 = 1;

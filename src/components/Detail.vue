@@ -317,7 +317,7 @@ export default {
   @media print {
     .table {
       tr:first-child {
-        background-color: #5491ff !important;
+        background: #5491ff !important;
         -webkit-print-color-adjust: exact;
       }
     }
@@ -354,7 +354,11 @@ export default {
       td {
         padding: 8px;
         border: 1px solid #ddd;
-        white-space: nowrap;
+      }
+      &:first-child {
+        td {
+          white-space: nowrap;
+        }
       }
     }
     tr:first-child {

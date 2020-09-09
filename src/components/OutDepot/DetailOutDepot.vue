@@ -72,7 +72,7 @@
 
       <table border="1" cellspacing="0" class="table">
         <tr v-for="item in arr.length" :key="`s` + item">
-          <td class="dsadsadsadasd" v-for="n in arr[item - 1]" :key="n.label + item">
+          <td v-for="n in arr[item - 1]" :key="n.label + item">
             <div class="d-f-c">
               <div class="W-80 t-j">{{ n.label }}</div>
               <div class="ml-10">{{ ": " + (outbound_task[n.id] || "") }}</div>
@@ -87,32 +87,26 @@
       </table>
 
       <table border="1" cellspacing="0" class="table" :style="{fontSize: fontSizes + 'px'}">
-        <tr style="background-color: #E9EDF5;font-weight: bold;">
-          <td style="width: 30px;">序号</td>
+        <tr style="font-weight: bold;">
+          <td style="width: 30px;">编号</td>
+          <td>商品全名</td>
+          <td>代码</td>
+          <td>跟单员</td>
+          <td>数量</td>
+          <td>备次</td>
           <td>订单编号</td>
-          <td>产品名称</td>
-          <td>产品编号</td>
-          <td width="80px">出库数量</td>
-          <td width="80px">备次</td>
-          <td width="80px">备次率</td>
-          <td width="80px">产品单价</td>
-          <td>仓库选择</td>
-          <td>仓位选择</td>
-          <td style="width: 15%">备注</td>
+          <td>备注</td>
         </tr>
         <template v-for="(item, index) in tableData">
           <tr :key="'nvb' + index">
             <td class="t-c">{{ index + 1 }}</td>
-            <td>{{ item.order_serial }}</td>
             <td>{{ item.product_name }}</td>
-            <td>{{ item.product_serial }}</td>
+            <td>{{ item.product_number }}</td>
+            <td>{{ item.product_number }}</td>
             <td>{{ item.product_number }}</td>
             <td>{{ item.sparetime }}</td>
-            <td>{{ item.sparetime_percent }}</td>
-            <td>{{ noShow ? "" : item.price }}</td>
-            <td>{{ item.inbound_warehouse }}</td>
-            <td>{{ item.warehouse_location }}</td>
-            <td>{{ item.note }}</td>
+            <td>{{ item.order_serial }}</td>
+            <td style="width: 100px;">{{ item.note }}</td>
           </tr>
         </template>
       </table>
@@ -128,14 +122,14 @@
         <div class="mb-5 mt-5">发货日期：2020-09-07</div>
         <div class="mb-5 mt-5">购买单位：2020-09-07</div>
         <table border="1" cellspacing="0" class="table" :style="{fontSize: fontSize + 'px'}">
-          <tr :style="{backgroundColor: '#E9EDF5',fontWeight: 'bold'} ">
-            <td style="width: 6%;">商品编号</td>
-            <td style="width: 44%;">商品全名</td>
-            <td style="width: 8%;">单位</td>
-            <td style="width: 8%;">数量</td>
-            <td style="width: 8%;">单价</td>
-            <td style="width: 8%;">金额</td>
-            <td style="width: 18%;">备注</td>
+          <tr :style="{fontWeight: 'bold'} ">
+            <td>商品编号</td>
+            <td style="width: 34%;">商品全名</td>
+            <td>单位</td>
+            <td>数量</td>
+            <td>单价</td>
+            <td>金额</td>
+            <td style="width: 20%;">备注</td>
           </tr>
           <template v-for="(item, index) in tableData.slice((ge-1) * 8, (ge) * 8)">
             <tr :key="'nvb' + index">
@@ -144,7 +138,7 @@
               <td>{{ item.product_serial }}</td>
               <td>{{ item.product_number }}</td>
               <td>{{ item.price }}</td>
-              <td>{{ item.price }}</td>
+              <td>{{ item.product_number * item.price }}</td>
               <td>{{ item.note }}</td>
             </tr>
           </template>
@@ -196,7 +190,7 @@ export default {
   data: () => {
     return {
       fontSize: 14,
-      fontSizes: 18,
+      fontSizes: 20,
       receiptShow: false, // 确定是流程图，还是单据
       visible: false,
       noShow: false,
@@ -292,16 +286,8 @@ export default {
 .detail {
   color: #000;
 }
-@media print {
-  // .header {
-  //   background-color: #ddd !important;
-  //   -webkit-print-color-adjust: exact;
-  // }
-}
+// 打印单据
 #receipt {
-  @page {
-    margin: 0;
-  }
   font-size: 12px;
   .box {
     .header {
@@ -322,7 +308,6 @@ export default {
       border: 1px solid #000;
       width: 100%;
       border-collapse: collapse;
-      white-space: nowrap;
       tr {
         height: 24px;
         line-height: 24px;
@@ -330,12 +315,14 @@ export default {
         td {
           padding: 0 8px;
           border: 1px solid #000;
-          white-space: nowrap;
         }
       }
       tr:first-child {
         background-color: #e3e9f6;
         color: #000;
+        td {
+          white-space: nowrap;
+        }
       }
       ::v-deep th {
         border-bottom: 1px solid #000;
@@ -358,6 +345,16 @@ export default {
   }
 }
 #detailOutDepot {
+  font-size: 16px;
+  @media print {
+    .table {
+      tr:first-child {
+        background: #909399 !important;
+        color: #fff;
+        -webkit-print-color-adjust: exact;
+      }
+    }
+  }
   .header {
     color: #000;
     text-align: center;
@@ -368,30 +365,31 @@ export default {
   }
   .table {
     margin-top: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #000;
     width: 100%;
     border-collapse: collapse;
-    white-space: nowrap;
     tr {
       height: 34px;
       th,
       td {
-        padding: 4px 8px;
-        border: 1px solid #ddd;
-        white-space: nowrap;
+        padding: 4px;
+        border: 1px solid #000;
       }
     }
     tr:first-child {
-      background-color: #e3e9f6;
-      color: #000;
+      background-color: #909399;
+      color: #fff;
+      td {
+        white-space: nowrap;
+      }
     }
     ::v-deep th {
-      border-bottom: 1px solid #ddd;
-      border-right: 1px solid #ddd;
+      border-bottom: 1px solid #000;
+      border-right: 1px solid #000;
     }
     ::v-deep td {
-      border-bottom: 1px solid #ddd;
-      border-right: 1px solid #ddd;
+      border-bottom: 1px solid #000;
+      border-right: 1px solid #000;
     }
   }
 }

@@ -1,5 +1,12 @@
 <template>
-  <el-dialog title :visible.sync="dialogVisible" width="96%" top="10vh" class="dialog" @close="cancel(false)">
+  <el-dialog
+    title
+    :visible.sync="dialogVisible"
+    width="96%"
+    top="10vh"
+    class="dialog"
+    @close="cancel(false)"
+  >
     <!-- 头部查询条件 -->
     <div id="printMe" ref="printMe" :style="{ fontSize: fontSize + 'px' }">
       <ul class="top">
@@ -11,11 +18,15 @@
         <li>单号 : {{ headerData.delivery_serial }}</li>
       </ul>
       <table border="1" cellspacing="0" class="table">
-        <tr>
+        <tr style="background-color: #5491ff ">
           <td :style="{ width: item.width }" v-for="item in arr" :key="item.label">{{ item.label }}</td>
         </tr>
         <template v-for="(item, index) in tableData">
-          <tr v-if="index > 0 && tableData[index - 1].receiving_unit !== tableData[index].receiving_unit" :key="item.product_name + index" style="height: 10px;"></tr>
+          <tr
+            v-if="index > 0 && tableData[index - 1].receiving_unit !== tableData[index].receiving_unit"
+            :key="item.product_name + index"
+            style="height: 10px;"
+          ></tr>
           <tr :key="item.receiving_unit + index">
             <td v-for="n in arr" :key="n.id">{{ n.id !== "index" ? item[n.id] : index + 1 }}</td>
           </tr>
@@ -137,7 +148,7 @@ export default {
         tmpa.href = URL.createObjectURL(obj);
       }
       tmpa.click();
-      setTimeout(function() {
+      setTimeout(function () {
         URL.revokeObjectURL(obj);
       }, 100);
     },
@@ -158,7 +169,9 @@ export default {
             {},
             {
               v: v[k],
-              position: (j > 25 ? this.getCharCol(j) : String.fromCharCode(65 + j)) + (i + 2),
+              position:
+                (j > 25 ? this.getCharCol(j) : String.fromCharCode(65 + j)) +
+                (i + 2),
             }
           );
         });
@@ -218,7 +231,18 @@ export default {
       //   },
       // ]; //<====合并单元格
 
-      tmpdata["!cols"] = [{ wpx: 50 }, { wpx: 80 }, { wpx: 80 }, { wpx: 130 }, { wpx: 130 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 100 }, { wpx: 100 }]; //<====设置一列宽度
+      tmpdata["!cols"] = [
+        { wpx: 50 },
+        { wpx: 80 },
+        { wpx: 80 },
+        { wpx: 130 },
+        { wpx: 130 },
+        { wpx: 80 },
+        { wpx: 80 },
+        { wpx: 80 },
+        { wpx: 100 },
+        { wpx: 100 },
+      ]; //<====设置一列宽度
 
       let tmpWB = {
         SheetNames: ["mySheet"], //保存的表标题
@@ -249,7 +273,12 @@ export default {
           type: "",
         }
       );
-      this.saveAs(tmpDown, `${new Date()}` + "." + (type.bookType == "biff2" ? "xls" : type.bookType));
+      this.saveAs(
+        tmpDown,
+        `${new Date()}` +
+          "." +
+          (type.bookType == "biff2" ? "xls" : type.bookType)
+      );
     },
     // 获取26个英文字母用来表示excel的列
     getCharCol(n) {
@@ -285,6 +314,14 @@ export default {
 
 <style lang="scss" scoped>
 #printMe {
+  @media print {
+    .table {
+      tr:first-child {
+        background-color: #5491ff !important;
+        -webkit-print-color-adjust: exact;
+      }
+    }
+  }
   color: #000;
   .border {
     .el-row {

@@ -1,7 +1,37 @@
 <template>
   <div class="detail">
     <el-row :gutter="10" type="flex" align="middle" justify="end">
-      <el-col :span="24" class="d-f-e">
+      <el-col :span="24" class="d-f-e d-f-c">
+        <template v-if="!receiptShow">
+          <span class="mr-10">{{fontSize}}</span>
+          <el-link
+            :underline="false"
+            type="primary"
+            style="margin-right: 20px"
+            @click="fontSize--"
+          >A-</el-link>
+          <el-link
+            :underline="false"
+            type="primary"
+            style="margin-right: 20px"
+            @click="fontSize++"
+          >A+</el-link>
+        </template>
+        <template v-else>
+          <span class="mr-10">{{fontSizes}}</span>
+          <el-link
+            :underline="false"
+            type="primary"
+            style="margin-right: 20px"
+            @click="fontSizes--"
+          >A-</el-link>
+          <el-link
+            :underline="false"
+            type="primary"
+            style="margin-right: 20px"
+            @click="fontSizes++"
+          >A+</el-link>
+        </template>
         <el-popover placement="top" width="160" v-model="visible">
           <p>确定审核出库吗？</p>
           <div style="text-align: right; margin: 0">
@@ -11,14 +41,26 @@
           <el-button slot="reference" type="primary" size="small" class="mr-10">审核出库</el-button>
         </el-popover>
 
-        <el-button type="primary" size="small" v-print="'#receipt'" @click="printReceipt" icon="el-icon-printer">打印单据</el-button>
+        <el-button
+          type="primary"
+          size="small"
+          v-print="'#receipt'"
+          @click="printReceipt"
+          icon="el-icon-printer"
+        >打印单据</el-button>
         <el-button type="primary" size="small" icon="el-icon-printer" @click="print">打印单据(无金额)</el-button>
-        <el-button type="primary" size="small" icon="el-icon-printer" v-print="'#detailOutDepot'" @click="flowPrint">打印流程单</el-button>
+        <el-button
+          type="primary"
+          size="small"
+          icon="el-icon-printer"
+          v-print="'#detailOutDepot'"
+          @click="flowPrint"
+        >打印流程单</el-button>
         <el-button type="warning" size="small" @click="updateDetail">复制</el-button>
         <el-button type="primary" size="small" @click="updateDetail(editID)">修改</el-button>
       </el-col>
     </el-row>
-    <div class="pt-10 " id="detailOutDepot" ref="detailOutDepot" v-show="receiptShow">
+    <div class="pt-10" id="detailOutDepot" ref="detailOutDepot" v-show="receiptShow">
       <div class="header">发货流程单</div>
       <ul class="d-f-s-b">
         <li>发货单号 : {{ outbound_task.outbound_task_serial }}</li>
@@ -44,8 +86,8 @@
         </tr>
       </table>
 
-      <table border="1" cellspacing="0" class="table">
-        <tr style="height: 32px;background-color: #E9EDF5;font-weight: bold;">
+      <table border="1" cellspacing="0" class="table" :style="{fontSize: fontSizes + 'px'}">
+        <tr style="background-color: #E9EDF5;font-weight: bold;">
           <td style="width: 30px;">序号</td>
           <td>订单编号</td>
           <td>产品名称</td>
@@ -76,66 +118,64 @@
       </table>
     </div>
     <div id="receipt" v-show="!receiptShow">
-      <div class="header">江苏源艺包装送货单</div>
-      <ul class="d-f-s-b mb-10 mt-10">
-        <li>公司地址：江苏省常熟市尚湖镇练塘颜巷工业区</li>
-        <li>电话：18261793098</li>
-        <li>传真：52746532</li>
-      </ul>
-      <div class="mb-10 mt-10">发货日期：2020-09-07</div>
-      <div class="mb-10 mt-10">购买单位：2020-09-07</div>
-      <table border="1" cellspacing="0" class="table">
-        <tr style="height: 32px;background-color: #E9EDF5;font-weight: bold;">
-          <td style="width: 6%;">商品编号</td>
-          <td style="width: 44%;">商品全名</td>
-          <td style="width: 8%;">单位</td>
-          <td style="width: 8%;">数量</td>
-          <td style="width: 8%;">单价</td>
-          <td style="width: 8%;">金额</td>
-          <td style="width: 18%;">备注</td>
-        </tr>
-        <template v-for="(item, index) in tableData">
-          <tr :key="'nvb' + index">
-            <td>{{ index + 1 }}</td>
-            <td>{{ item.product_name }}</td>
-            <td>{{ item.product_serial }}</td>
-            <td>{{ item.product_number }}</td>
-            <td>{{ item.price }}</td>
-            <td>{{ item.price }}</td>
-            <td>{{ item.note }}</td>
+      <div v-for="(ge) in Math.ceil(tableData.length/8)" :key="'ss' + ge" class="box">
+        <div class="header">江苏源艺包装送货单</div>
+        <ul class="d-f-s-b mb-5 mt-5">
+          <li>公司地址：江苏省常熟市尚湖镇练塘颜巷工业区</li>
+          <li>电话：18261793098</li>
+          <li>传真：52746532</li>
+        </ul>
+        <div class="mb-5 mt-5">发货日期：2020-09-07</div>
+        <div class="mb-5 mt-5">购买单位：2020-09-07</div>
+        <table border="1" cellspacing="0" class="table" :style="{fontSize: fontSize + 'px'}">
+          <tr :style="{backgroundColor: '#E9EDF5',fontWeight: 'bold'} ">
+            <td style="width: 6%;">商品编号</td>
+            <td style="width: 44%;">商品全名</td>
+            <td style="width: 8%;">单位</td>
+            <td style="width: 8%;">数量</td>
+            <td style="width: 8%;">单价</td>
+            <td style="width: 8%;">金额</td>
+            <td style="width: 18%;">备注</td>
           </tr>
-        </template>
-        <tr>
-          <td>合计</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-      </table>
+          <template v-for="(item, index) in tableData.slice((ge-1) * 8, (ge) * 8)">
+            <tr :key="'nvb' + index">
+              <td>{{ (ge-1) * 8 + index + 1 }}</td>
+              <td>{{ item.product_name }}</td>
+              <td>{{ item.product_serial }}</td>
+              <td>{{ item.product_number }}</td>
+              <td>{{ item.price }}</td>
+              <td>{{ item.price }}</td>
+              <td>{{ item.note }}</td>
+            </tr>
+          </template>
+          <tr>
+            <td>合计</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
 
-      <ul>
-        <li class="mt-10 mb-10">
-          注：1. 需方在签收货物前对货物数量、规格、包装进行核对检验，核对无异后签收，签收后视为数量、规格、包装无异议；
-        </li>
-        <li class="mb-10">
-          2. 质量异议期：如有异议，需方自签收之日起三日内向供方提出书面异议并需妥善保管货物不得使用货物；逾期未提异议或已使用货物的视为货物质量合格；
-        </li>
-        <li class="mb-10">3. 油质，染料，化学剂，高温烫气及其他造成色纱，退色或污染，均非本公司产品瑕疵，需方使用前，请自行彻底测试。</li>
-        <li class="mb-10">4. 货物交付履行地：常熟。</li>
-      </ul>
-      <el-row class="d-f-s-b mb-10 mt-10">
-        <el-col :span="8">制单人：赵宇</el-col>
-        <el-col :span="8">销售：阿吧</el-col>
-        <el-col :span="8">收货单位及经手人（签字）：</el-col>
-      </el-row>
-      <el-row class="d-f-s-b mb-10 mt-10">
-        <el-col :span="8">送货人（签字）：主仓库</el-col>
-        <el-col :span="8">负责人： 张少文</el-col>
-        <el-col :span="8"></el-col>
-      </el-row>
+        <ul class="note">
+          <li>注：1. 需方在签收货物前对货物数量、规格、包装进行核对检验，核对无异后签收，签收后视为数量、规格、包装无异议；</li>
+          <li>2. 质量异议期：如有异议，需方自签收之日起三日内向供方提出书面异议并需妥善保管货物不得使用货物；逾期未提异议或已使用货物的视为货物质量合格；</li>
+          <li>3. 油质，染料，化学剂，高温烫气及其他造成色纱，退色或污染，均非本公司产品瑕疵，需方使用前，请自行彻底测试。</li>
+          <li>4. 货物交付履行地：常熟。</li>
+        </ul>
+        <el-row class="d-f-s-b mb-5 mt-5">
+          <el-col :span="8">制单人：赵宇</el-col>
+          <el-col :span="8">销售：阿吧</el-col>
+          <el-col :span="8">收货单位及经手人（签字）：</el-col>
+        </el-row>
+        <el-row class="d-f-s-b mb-5 mt-5">
+          <el-col :span="8">送货人（签字）：主仓库</el-col>
+          <el-col :span="8">负责人： 张少文</el-col>
+          <el-col :span="8"></el-col>
+        </el-row>
+      </div>
     </div>
   </div>
 </template>
@@ -155,6 +195,8 @@ export default {
   },
   data: () => {
     return {
+      fontSize: 14,
+      fontSizes: 18,
       receiptShow: false, // 确定是流程图，还是单据
       visible: false,
       noShow: false,
@@ -248,49 +290,81 @@ export default {
 
 <style lang="scss" scoped>
 .detail {
-  font-size: 15px;
+  color: #000;
+}
+@media print {
+  // .header {
+  //   background-color: #ddd !important;
+  //   -webkit-print-color-adjust: exact;
+  // }
 }
 #receipt {
-  .header {
-    text-align: center;
-    font-size: 44px;
-    font-family: "楷体";
-    margin-bottom: 20px;
+  @page {
+    margin: 0;
   }
-  .table {
-    border: 1px solid #ddd;
-    width: 100%;
-    border-collapse: collapse;
-    white-space: nowrap;
-    tr {
-      height: 48px;
-      th,
-      td {
-        padding: 8px;
-        border: 1px solid #ddd;
-        white-space: nowrap;
+  font-size: 12px;
+  .box {
+    .header {
+      color: #000;
+      text-align: center;
+      font-size: 26px;
+      line-height: 26px;
+      font-family: "楷体";
+      margin-bottom: 5px;
+      margin-top: 35px;
+    }
+    &:first-child {
+      .header {
+        margin-top: 0;
       }
     }
-    tr:first-child {
-      background-color: #e3e9f6;
-      color: #000;
+    .table {
+      border: 1px solid #000;
+      width: 100%;
+      border-collapse: collapse;
+      white-space: nowrap;
+      tr {
+        height: 24px;
+        line-height: 24px;
+        th,
+        td {
+          padding: 0 8px;
+          border: 1px solid #000;
+          white-space: nowrap;
+        }
+      }
+      tr:first-child {
+        background-color: #e3e9f6;
+        color: #000;
+      }
+      ::v-deep th {
+        border-bottom: 1px solid #000;
+        border-right: 1px solid #000;
+      }
+      ::v-deep td {
+        border-bottom: 1px solid #000;
+        border-right: 1px solid #000;
+      }
     }
-    ::v-deep th {
-      border-bottom: 1px solid #ddd;
-      border-right: 1px solid #ddd;
-    }
-    ::v-deep td {
-      border-bottom: 1px solid #ddd;
-      border-right: 1px solid #ddd;
+    .note {
+      font-size: 10px;
+      li {
+        margin-bottom: 5px;
+        &:first-child {
+          margin-top: 5px;
+        }
+      }
     }
   }
 }
 #detailOutDepot {
   .header {
+    color: #000;
     text-align: center;
-    font-size: 44px;
+    font-size: 26px;
+    line-height: 26px;
     font-family: "楷体";
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
   .table {
     margin-top: 10px;
@@ -299,10 +373,10 @@ export default {
     border-collapse: collapse;
     white-space: nowrap;
     tr {
-      height: 48px;
+      height: 34px;
       th,
       td {
-        padding: 8px;
+        padding: 4px 8px;
         border: 1px solid #ddd;
         white-space: nowrap;
       }

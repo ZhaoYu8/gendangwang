@@ -3,19 +3,19 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "plan",
-    component: () => import(/* webpackChunkName: "plan" */ "../views/Plan.vue"),
+    name: "outDepot",
+    component: () => import(/* webpackChunkName: "outDepot" */ "../views/OutDepot.vue"),
   },
-  // {
-  //   path: "/outDepot",
-  //   name: "outDepot",
-  //   component: () => import(/* webpackChunkName: "outDepot" */ "../views/OutDepot.vue"),
-  // },
-  // {
-  //   path: "/reviewDepot",
-  //   name: "reviewDepot",
-  //   component: () => import(/* webpackChunkName: "ReviewDepot" */ "../views/ReviewDepot.vue"),
-  // },
+  {
+    path: "/outDepot",
+    name: "outDepot",
+    component: () => import(/* webpackChunkName: "outDepot" */ "../views/OutDepot.vue"),
+  },
+  {
+    path: "/reviewDepot",
+    name: "reviewDepot",
+    component: () => import(/* webpackChunkName: "ReviewDepot" */ "../views/ReviewDepot.vue"),
+  },
   {
     path: "/plan",
     name: "plan",

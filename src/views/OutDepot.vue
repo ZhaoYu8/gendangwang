@@ -58,14 +58,15 @@ export default {
         { label: "销售", model: "", placeholder: "", type: "select", data: [], id: "saler_id" },
         { label: "负责人", model: "", placeholder: "", type: "select", data: [], id: "member_id" },
         { label: "发货时间", model: "", placeholder: "", type: "daterange", span: 8, id: "delivery_date_min" },
-        { label: "关键字", model: "", placeholder: "", id: "query_key" },
+        { label: "关键字", model: "", placeholder: "订单编号/产品名称/收货人/收货单位", id: "query_key" },
       ],
       tableData: [],
       tableHeader: [
         // 类型、跟单编号、产品名称、提交人、跟单员   这些不可改
         { label: "序号", id: "id", width: 70, type: "serial" },
         { label: "发货时间", id: "delivery_date" },
-        { label: "出库时间", id: "outbounded_at" },
+        { label: "收货人", id: "contact_name" },
+        { label: "收货单位", id: "contact_company" },
         { label: "客户", id: "customer_name" },
         { label: "出库单号", id: "outbound_task_serial" },
         { label: "发货总数", id: "outbound_number" },
@@ -82,27 +83,36 @@ export default {
   methods: {
     detail(res) {
       this.addOrDeatil = false;
-      this.$bus.$emit("detailShow", res);
+      this.$nextTick(() => {
+        this.$bus.$emit("detailShow", val);
+      });
     },
     // 详情跳修改
     update(res) {
       this.addOrDeatil = true;
-      this.$bus.$emit("panelShow", res);
+      this.$nextTick(() => {
+        this.$bus.$emit("panelShow", res);
+      });
     },
     // 新增成功更新页面
-    cancel() {
+    cancel(type) {
       this.dialogVisible = false;
+      if (type) return;
       this.query();
     },
     detailChange(val) {
       this.detailData = val;
       this.dialogVisible = true;
       this.addOrDeatil = false;
-      this.$bus.$emit("detailShow", val);
+      this.$nextTick(() => {
+        this.$bus.$emit("detailShow", val);
+      });
     },
     panelChange() {
       this.addOrDeatil = this.dialogVisible = true;
-      this.$bus.$emit("panelShow");
+      this.$nextTick(() => {
+        this.$bus.$emit("panelShow");
+      });
     },
     async query() {
       let obj = {

@@ -2,10 +2,10 @@
   <div class="add-outdepot">
     <Panel :arr="arr" :special="'w-20'" @change="custChange" />
     <!-- 第一个表格 -->
-    <div class="d-f-s-b pt-10 pb-10">
-      <el-button type="primary" size="large" @click="changeDialog">选择出库产品</el-button>
+    <div :class="{ 'd-f-e': finance }" class="d-f-s-b pt-10 pb-10">
+      <el-button type="primary" size="large" @click="changeDialog" v-if="!finance">选择出库产品</el-button>
       <div>
-        <el-button size="large">取消</el-button>
+        <el-button size="large" @click="cancel(1)">取消</el-button>
         <el-button type="primary" size="large" @click="save">保存</el-button>
       </div>
     </div>
@@ -39,13 +39,18 @@
           <el-input v-model="scope.row['sparetime_percent']" placeholder="" @change="percentChange(scope.row)"></el-input>
         </template>
       </el-table-column>
-      <el-table-column label="产品单价" align="center" header-align="center" prop="price" width="100"> </el-table-column>
+      <el-table-column label="产品单价" align="center" header-align="center" prop="price" width="100">
+        <template slot-scope="scope">
+          <el-input v-model="scope.row['price']" placeholder="" v-if="finance" @change="numChange(scope.row, 'price')"></el-input>
+          <div v-else>{{ scope.row["price"] }}</div></template
+        >
+      </el-table-column>
       <el-table-column label="备注" align="center" header-align="center">
         <template slot-scope="scope">
           <el-input v-model="scope.row['note']" placeholder=""></el-input>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" header-align="center" width="80">
+      <el-table-column label="操作" align="center" header-align="center" width="80" v-if="!finance">
         <template slot-scope="scope">
           <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="del(scope.$index)" class="mr-3"></el-button>
         </template>
@@ -65,6 +70,7 @@ export default {
   },
   data: () => {
     return {
+      finance: 0, // 是否是财务审核
       dialogShow: false,
       tableData: [],
       editId: 0,
@@ -120,12 +126,15 @@ export default {
       this.tableData = this.tableData.concat(val);
     },
     numberChange(val) {
-      val.product_number = Number(val.product_number || 0);
+      val.product_number = Number(val.product_number) || 0;
       val.sparetime = Math.ceil((val.product_number * val.sparetime_percent) / 100) || 0;
     },
     percentChange(val) {
-      val.sparetime_percent = Number(val.sparetime_percent || 0);
+      val.sparetime_percent = Number(val.sparetime_percent) || 0;
       val.sparetime = Math.ceil((val.product_number * val.sparetime_percent) / 100) || 0;
+    },
+    numChange(val, type) {
+      val[type] = Number(val[type]) || 0;
     },
     del(val) {
       this.tableData.splice(val, 1);
@@ -172,6 +181,18 @@ export default {
         products: obj,
       };
       if (this.editId) params.id = this.editId;
+      if (this.finance) {
+        params.status = 2;
+        let update = await this.$post(`outbound_tasks/${this.editId ? "for_update" : "for_create"}`, params);
+        let res = await this.$post(`outbound_tasks/finacal_audit`, { id: this.editId });
+        this.$notify({
+          title: "提示",
+          type: "success",
+          message: `财务审核成功！`,
+        });
+        this.cancel();
+        return;
+      }
       let res = await this.$post(`outbound_tasks/${this.editId ? "for_update" : "for_create"}`, params);
       this.$notify({
         title: "提示",
@@ -182,14 +203,16 @@ export default {
         this.$emit("detail", { id: this.editId });
         return;
       }
-      this.$emit("cancel");
+      this.cancel();
+    },
+    cancel(type) {
+      this.$emit("cancel", type);
     },
   },
   beforeDestroy() {
     this.$bus.$off("panelShow");
   },
   mounted() {
-    this.init();
     this.$bus.$on("panelShow", (res) => {
       if (res) {
         this.tableData = res.tableData;
@@ -197,6 +220,7 @@ export default {
           r.model = res.outbound_task[r.id];
         });
         this.editId = res.id;
+        this.finance = res.type;
         return;
       }
       this.init();

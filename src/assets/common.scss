@@ -41,10 +41,6 @@ li {
 .f-s {
   flex-shrink: 1;
 }
-.d-f-e {
-  display: flex;
-  justify-content: flex-end;
-}
 .d-f-s-b {
   display: flex;
   justify-content: space-between;
@@ -63,6 +59,10 @@ li {
   align-items: center;
   justify-content: space-between;
 }
+.d-f-e {
+  display: flex;
+  justify-content: flex-end;
+}
 //#endregion
 //#region 文字部分
 .f-20 {
@@ -79,6 +79,10 @@ li {
 }
 .t-j {
   text-align-last: justify;
+}
+.w-s-n {
+  // 文字不换行
+  white-space: nowrap;
 }
 //#endregion
 

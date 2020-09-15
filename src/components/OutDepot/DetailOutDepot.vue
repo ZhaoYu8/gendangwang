@@ -3,34 +3,14 @@
     <el-row :gutter="10" type="flex" align="middle" justify="end">
       <el-col :span="24" class="d-f-e d-f-c">
         <template v-if="!receiptShow">
-          <span class="mr-10">{{fontSize}}</span>
-          <el-link
-            :underline="false"
-            type="primary"
-            style="margin-right: 20px"
-            @click="fontSize--"
-          >A-</el-link>
-          <el-link
-            :underline="false"
-            type="primary"
-            style="margin-right: 20px"
-            @click="fontSize++"
-          >A+</el-link>
+          <span class="mr-10">{{ fontSize }}</span>
+          <el-link :underline="false" type="primary" style="margin-right: 20px" @click="fontSize--">A-</el-link>
+          <el-link :underline="false" type="primary" style="margin-right: 20px" @click="fontSize++">A+</el-link>
         </template>
         <template v-else>
-          <span class="mr-10">{{fontSizes}}</span>
-          <el-link
-            :underline="false"
-            type="primary"
-            style="margin-right: 20px"
-            @click="fontSizes--"
-          >A-</el-link>
-          <el-link
-            :underline="false"
-            type="primary"
-            style="margin-right: 20px"
-            @click="fontSizes++"
-          >A+</el-link>
+          <span class="mr-10">{{ fontSizes }}</span>
+          <el-link :underline="false" type="primary" style="margin-right: 20px" @click="fontSizes--">A-</el-link>
+          <el-link :underline="false" type="primary" style="margin-right: 20px" @click="fontSizes++">A+</el-link>
         </template>
         <el-popover placement="top" width="160" v-model="visible">
           <p>确定审核出库吗？</p>
@@ -41,22 +21,10 @@
           <el-button slot="reference" type="primary" size="small" class="mr-10">审核出库</el-button>
         </el-popover>
 
-        <el-button
-          type="primary"
-          size="small"
-          v-print="'#receipt'"
-          @click="printReceipt"
-          icon="el-icon-printer"
-        >打印单据</el-button>
-        <el-button type="primary" size="small" icon="el-icon-printer" @click="print">打印单据(无金额)</el-button>
-        <el-button
-          type="primary"
-          size="small"
-          icon="el-icon-printer"
-          v-print="'#detailOutDepot'"
-          @click="flowPrint"
-        >打印流程单</el-button>
-        <el-button type="warning" size="small" @click="updateDetail">复制</el-button>
+        <el-button type="primary" size="small" v-print="'#receipt'" @click="printReceipt" icon="el-icon-printer">打印单据</el-button>
+        <el-button type="primary" size="small" icon="el-icon-printer" v-print="'#receipt'" @click="print">打印单据(无金额)</el-button>
+        <el-button type="primary" size="small" icon="el-icon-printer" v-print="'#detailOutDepot'" @click="flowPrint">打印流程单</el-button>
+        <el-button type="warning" size="small" @click="updateDetail(0)">复制</el-button>
         <el-button type="primary" size="small" @click="updateDetail(editID)">修改</el-button>
       </el-col>
     </el-row>
@@ -86,7 +54,7 @@
         </tr>
       </table>
 
-      <table border="1" cellspacing="0" class="table" :style="{fontSize: fontSizes + 'px'}">
+      <table border="1" cellspacing="0" class="table" :style="{ fontSize: fontSizes + 'px' }">
         <tr style="font-weight: bold;">
           <td style="width: 30px;">编号</td>
           <td>商品全名</td>
@@ -101,8 +69,8 @@
           <tr :key="'nvb' + index">
             <td class="t-c">{{ index + 1 }}</td>
             <td>{{ item.product_name }}</td>
-            <td>{{ item.product_number }}</td>
-            <td>{{ item.product_number }}</td>
+            <td>{{ item.product_code }}</td>
+            <td>{{ item.tracking_member_name }}</td>
             <td>{{ item.product_number }}</td>
             <td>{{ item.sparetime }}</td>
             <td>{{ item.order_serial }}</td>
@@ -112,33 +80,33 @@
       </table>
     </div>
     <div id="receipt" v-show="!receiptShow">
-      <div v-for="(ge) in Math.ceil(tableData.length/8)" :key="'ss' + ge" class="box">
+      <div v-for="ge in Math.ceil(tableData.length / 8)" :key="'ss' + ge" class="box">
         <div class="header">江苏源艺包装送货单</div>
         <ul class="d-f-s-b mb-5 mt-5">
           <li>公司地址：江苏省常熟市尚湖镇练塘颜巷工业区</li>
           <li>电话：18261793098</li>
           <li>传真：52746532</li>
         </ul>
-        <div class="mb-5 mt-5">发货日期：2020-09-07</div>
-        <div class="mb-5 mt-5">购买单位：2020-09-07</div>
-        <table border="1" cellspacing="0" class="table" :style="{fontSize: fontSize + 'px'}">
-          <tr :style="{fontWeight: 'bold'} ">
+        <div class="mb-5 mt-5">发货日期：{{ outbound_task.delivery_date }}</div>
+        <div class="mb-5 mt-5">购买单位：{{ outbound_task.contact_company }}</div>
+        <table border="1" cellspacing="0" class="table" :style="{ fontSize: fontSize + 'px' }">
+          <tr :style="{ fontWeight: 'bold' }">
             <td>商品编号</td>
             <td style="width: 34%;">商品全名</td>
-            <td>单位</td>
+            <td class="w-s-n">单位</td>
             <td>数量</td>
             <td>单价</td>
             <td>金额</td>
             <td style="width: 20%;">备注</td>
           </tr>
-          <template v-for="(item, index) in tableData.slice((ge-1) * 8, (ge) * 8)">
+          <template v-for="(item, index) in tableData.slice((ge - 1) * 8, ge * 8)">
             <tr :key="'nvb' + index">
-              <td>{{ (ge-1) * 8 + index + 1 }}</td>
+              <td>{{ (ge - 1) * 8 + index + 1 }}</td>
               <td>{{ item.product_name }}</td>
-              <td>{{ item.product_serial }}</td>
+              <td class="w-s-n">{{ item.product_serial }}</td>
               <td>{{ item.product_number }}</td>
-              <td>{{ item.price }}</td>
-              <td>{{ item.product_number * item.price }}</td>
+              <td>{{ noShow ? "" : item.price }}</td>
+              <td>{{ noShow ? "" : item.product_number * item.price }}</td>
               <td>{{ item.note }}</td>
             </tr>
           </template>
@@ -148,7 +116,16 @@
             <td></td>
             <td></td>
             <td></td>
-            <td></td>
+            <td>
+              {{
+                noShow
+                  ? ""
+                  : tableData
+                      .slice((ge - 1) * 8, ge * 8)
+                      .map((r) => (r.product_number || 0) * (r.price || 0))
+                      .reduce((prev, cur) => prev + cur)
+              }}
+            </td>
             <td></td>
           </tr>
         </table>
@@ -160,13 +137,13 @@
           <li>4. 货物交付履行地：常熟。</li>
         </ul>
         <el-row class="d-f-s-b mb-5 mt-5">
-          <el-col :span="8">制单人：赵宇</el-col>
-          <el-col :span="8">销售：阿吧</el-col>
+          <el-col :span="8">制单人：{{ outbound_task.maker }}</el-col>
+          <el-col :span="8">销售：{{ outbound_task.saler }}</el-col>
           <el-col :span="8">收货单位及经手人（签字）：</el-col>
         </el-row>
         <el-row class="d-f-s-b mb-5 mt-5">
-          <el-col :span="8">送货人（签字）：主仓库</el-col>
-          <el-col :span="8">负责人： 张少文</el-col>
+          <el-col :span="8">送货人（签字）：{{ outbound_task.siji }}</el-col>
+          <el-col :span="8">负责人：{{ outbound_task.tracking_member }}</el-col>
           <el-col :span="8"></el-col>
         </el-row>
       </div>
@@ -190,7 +167,7 @@ export default {
   data: () => {
     return {
       fontSize: 14,
-      fontSizes: 20,
+      fontSizes: 16,
       receiptShow: false, // 确定是流程图，还是单据
       visible: false,
       noShow: false,
@@ -274,7 +251,6 @@ export default {
     this.$bus.$off("detailShow");
   },
   mounted() {
-    if (this.detailData.id) this.init(this.detailData);
     this.$bus.$on("detailShow", (res) => {
       this.init(res);
     });

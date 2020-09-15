@@ -2,11 +2,6 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    name: "outDepot",
-    component: () => import(/* webpackChunkName: "outDepot" */ "../views/OutDepot.vue"),
-  },
-  {
     path: "/outDepot",
     name: "outDepot",
     component: () => import(/* webpackChunkName: "outDepot" */ "../views/OutDepot.vue"),

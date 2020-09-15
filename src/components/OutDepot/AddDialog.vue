@@ -97,11 +97,11 @@ export default {
   },
   methods: {
     numberChange(val) {
-      val.product_number = Number(val.product_number || 0);
+      val.product_number = Number(val.product_number) || 0;
       val.sparetime = Math.ceil((val.product_number * val.sparetime_percent) / 100) || 0;
     },
     percentChange(val) {
-      val.sparetime_percent = Number(val.sparetime_percent || 0);
+      val.sparetime_percent = Number(val.sparetime_percent) || 0;
       val.sparetime = Math.ceil((val.product_number * val.sparetime_percent) / 100) || 0;
     },
     handleSelectionChange(val) {

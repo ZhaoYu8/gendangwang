@@ -6,7 +6,7 @@
         <el-form label-position="left" :inline="true">
           <el-col span="7">
             <el-form-item label="客户名称：" class="form-item">
-              <el-select v-model="cust" placeholder="请选择客户名称" filterable @change="inputModel = ''">
+              <el-select v-model="cust" placeholder="请选择客户名称" filterable @change="inputModel = ''" clearable>
                 <el-option v-for="item in this.$vuexData.x.customer" :key="item.id" :label="item.name" :value="item.id"> </el-option>
               </el-select>
             </el-form-item>
@@ -27,23 +27,39 @@
     </el-card>
     <!-- 第一个表格 -->
     <div class="pt-10 ">
-      <el-table :data="tableData" style="width: 100%;" border height="600" ref="dialog1Table" @selection-change="handleSelectionChange">
+      <el-table :data="tableData" style="width: 100%;" border height="600" ref="table" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
-        <el-table-column label="入库日期" align="center" prop="order_serial" header-align="center"></el-table-column>
-        <el-table-column label="销售" align="center" prop="product_name" header-align="center"></el-table-column>
-        <el-table-column label="负责人" align="center" header-align="center"> </el-table-column>
-        <el-table-column label="分类" align="center" header-align="center"> </el-table-column>
-        <el-table-column label="客户名称" align="center" prop="storage_quantity" header-align="center" width="100"></el-table-column>
-        <el-table-column label="订单编号" align="center" header-align="center" width="100"> </el-table-column>
-        <el-table-column label="产品名称" align="center" prop="sparetime" header-align="center" width="100"> </el-table-column>
-        <el-table-column label="产品编码" align="center" header-align="center" width="100"> </el-table-column>
-        <el-table-column label="当前库存" align="center" header-align="center" prop="price" width="100"> </el-table-column>
-        <el-table-column label="入库数量" align="center" header-align="center"> </el-table-column>
-        <el-table-column label="库位" align="center" header-align="center"> </el-table-column>
-        <el-table-column label="是否结束" align="center" header-align="center"> </el-table-column>
+        <el-table-column label="入库日期" align="center" prop="entried_at" header-align="center">
+          <template slot-scope="scope">
+            <el-date-picker v-model="scope.row['entried_at']" type="date" placeholder="date"></el-date-picker>
+          </template>
+        </el-table-column>
+        <el-table-column label="销售" align="center" prop="saler_name" header-align="center"></el-table-column>
+        <el-table-column label="负责人" align="center" prop="member_name" header-align="center"> </el-table-column>
+        <el-table-column label="分类" align="center" prop="product_group" header-align="center"> </el-table-column>
+        <el-table-column label="客户名称" align="center" prop="customer_name" header-align="center" width="100"></el-table-column>
+        <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center" width="100"> </el-table-column>
+        <el-table-column label="产品名称" align="center" prop="product_name" header-align="center" width="100"> </el-table-column>
+        <el-table-column label="产品编码" align="center" prop="product_serial" header-align="center" width="100"> </el-table-column>
+        <el-table-column label="当前库存" align="center" prop="ccccc" header-align="center" width="100"> </el-table-column>
+        <el-table-column label="入库数量" align="center" prop="entry_number" header-align="center">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row['entry_number']" placeholder="" @change="numberChange(scope.row)"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column label="库位" align="center" prop="location_id" header-align="center">
+          <template slot-scope="scope">
+            <el-select v-model="scope.row['location_id']" placeholder="">
+              <el-option v-for="item in location_options" :key="item.id" :label="item.name" :value="item.id"> </el-option>
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column label="是否结束" align="center" prop="note" header-align="center">
+          <template slot-scope="scope"> <el-input v-model="scope.row['note']" placeholder=""></el-input> </template
+        ></el-table-column>
       </el-table>
       <!-- 第一个表格分页 -->
-      <el-pagination layout="prev, pager, next" :total="50" background :page-size="20" class="pt-10 d-f-e"> </el-pagination>
+      <el-pagination layout="prev, pager, next" :current-page.sync="currentPage" :total="total_count" background :page-size="20" class="pt-10 d-f-e" @current-change="currentChange"> </el-pagination>
     </div>
   </el-dialog>
 </template>
@@ -67,19 +83,23 @@ export default {
       custData: [], // 客户数据
       dialogVisible: false,
       tableData: [],
+      location_options: [],
+      total_count: 1,
+      currentPage: 1,
     };
   },
   watch: {
     visible(val) {
       if (val) {
         this.dialogVisible = true;
+        this.multipleSelection = [];
+        this.query();
       }
     },
   },
   methods: {
     numberChange(val) {
-      val.product_number = Number(val.product_number) || 0;
-      val.sparetime = Math.ceil((val.product_number * val.sparetime_percent) / 100) || 0;
+      val.entry_number = Number(val.entry_number) || 0;
     },
     percentChange(val) {
       val.sparetime_percent = Number(val.sparetime_percent) || 0;
@@ -87,22 +107,31 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+      console.log(val);
     },
     cancel(type = false) {
       this.$emit('cancel', type);
       this.dialogVisible = false;
     },
     async query() {
-      let obj = {};
-      if (this.inputModel) {
-        obj.query_key = this.inputModel;
-      } else {
-        obj.customer_id = this.cust;
-      }
-      let res = await this.$post('outbound_tasks/choose_products', obj);
-      this.tableData = res.data.data.items.map((r) => {
-        return { ...r, ...{ sparetime: 0 } };
+      let res = await this.$post('yuanyi_entries/choose_products', {
+        page: this.currentPage,
       });
+      res = res.data.data;
+      let arr = this.multipleSelection;
+      let data = res.products.filter((r) => !this.multipleSelection.map((n) => n.id).includes(r.id));
+      data.map((r, n) => {
+        r.location_id = res.location_options.length ? res.location_options[0].id : null;
+        r.entried_at = moment().format('YYYY-MM-DD');
+      });
+      this.tableData = this.multipleSelection.concat(data);
+      this.$nextTick(() => {
+        arr.forEach((row) => {
+          this.$refs.table.toggleRowSelection(row);
+        });
+      });
+      this.total_count = res.paginate_meta.total_count;
+      this.location_options = res.location_options;
     },
     save() {
       if (!this.multipleSelection.length) {
@@ -113,19 +142,15 @@ export default {
         });
         return;
       }
-      this.$emit('save', this.multipleSelection);
+      this.$emit('save', this.multipleSelection, this.location_options);
       this.cancel();
     },
-  },
-  beforeDestroy() {
-    this.$bus.$off('AddOutDepot');
-  },
-  mounted() {
-    this.$bus.$on('AddOutDepot', (val) => {
-      this.cust = val;
+    currentChange() {
       this.query();
-    });
+    },
   },
+  beforeDestroy() {},
+  mounted() {},
 };
 </script>
 

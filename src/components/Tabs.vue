@@ -10,8 +10,10 @@ export default {
   data() {
     return {
       tabs: [
-        { label: "出库管理", key: "outDepot" },
-        { label: "出库财务审核", key: "reviewDepot" },
+        { label: "入库管理", key: "enterDepot" },
+        { label: "出库管理", key: "depot" },
+        { label: "发货管理", key: "outDepot" },
+        { label: "发货财务审核", key: "reviewDepot" },
         { label: "送货计划单", key: "plan" },
         { label: "送货派货单", key: "deliverGoods" },
         { label: "送货单列表", key: "deliveryList" },

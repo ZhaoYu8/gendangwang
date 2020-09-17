@@ -43,7 +43,7 @@
           <td v-for="n in arr[item - 1]" :key="n.label + item">
             <div class="d-f-c">
               <div class="W-80 t-j">{{ n.label }}</div>
-              <div class="ml-10">{{ ": " + (outbound_task[n.id] || "") }}</div>
+              <div class="ml-10">{{ ': ' + (outbound_task[n.id] || '') }}</div>
             </div>
           </td>
         </tr>
@@ -88,7 +88,12 @@
           <li>传真：52746532</li>
         </ul>
         <div class="mb-5 mt-5">发货日期：{{ outbound_task.delivery_date }}</div>
-        <div class="mb-5 mt-5">购买单位：{{ outbound_task.contact_company }}</div>
+        <ul class="d-f-s-b mb-5 mt-5">
+          <li>购买单位：{{ outbound_task.contact_company }}</li>
+          <li>收件人：{{ outbound_task.contact_name }}</li>
+          <li>电话：{{ outbound_task.contact_way }}</li>
+          <li>地址：{{ outbound_task.delivery_address }}</li>
+        </ul>
         <table border="1" cellspacing="0" class="table" :style="{ fontSize: fontSize + 'px' }">
           <tr :style="{ fontWeight: 'bold' }">
             <td>商品编号</td>
@@ -105,8 +110,8 @@
               <td>{{ item.product_name }}</td>
               <td class="w-s-n">{{ item.product_serial }}</td>
               <td>{{ item.product_number }}</td>
-              <td>{{ noShow ? "" : item.price }}</td>
-              <td>{{ noShow ? "" : item.product_number * item.price }}</td>
+              <td>{{ noShow ? '' : item.price }}</td>
+              <td>{{ noShow ? '' : item.product_number * item.price }}</td>
               <td>{{ item.note }}</td>
             </tr>
           </template>
@@ -119,7 +124,7 @@
             <td>
               {{
                 noShow
-                  ? ""
+                  ? ''
                   : tableData
                       .slice((ge - 1) * 8, ge * 8)
                       .map((r) => (r.product_number || 0) * (r.price || 0))
@@ -153,7 +158,7 @@
 
 <script>
 export default {
-  name: "DetailOutDepot",
+  name: 'DetailOutDepot',
   props: {},
   components: {},
   props: {
@@ -176,36 +181,36 @@ export default {
       editID: 0,
       arr: [
         [
-          { label: "跟单员", width: "25", id: "tracking_member_name" },
-          { label: "业务员", width: "50", id: "saler_name" },
-          { label: "发货日期", width: "25", id: "delivery_date" },
+          { label: '跟单员', width: '25', id: 'tracking_member_name' },
+          { label: '业务员', width: '50', id: 'saler_name' },
+          { label: '发货日期', width: '25', id: 'delivery_date' },
         ],
         [
-          { label: "收货单位", id: "contact_company" },
-          { label: "发货单位", id: "delivery_company" },
-          { label: "货运方式", id: "huoyunfangshi" },
+          { label: '收货单位', id: 'contact_company' },
+          { label: '发货单位', id: 'delivery_company' },
+          { label: '货运方式', id: 'huoyunfangshi' },
         ],
         [
-          { label: "收货人", id: "contact_name" },
-          { label: "发货人", id: "signment_member_name" },
-          { label: "放单方式", id: "fangdanfangshi" },
+          { label: '收货人', id: 'contact_name' },
+          { label: '发货人', id: 'signment_member_name' },
+          { label: '放单方式', id: 'fangdanfangshi' },
         ],
         [
-          { label: "联系方式", id: "contact_way" },
-          { label: "联系方式", id: "delivery_contact_way" },
-          { label: "付费方式", id: "fufeifangshi" },
+          { label: '联系方式', id: 'contact_way' },
+          { label: '联系方式', id: 'delivery_contact_way' },
+          { label: '付费方式', id: 'fufeifangshi' },
         ],
         [
-          { label: "收货地址", id: "delivery_address" },
-          { label: "发货地址", id: "delivery_from" },
-          { label: "特殊要求", id: "spec_note" },
+          { label: '收货地址', id: 'delivery_address' },
+          { label: '发货地址', id: 'delivery_from' },
+          { label: '特殊要求', id: 'spec_note' },
         ],
       ],
     };
   },
   methods: {
     async init(val) {
-      let res = await this.$post("outbound_tasks/for_show", {
+      let res = await this.$post('outbound_tasks/for_show', {
         id: val.id,
       });
       this.tableData = res.data.data.products;
@@ -229,18 +234,18 @@ export default {
     // 审核出库
     async audit() {
       this.visible = false;
-      let res = await this.$post("outbound_tasks/pass_audit", {
+      let res = await this.$post('outbound_tasks/pass_audit', {
         id: this.editID,
       });
       this.$notify({
-        title: "提示",
-        type: "success",
-        message: "审核出库成功！",
+        title: '提示',
+        type: 'success',
+        message: '审核出库成功！',
       });
-      this.$emit("cancel");
+      this.$emit('cancel');
     },
     updateDetail(id = 0) {
-      this.$emit("update", {
+      this.$emit('update', {
         outbound_task: this.outbound_task,
         tableData: this.tableData,
         id: id,
@@ -248,10 +253,10 @@ export default {
     },
   },
   beforeDestroy() {
-    this.$bus.$off("detailShow");
+    this.$bus.$off('detailShow');
   },
   mounted() {
-    this.$bus.$on("detailShow", (res) => {
+    this.$bus.$on('detailShow', (res) => {
       this.init(res);
     });
   },
@@ -271,7 +276,7 @@ export default {
       text-align: center;
       font-size: 26px;
       line-height: 26px;
-      font-family: "楷体";
+      font-family: '楷体';
       margin-bottom: 5px;
       margin-top: 35px;
     }
@@ -336,7 +341,7 @@ export default {
     text-align: center;
     font-size: 26px;
     line-height: 26px;
-    font-family: "楷体";
+    font-family: '楷体';
     margin-bottom: 10px;
   }
   .table {

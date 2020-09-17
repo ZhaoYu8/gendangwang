@@ -6,7 +6,7 @@
         <el-form label-position="left" :inline="true">
           <el-col span="7">
             <el-form-item label="客户名称：" class="form-item">
-              <el-select v-model="cust" placeholder="请选择客户名称">
+              <el-select v-model="cust" placeholder="请选择客户名称" filterable @change="inputModel = ''">
                 <el-option v-for="item in this.$vuexData.x.customer" :key="item.id" :label="item.name" :value="item.id"> </el-option>
               </el-select>
             </el-form-item>
@@ -112,10 +112,13 @@ export default {
       this.dialogVisible = false;
     },
     async query() {
-      let res = await this.$post("outbound_tasks/choose_products", {
-        customer_id: this.cust,
-        query_key: this.inputModel,
-      });
+      let obj = {};
+      if (this.inputModel) {
+        obj.query_key = this.inputModel;
+      } else {
+        obj.customer_id = this.cust;
+      }
+      let res = await this.$post("outbound_tasks/choose_products", obj);
       this.tableData = res.data.data.items.map((r) => {
         return { ...r, ...{ sparetime: 0 } };
       });

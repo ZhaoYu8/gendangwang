@@ -288,9 +288,6 @@ export default {
     },
     Update() {
       // 取user数据
-      this.$vuexFn.getUser().then(() => {
-        this.init();
-      });
       this.headerChange(this.arr[0]);
     },
     init() {

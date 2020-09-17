@@ -37,11 +37,11 @@
         <el-table-column label="销售" align="center" prop="saler_name" header-align="center"></el-table-column>
         <el-table-column label="负责人" align="center" prop="member_name" header-align="center"> </el-table-column>
         <el-table-column label="分类" align="center" prop="product_group" header-align="center"> </el-table-column>
-        <el-table-column label="客户名称" align="center" prop="customer_name" header-align="center" width="100"></el-table-column>
-        <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center" width="100"> </el-table-column>
-        <el-table-column label="产品名称" align="center" prop="product_name" header-align="center" width="100"> </el-table-column>
-        <el-table-column label="产品编码" align="center" prop="product_serial" header-align="center" width="100"> </el-table-column>
-        <el-table-column label="当前库存" align="center" prop="ccccc" header-align="center" width="100"> </el-table-column>
+        <el-table-column label="客户名称" align="center" prop="customer_name" header-align="center" ></el-table-column>
+        <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center" > </el-table-column>
+        <el-table-column label="产品名称" align="center" prop="product_name" header-align="center" > </el-table-column>
+        <el-table-column label="产品编码" align="center" prop="product_serial" header-align="center" > </el-table-column>
+        <el-table-column label="当前库存" align="center" prop="ccccc" header-align="center" > </el-table-column>
         <el-table-column label="入库数量" align="center" prop="entry_number" header-align="center">
           <template slot-scope="scope">
             <el-input v-model="scope.row['entry_number']" placeholder="" @change="numberChange(scope.row)"></el-input>
@@ -107,7 +107,6 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
-      console.log(val);
     },
     cancel(type = false) {
       this.$emit('cancel', type);

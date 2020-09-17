@@ -13,11 +13,11 @@
         <el-table-column label="销售" align="center" prop="saler_name" header-align="center"></el-table-column>
         <el-table-column label="负责人" align="center" prop="member_name" header-align="center"> </el-table-column>
         <el-table-column label="分类" align="center" prop="product_group" header-align="center"> </el-table-column>
-        <el-table-column label="客户名称" align="center" prop="customer_name" header-align="center" width="100"></el-table-column>
-        <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center" width="100"> </el-table-column>
-        <el-table-column label="产品名称" align="center" prop="product_name" header-align="center" width="100"> </el-table-column>
-        <el-table-column label="产品编码" align="center" prop="product_serial" header-align="center" width="100"> </el-table-column>
-        <el-table-column label="当前库存" align="center" prop="ccccc" header-align="center" width="100"> </el-table-column>
+        <el-table-column label="客户名称" align="center" prop="customer_name" header-align="center" ></el-table-column>
+        <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center" > </el-table-column>
+        <el-table-column label="产品名称" align="center" prop="product_name" header-align="center" > </el-table-column>
+        <el-table-column label="产品编码" align="center" prop="product_serial" header-align="center" > </el-table-column>
+        <el-table-column label="当前库存" align="center" prop="ccccc" header-align="center" > </el-table-column>
         <el-table-column label="入库数量" align="center" prop="entry_number" header-align="center">
           <template slot-scope="scope">
             <el-input v-model="scope.row['entry_number']" placeholder="" @change="numberChange(scope.row)"></el-input>
@@ -42,7 +42,7 @@
       <!-- 第一个表格分页 -->
     </div>
     <div class="d-f-e pt-10">
-      <el-button>取消</el-button>
+      <el-button @click="cancel">取消</el-button>
       <el-button type="primary" @click="save">保存</el-button>
     </div>
     <AddDialogs :visible="visible" @save="addDialogData" @cancel="visible = false" />
@@ -75,7 +75,7 @@ export default {
     del(val) {
       this.tableData.splice(val, 1);
     },
-    save() {
+    async save() {
       if (!this.tableData.length) {
         this.$notify({
           title: '警告',
@@ -84,12 +84,20 @@ export default {
         });
         return;
       }
-      let arr = {};
+      let data = {};
       this.tableData.map((r, n) => {
         r.entried_at = moment(r.entried_at).format('YYYY-MM-DD');
-        arr[n] = r;
+        data[n] = r;
       });
-      console.log(arr);
+      let res = await this.$post('yuanyi_entries/for_create', { products: data });
+      this.cancel();
+    },
+    cancel() {
+      this.tableData = [];
+      this.$emit('cancel', false);
+    },
+    numberChange(val) {
+      val.entry_number = Number(val.entry_number) || 0;
     },
   },
   beforeDestroy() {

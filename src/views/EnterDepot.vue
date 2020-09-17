@@ -1,5 +1,5 @@
 <template>
-  <div class="p-10">
+  <div class="p-10 box">
     <Panel :arr="arr">
       <el-col :span="4" class="d-f-e">
         <el-button type="primary" @click="query">查询</el-button>
@@ -7,20 +7,20 @@
       </el-col>
     </Panel>
     <!-- 表格 -->
-    <div class="pt-10 ">
-      <el-table :data="tableData" style="width: 100%;" border ref="firstTable" stripe>
-        <el-table-column header-align="center" :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index">
-          <template slot-scope="scope">
-            <template v-if="item.id === 'outbound_task_serial'">
-              <el-link v-if="item.id === 'outbound_task_serial'" type="primary" @click="detailChange(scope.row)">{{ scope.row[item.id] }}</el-link>
-            </template>
-            <template v-else>
-              <el-input v-model="scope.row[item.id]" v-if="item.type === 'input'" v-focus />
-              <div v-else-if="item.type === 'serial'" class="t-c">{{ scope.$index + 1 }}</div>
-              <div v-else>{{ scope.row[item.id] }}</div>
-            </template>
-          </template>
-        </el-table-column>
+    <div class="pt-10 table">
+      <el-table :data="tableData" style="width: 100%;" border ref="table">
+        <el-table-column label="入库日期" align="center" prop="entried_at" header-align="center"> </el-table-column>
+        <el-table-column label="销售" align="center" prop="saler_name" header-align="center"></el-table-column>
+        <el-table-column label="负责人" align="center" prop="member_name" header-align="center"> </el-table-column>
+        <el-table-column label="分类" align="center" prop="product_group" header-align="center"> </el-table-column>
+        <el-table-column label="客户名称" align="center" prop="customer_name" header-align="center"></el-table-column>
+        <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center"> </el-table-column>
+        <el-table-column label="产品名称" align="center" prop="product_name" header-align="center"> </el-table-column>
+        <el-table-column label="产品编码" align="center" prop="product_serial" header-align="center"> </el-table-column>
+        <el-table-column label="当前库存" align="center" prop="ccccc" header-align="center"> </el-table-column>
+        <el-table-column label="入库数量" align="center" prop="entry_number" header-align="center"> </el-table-column>
+        <el-table-column label="库位" align="center" prop="location_id" header-align="center"> </el-table-column>
+        <el-table-column label="是否结束" align="center" prop="note" header-align="center"></el-table-column>
       </el-table>
     </div>
     <el-pagination
@@ -33,7 +33,7 @@
       @current-change="currentChange"
     ></el-pagination>
     <el-dialog title="新建入库单" :visible="visible" width="95%" top="5vh" @close="visible = false" :close-on-click-modal="false">
-      <AddEnterDepot />
+      <AddEnterDepot @cancel="visible = false" />
     </el-dialog>
   </div>
 </template>
@@ -44,7 +44,7 @@ export default {
   name: 'enterDepot',
   data() {
     return {
-      visible: true,
+      visible: false,
       arr: [
         { label: '仓库', model: '', placeholder: '', type: 'select', data: [], id: 'inbound_warehouse_id' },
         { label: '仓位', model: '', placeholder: '', type: 'select', data: [], id: 'warehouse_location_id' },
@@ -55,19 +55,6 @@ export default {
         { label: '入库时间', model: '', placeholder: '', type: 'daterange', span: 8, id: 'delivery_date_min' },
       ],
       tableData: [],
-      tableHeader: [
-        // 类型、跟单编号、产品名称、提交人、跟单员   这些不可改
-        { label: '序号', id: 'id', width: 70, type: 'serial' },
-        { label: '发货时间', id: 'delivery_date' },
-        { label: '收货人', id: 'contact_name' },
-        { label: '收货单位', id: 'contact_company' },
-        { label: '客户', id: 'customer_name' },
-        { label: '出库单号', id: 'outbound_task_serial' },
-        { label: '发货总数', id: 'outbound_number' },
-        { label: '当前状态', id: 'status_name' },
-        { label: '更新时间', id: 'updated_at' },
-        { label: '最后操作人', id: 'updator' },
-      ],
       currentPage: 1,
       total: 1,
     };
@@ -84,7 +71,7 @@ export default {
         obj.delivery_date_min = moment(obj.delivery_date_min[0]).format('YYYY-MM-DD');
       }
       let res = await this.$post('yuanyi_entries/list', obj);
-      this.tableData = res.data.data.items;
+      this.tableData = res.data.data.entries;
       this.total = res.data.data.paginate_meta.total_count;
     },
     panelChange() {
@@ -95,8 +82,11 @@ export default {
       this.query();
     },
   },
-  mounted() {},
+  mounted() {
+    this.query();
+  },
 };
 </script>
 
-<style lang="" scoped></style>
+<style lang="scss" scoped>
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="复制新建" :visible.sync="dialogVisible" width="96%" top="5vh" class="dialogthree" @close="cancel(false)">
+  <el-dialog title="复制新建" :visible.sync="dialogVisible" width="96%" top="5vh" class="dialogthree dialog" @close="cancel(false)">
     <!-- 第一个表格 -->
     <div class="pt-10 ">
       <el-table :data="tableData" style="width: 100%;" border height="600" ref="dialog2Table" @select="selected">

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="选择产品" :visible.sync="dialogVisible" width="85%" :append-to-body="true">
+  <el-dialog title="选择产品" :visible.sync="dialogVisible" width="85%" class="dialog" :append-to-body="true">
     <div class="second">
       <!-- 头部查询条件 -->
       <el-card>
@@ -53,15 +53,15 @@
 
 <script>
 export default {
-  name: "AddProduct",
+  name: 'AddProduct',
   props: {},
   data: () => {
     return {
       dialogVisible: false,
       arr: [
-        { label: "日期", model: "", placeholder: "", id: "delivery_date", type: "date", data: [] },
-        { label: "班次", model: "", placeholder: "", id: "delivery_shifts", type: "select", data: [] },
-        { label: "路线", model: "", placeholder: "请输入路线", id: "delivery_route", type: "select", data: [], multiple: true },
+        { label: '日期', model: '', placeholder: '', id: 'delivery_date', type: 'date', data: [] },
+        { label: '班次', model: '', placeholder: '', id: 'delivery_shifts', type: 'select', data: [] },
+        { label: '路线', model: '', placeholder: '请输入路线', id: 'delivery_route', type: 'select', data: [], multiple: true },
       ],
       tableData: [],
       checkArr: [],
@@ -80,14 +80,14 @@ export default {
     },
     goBack() {
       this.dialogVisible = false;
-      this.$emit("goBack", this.checkArr);
+      this.$emit('goBack', this.checkArr);
       this.checkArr = [];
     },
     tableChange(val, item) {
-      if (item.type === "date") {
+      if (item.type === 'date') {
         val[item.id] = this.$common.format(val[item.id]);
       }
-      let arr = ["delivery_number", "sparetime_percent"];
+      let arr = ['delivery_number', 'sparetime_percent'];
       if (arr.includes(item.id)) {
         val[item.id] = Number(val[item.id] || 0);
         val.sparetime = Math.ceil((Number(val.delivery_number) * Number(val.sparetime_percent)) / 100) || 0;
@@ -99,7 +99,7 @@ export default {
         ...this.$common.querySql.call(this, this.arr),
         ...{ not_paginate: 1 },
       };
-      await this.$post("/delivery_plans/list_plan", obj).then((res) => {
+      await this.$post('/delivery_plans/list_plan', obj).then((res) => {
         let data = res.data.data;
         data.map((r) => {
           if (!Number(r.delivery_number) && !Number(r.sparetime_percent)) {
@@ -113,19 +113,19 @@ export default {
     },
   },
   beforeDestroy() {
-    this.$bus.$off("addProduct");
-    this.$bus.$off("user");
+    this.$bus.$off('addProduct');
+    this.$bus.$off('user');
   },
   mounted() {
     // 取user数据
     this.arr[1].data = this.$vuexData.x.delivery_shift;
     this.arr[2].data = this.$vuexData.x.delivery_route;
-    this.$bus.$on("user", () => {
+    this.$bus.$on('user', () => {
       this.arr[1].data = this.$vuexData.x.delivery_shift;
       this.arr[2].data = this.$vuexData.x.delivery_route;
       // this.arr[3].data = this.$vuexData.x.customer;
     });
-    this.$bus.$on("addProduct", (res) => {
+    this.$bus.$on('addProduct', (res) => {
       this.tableData = res.tableData;
       this.dialogVisible = true;
     });

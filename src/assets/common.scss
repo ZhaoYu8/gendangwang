@@ -31,6 +31,9 @@ li {
 .W-80 {
   width: 80px;
 }
+.w-100 {
+  width: 100%;
+}
 // #region flex布局
 .d-f {
   display: flex;
@@ -44,6 +47,10 @@ li {
 .d-f-s-b {
   display: flex;
   justify-content: space-between;
+}
+.d-f-s-a {
+  display: flex;
+  justify-content: space-around;
 }
 .d-f-c {
   display: flex;
@@ -257,7 +264,7 @@ body {
   .table {
     flex: 1;
     overflow: hidden;
-    ::v-deep.el-table {
+    .el-table {
       display: flex;
       flex-direction: column;
       height: 100%;

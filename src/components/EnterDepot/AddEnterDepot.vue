@@ -90,11 +90,11 @@ export default {
         data[n] = r;
       });
       let res = await this.$post('yuanyi_entries/for_create', { products: data });
-      this.cancel();
+      this.cancel(true);
     },
-    cancel() {
+    cancel(type = false) {
       this.tableData = [];
-      this.$emit('cancel', false);
+      this.$emit('cancel', type);
     },
     numberChange(val) {
       val.entry_number = Number(val.entry_number) || 0;

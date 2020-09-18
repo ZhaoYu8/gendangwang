@@ -1,9 +1,10 @@
 <template>
   <div class="p-10 box">
     <Panel :arr="arr">
-      <el-col :span="4" class="d-f-e">
-        <el-button type="primary" @click="query">查询</el-button>
-        <el-button type="warning" @click="panelChange">新增入库单</el-button>
+      <el-col :span="6" class="d-f-e">
+        <el-button type="primary" plain @click="query">查询</el-button>
+        <el-button type="primary" @click="panelChange">新增入库单</el-button>
+        <el-button type="warning" @click="visibleBatch = true">批量导入</el-button>
       </el-col>
     </Panel>
     <!-- 表格 -->
@@ -18,8 +19,8 @@
         <el-table-column label="产品名称" align="center" prop="product_name" header-align="center"> </el-table-column>
         <el-table-column label="产品编码" align="center" prop="product_serial" header-align="center"> </el-table-column>
         <el-table-column label="当前库存" align="center" prop="ccccc" header-align="center"> </el-table-column>
-        <el-table-column label="入库数量" align="center" prop="entry_number" header-align="center"> </el-table-column>
-        <el-table-column label="库位" align="center" prop="location_id" header-align="center"> </el-table-column>
+        <el-table-column label="入库数量" align="center" prop="storage_number" header-align="center"> </el-table-column>
+        <el-table-column label="库位" align="center" prop="location_name" header-align="center"> </el-table-column>
         <el-table-column label="是否结束" align="center" prop="note" header-align="center"></el-table-column>
       </el-table>
     </div>
@@ -32,8 +33,21 @@
       :current-page.sync="currentPage"
       @current-change="currentChange"
     ></el-pagination>
-    <el-dialog title="新建入库单" :visible="visible" width="95%" top="5vh" @close="visible = false" :close-on-click-modal="false">
-      <AddEnterDepot @cancel="visible = false" />
+    <el-dialog title="新建入库单" :visible="visible" width="95%" top="5vh" class="dialog" @close="visible = false" :close-on-click-modal="false">
+      <AddEnterDepot @cancel="cancel" />
+    </el-dialog>
+    <el-dialog title="批量导入" :visible="visibleBatch" width="40%" top="5vh" class="dialog" @close="visibleBatch = false">
+      默认模板：
+      <div>xsjxsjixs.xlsx</div>
+      <el-upload class=" t-c" accept=".xlsx,.xls" drag action="https://jsonplaceholder.typicode.com/posts/">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">只能上传xlsx,xls文件</div>
+      </el-upload>
+      <div class="d-f-e pt-10">
+        <el-button @click="visibleBatch = false">取消</el-button>
+        <el-button type="primary" @click="save">保存</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -45,6 +59,7 @@ export default {
   data() {
     return {
       visible: false,
+      visibleBatch: false,
       arr: [
         { label: '仓库', model: '', placeholder: '', type: 'select', data: [], id: 'inbound_warehouse_id' },
         { label: '仓位', model: '', placeholder: '', type: 'select', data: [], id: 'warehouse_location_id' },
@@ -52,7 +67,7 @@ export default {
         { label: '销售', model: '', placeholder: '', type: 'select', data: [], id: 'saler_id' },
         { label: '负责人', model: '', placeholder: '', type: 'select', data: [], id: 'member_id' },
         { label: '部门', model: '', placeholder: '', type: 'select', data: [], id: 'member_id' },
-        { label: '入库时间', model: '', placeholder: '', type: 'daterange', span: 8, id: 'delivery_date_min' },
+        { label: '入库时间', model: '', placeholder: '', type: 'daterange', span: 6, id: 'delivery_date_min' },
       ],
       tableData: [],
       currentPage: 1,
@@ -81,12 +96,25 @@ export default {
       this.currentPage = index;
       this.query();
     },
+    init() {
+      this.arr[0].data = this.$vuexData.x.warehouse;
+      this.arr[1].data = this.$vuexData.x.location;
+      this.arr[2].data = this.$vuexData.x.customer;
+    },
+    cancel(type) {
+      this.visible = false;
+      if (type) this.query();
+    },
   },
   mounted() {
     this.query();
+    this.init();
+    this.$bus.$on('user', () => {
+      this.init();
+      // this.arr[3].data = this.$vuexData.x.customer;
+    });
   },
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

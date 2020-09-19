@@ -23,6 +23,10 @@
             >
             </el-date-picker>
             <el-date-picker size="small" v-if="item.type === 'date'" :placeholder="item.placeholder || '请选择'" v-model="item.model" type="date" @change="change(item)"> </el-date-picker>
+
+            <div class="radio" v-if="item.type === 'filter'">
+              <span v-for="now in item.data" :key="now.id" class="item" :class="{ active: now.id === item.model }" @click="item.model = now.id">{{ now.name }}</span>
+            </div>
           </el-form-item>
         </el-col>
         <slot></slot>
@@ -33,7 +37,7 @@
 
 <script>
 export default {
-  name: "tabs",
+  name: 'tabs',
   props: {
     arr: {
       type: Array,
@@ -41,7 +45,7 @@ export default {
     },
     special: {
       type: String,
-      default: "",
+      default: '',
     },
   },
   data() {
@@ -49,12 +53,34 @@ export default {
   },
   methods: {
     change(val) {
-      this.$emit("input", val.model);
-      this.$emit("change", val);
+      this.$emit('input', val.model);
+      this.$emit('change', val);
     },
   },
   mounted() {},
 };
 </script>
 
-<style lang="" scoped></style>
+<style lang="scss" scoped>
+.radio {
+  margin-bottom: 10px;
+  &-title {
+    font-weight: 700;
+  }
+  .item {
+    display: inline-block;
+    padding: 4px 12px;
+    background-color: #fff;
+    border-radius: 3px;
+    cursor: pointer;
+    line-height: 24px;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+  .active {
+    background-color: #409eff;
+    color: #fff;
+  }
+}
+</style>

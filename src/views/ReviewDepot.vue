@@ -1,12 +1,12 @@
 <template>
-  <div class="outdepot">
+  <div class="outdepot box">
     <Panel :arr="arr">
       <el-col :span="4" class="d-f-e">
         <el-button type="primary" @click="query">查询</el-button>
       </el-col>
     </Panel>
     <!-- 表格 -->
-    <div class="pt-10 ">
+    <div class="pt-10 table">
       <el-table :data="tableData" style="width: 100%;" border ref="firstTable" stripe>
         <el-table-column header-align="center" :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index">
           <template slot-scope="scope">

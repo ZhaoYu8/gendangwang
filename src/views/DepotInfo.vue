@@ -182,9 +182,9 @@ export default {
   },
   mounted() {
     this.query();
-    if (this.$vuexData.x.location.length) this.locationModel = this.$vuexData.x.location[0].id;
-    this.$bus.$on('user', () => {
-      this.locationModel = this.$vuexData.x.location[0].id;
+    this.arr[0].data = this.$vuexData.x.customer;
+    this.$bus.$on("user", () => {
+      this.arr[0].data = this.$vuexData.x.customer;
     });
   },
 };

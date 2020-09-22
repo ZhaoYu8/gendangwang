@@ -99,18 +99,20 @@ export default {
       this.currentPage = index;
       this.query();
     },
-    async save() {
-      let res = await this.$post(`yuanyi_storages/${this.visibleType === 1 ? 'switch_location' : 'change_storage'}`, obj);
-      this.$common.notify();
-      this.query();
-    },
-    change(val, type) {
-      this.visible = true;
-      this.visibleType = type;
-      this.visibleData = val;
-      this.$nextTick(() => {
-        this.$refs.input.focus();
-      });
+    async change() {
+      this.$confirm('是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(async () => {
+          return;
+          let res = await this.$post(`yuanyi_storages/${this.visibleType === 1 ? 'switch_location' : 'change_storage'}`);
+          this.$common.notify();
+          this.query();
+        })
+        .catch(() => {});
+      return;
     },
   },
   mounted() {

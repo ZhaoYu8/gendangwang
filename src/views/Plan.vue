@@ -1,5 +1,5 @@
 <template>
-  <div class="plan">
+  <div class="plan box p-10">
     <!-- 头部查询条件 -->
     <el-card>
       <el-row :gutter="20">
@@ -35,7 +35,7 @@
       </el-row>
     </el-card>
     <!-- 表格 -->
-    <div class="pt-10 ">
+    <div class="pt-10 table">
       <el-table :data="tableData" style="width: 100%;" border ref="firstTable" @select="selected" @select-all="selectedAll">
         <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
         <el-table-column label="操作" width="50" align="center" header-align="center">

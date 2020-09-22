@@ -1,5 +1,5 @@
 <template>
-  <div class="second">
+  <div class="second p-10 box">
     <!-- 头部查询条件 -->
     <el-card>
       <el-row :gutter="20">
@@ -66,8 +66,8 @@
     </div>
 
     <!-- 第二个 表格 -->
-    <div class="pt-10 ">
-      <el-table :data="tableData2" style="width: 100%;" height="200" border ref="multipleTable_b">
+    <div class="pt-10 table">
+      <el-table :data="tableData2" style="width: 100%;" border ref="multipleTable_b">
         <el-table-column label="操作" width="200" align="center" header-align="center">
           <div slot-scope="scope" style="display: flex; justify-content: space-around;">
             <el-link :underline="false" type="danger" @click="delTwo(scope)">删除</el-link>
@@ -103,11 +103,11 @@
 </template>
 
 <script>
-import Dialog from "../components/DeliverGoodsDialog4";
-import Detail from "../components/Detail";
+import Dialog from '../components/DeliverGoodsDialog4';
+import Detail from '../components/Detail';
 
 export default {
-  name: "DeliverGoods",
+  name: 'DeliverGoods',
   props: {},
   components: {
     Dialog,
@@ -121,9 +121,9 @@ export default {
       centerDialogVisible1: false,
       paginate_meta2: {},
       arr: [
-        { label: "日期", model: "", placeholder: "", id: "delivery_date", type: "date", data: [] },
-        { label: "班次", model: "", placeholder: "", id: "delivery_shifts", type: "select", data: [] },
-        { label: "路线", model: "", placeholder: "请输入路线", id: "delivery_route", type: "select", data: [], multiple: true },
+        { label: '日期', model: '', placeholder: '', id: 'delivery_date', type: 'date', data: [] },
+        { label: '班次', model: '', placeholder: '', id: 'delivery_shifts', type: 'select', data: [] },
+        { label: '路线', model: '', placeholder: '请输入路线', id: 'delivery_route', type: 'select', data: [], multiple: true },
         // { label: "下单客户", model: "", placeholder: "", id: "customer_id", type: "select", data: [] },
         // { label: "产品名称", model: "", placeholder: "请输入产品名称", id: "product_name" },
       ],
@@ -145,17 +145,17 @@ export default {
   methods: {
     // 查询条件change事件
     async headerChange(val) {
-      if (val.id === "delivery_route") return;
+      if (val.id === 'delivery_route') return;
       if (this.arr[0].model) {
         this.arr[0].model = this.$common.format(this.arr[0].model);
       }
       if (this.arr[0].model && this.arr[1].model) {
-        let res = await this.$post("/delivery_plans/get_routes", {
+        let res = await this.$post('/delivery_plans/get_routes', {
           delivery_date: this.arr[0].model,
           delivery_shifts: this.arr[1].model,
         });
         this.arr[2].data = res.data.data.delivery_route_options;
-        this.arr[2].model = "";
+        this.arr[2].model = '';
       }
     },
     // 选中数据
@@ -164,7 +164,7 @@ export default {
     },
     // 点击修改触发
     async edit(val) {
-      this.$post("/delivery_plans/detail", {
+      this.$post('/delivery_plans/detail', {
         delivery_good_id: val.row.delivery_good_id,
       }).then((res) => {
         this.checkArrOk = res.data.data.delivery_products;
@@ -182,18 +182,18 @@ export default {
         }, 300);
     },
     async delTwo(val) {
-      let data = await this.$confirm("确定删除么?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      let data = await this.$confirm('确定删除么?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       }).then(() => {
-        this.$post("/delivery_plans/delete_schedule", {
+        this.$post('/delivery_plans/delete_schedule', {
           delivery_good_id: val.row.delivery_good_id || 0,
         }).then(() => {
           // 删除之后查询，并且提示删除成功!
           this.$message({
-            type: "success",
-            message: "删除成功!",
+            type: 'success',
+            message: '删除成功!',
           });
           let _this = this;
           setTimeout(() => {
@@ -206,7 +206,7 @@ export default {
     async tableChange(val, item) {
       await this.$common.tableChange.call(this, val, item);
       // 如果是修改班次。或者路线。需要重新更新一下这二个data
-      if (!["delivery_shifts", "delivery_route"].includes(item.id)) return;
+      if (!['delivery_shifts', 'delivery_route'].includes(item.id)) return;
       this.Update();
     },
     onAdd() {
@@ -216,9 +216,9 @@ export default {
         this.checkArrOk = JSON.parse(JSON.stringify(arr));
       } else {
         this.$notify({
-          title: "警告",
-          message: "最少选择一条产品数据!",
-          type: "warning",
+          title: '警告',
+          message: '最少选择一条产品数据!',
+          type: 'warning',
         });
       }
     },
@@ -245,7 +245,7 @@ export default {
         ...this.$common.querySql.call(this, this.arr),
         ...{ not_paginate: 1 },
       };
-      await this.$post("/delivery_plans/list_plan", obj).then((res) => {
+      await this.$post('/delivery_plans/list_plan', obj).then((res) => {
         let data = res.data.data;
         data.map((r) => {
           if (!Number(r.delivery_number) && !Number(r.sparetime_percent)) {
@@ -262,14 +262,14 @@ export default {
     },
     queryTwo() {
       let obj = { page: this.currentPage2 };
-      this.$post("/delivery_plans/list_schedule", obj).then((res) => {
+      this.$post('/delivery_plans/list_schedule', obj).then((res) => {
         let data = res.data.data;
         this.tableData2 = data;
         this.paginate_meta2 = res.data.paginate_meta;
       });
     },
     go(val) {
-      this.$post("/delivery_plans/detail", {
+      this.$post('/delivery_plans/detail', {
         delivery_good_id: val.row.delivery_good_id,
       }).then((res) => {
         this.detailData = res.data;
@@ -278,7 +278,7 @@ export default {
       // window.open(`https://gendanwang.com/v1/delivery_goods/${val.row.delivery_good_id}`);
     },
     print(val) {
-      this.$post("/delivery_plans/detail", {
+      this.$post('/delivery_plans/detail', {
         delivery_good_id: val.row.delivery_good_id,
       }).then((res) => {
         this.detailData = res.data;
@@ -298,7 +298,7 @@ export default {
   mounted() {
     // 取user数据
     this.init();
-    this.$bus.$on("user", () => {
+    this.$bus.$on('user', () => {
       this.init();
       // this.arr[3].data = this.$vuexData.x.customer;
     });

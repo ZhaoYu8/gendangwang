@@ -44,26 +44,16 @@ export default {
       headerArr: [],
       arr: [
         { label: '序号', width: '30px', id: 'index' },
-        { label: '业务员', width: '30px', id: 'delivery_route' },
-        { label: '跟单员', width: '30px', id: 'delivery_shifts' },
-        { label: '分类', width: '100px', id: 'receiving_unit' },
-        { label: '客户名称', width: '16%', id: 'product_name' },
-        { label: '品名/规格', width: '50px', id: 'product_code' },
-        { label: '单价', width: '50px', id: 'order_member' },
-        { label: '数量', width: '50px', id: 'delivery_number' },
-        { label: '金额', width: '30px', id: 'sparetime' },
-        { label: '入库日期', width: '100px', id: 'order_serial' },
-        { label: '仓储库位', width: '100px', id: 'warehouse_name' },
-      ],
-      arr1: [
-        { label: '序号', width: '30px', id: 'index' },
-        { label: '业务员', width: '30px', id: 'delivery_route' },
-        { label: '织唛部', width: '30px', id: 'delivery_shifts' },
-        { label: '纸张部', width: '100px', id: 'receiving_unit' },
-        { label: '塑料部', width: '16%', id: 'product_name' },
-        { label: '无纺部', width: '50px', id: 'product_code' },
-        { label: '绒球部', width: '50px', id: 'order_member' },
-        { label: '业务员合计', width: '50px', id: 'delivery_number' },
+        { label: '销售', id: 'saler_name' },
+        { label: '跟单员', id: 'member_name' },
+        { label: '分类', id: 'product_group' },
+        { label: '客户名称', id: 'customer_name' },
+        { label: '产品名称', id: 'product_name' },
+        { label: '单价', id: 'product_price' },
+        { label: '数量', id: 'storage_number' },
+        { label: '金额', id: 'money' },
+        { label: '入库日期', id: 'updated_at' },
+        { label: '仓储库位', id: 'location_name' },
       ],
     };
   },
@@ -73,14 +63,26 @@ export default {
     this.query();
   },
   methods: {
-    change() {
-      this.headerArr = this.model === '0' ? this.arr : this.arr1;
+    async change() {
+      if (this.model === '0') {
+        this.query();
+        this.headerArr = this.arr;
+      } else {
+        await this.query1();
+      }
     },
     async query() {
       let res = await this.$post('yuanyi_storages/list', {});
       this.tableData = res.data.data.entries.map((r) => {
         return { ...r, ...{ money: r.product_price * r.storage_number } };
       });
+    },
+    async query1() {
+      let res = await this.$post('yuanyi_storages/saler_inventory', {});
+      this.headerArr = res.data.data.headers.map((r) => {
+        return { label: r.name, id: r.id };
+      });
+      this.tableData = res.data.data.items;
     },
     exports() {
       //表格标题
@@ -152,7 +154,7 @@ export default {
       // tmpdata["A1"] = { v: 1 };
       // outputPos = ["A1"].concat(outputPos);
       let _arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'];
-      _arr = this.model === '0' ? _arr : _arr.slice(0, 8);
+      _arr = this.model === '0' ? _arr : _arr.slice(0, this.headerArr.length);
       _arr.map((r) => {
         tmpdata[`${r}1`].s = {
           font: { sz: 14, bold: true, vertAlign: true },

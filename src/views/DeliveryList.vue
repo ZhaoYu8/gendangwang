@@ -1,7 +1,7 @@
 <template>
-  <div class="second">
+  <div class="second box">
     <!-- 头部查询条件 -->
-    <el-card>
+    <el-card class="p-10">
       <el-row :gutter="20">
         <el-form label-position="left" :inline="true">
           <el-col :span="6" v-for="(item, index) in arr" :key="item.label + index">
@@ -30,7 +30,7 @@
       </el-row>
     </el-card>
     <!-- 第二个 表格 -->
-    <div class="pt-10 ">
+    <div class="pt-10 table">
       <el-table :data="tableData" style="width: 100%;" border ref="multipleTable_b">
         <el-table-column label="操作" width="170" align="center" header-align="center">
           <div slot-scope="scope" style="display: flex; justify-content: space-around;">

@@ -59,7 +59,7 @@
       </div>
       <template v-else>
         <template v-if="visibleType === 1">
-          <el-select v-model="locationModel" placeholder="请选择仓位！" class="w-100">
+          <el-select v-model="locationModel" placeholder="请选择仓位！" class="w-100" filterable>
             <el-option v-for="item in $vuexData.x.location" :key="item.id" :label="item.name" :value="item.id"> </el-option>
           </el-select>
         </template>

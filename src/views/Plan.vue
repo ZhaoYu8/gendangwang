@@ -7,7 +7,7 @@
           <el-col :span="6" v-for="(item, index) in arr" :key="item.label + index">
             <el-form-item :label="item.label" class="form-item">
               <el-input v-model="item.model" :placeholder="item.placeholder || '请输入'" v-if="!item.type"></el-input>
-              <el-select v-model="item.model" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'" clearable style="width: 100%;">
+              <el-select filterable v-model="item.model" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'" clearable style="width: 100%;">
                 <el-option v-for="(list, d) in item.data" :key="d" :label="list.name" :value="list.id"></el-option>
               </el-select>
             </el-form-item>
@@ -76,12 +76,12 @@
 </template>
 
 <script>
-import Dialog1 from "../components/PlanDialog1";
-import Dialog2 from "../components/PlanDialog2";
-import Dialog3 from "../components/PlanDialog3";
+import Dialog1 from '../components/PlanDialog1';
+import Dialog2 from '../components/PlanDialog2';
+import Dialog3 from '../components/PlanDialog3';
 
 export default {
-  name: "Plan",
+  name: 'Plan',
   props: {},
   components: {
     Dialog1,
@@ -95,9 +95,9 @@ export default {
       dialog3: false,
       paginate_meta: {}, // 分页总数数据
       arr: [
-        { label: "下单客户：", model: "", placeholder: "", type: "select", data: [], id: "customer_id" },
-        { label: "收货单位：", model: "", placeholder: "", data: [], id: "receiving_unit" },
-        { label: "产品名称：", model: "", placeholder: "", id: "product_name" },
+        { label: '下单客户：', model: '', placeholder: '', type: 'select', data: [], id: 'customer_id' },
+        { label: '收货单位：', model: '', placeholder: '', data: [], id: 'receiving_unit' },
+        { label: '产品名称：', model: '', placeholder: '', id: 'product_name' },
       ],
       currentPage: 1, // 第一个表格分页
       tableData: [], // 表格数据
@@ -149,7 +149,7 @@ export default {
         this.currentPage = 1;
         this.query();
         this.$vuexFn.getUser().then(() => {
-          this.$bus.$emit("user");
+          this.$bus.$emit('user');
         });
       }
       this.dialog3 = this.dialog2 = this.dialog1 = false;
@@ -160,7 +160,7 @@ export default {
         ...this.$common.querySql.call(this, this.arr),
         ...{ page: this.currentPage },
       };
-      await this.$post("/delivery_plans/list_plan", obj).then((res) => {
+      await this.$post('/delivery_plans/list_plan', obj).then((res) => {
         let data = res.data.data;
         data.map((r) => {
           if (!Number(r.delivery_number) && !Number(r.sparetime_percent)) {
@@ -191,24 +191,24 @@ export default {
       let arr = this.checkArr;
       if (!arr.length) {
         this.$notify({
-          title: "警告",
-          message: "你必须选择数据，才能进行多选删除!",
-          type: "warning",
+          title: '警告',
+          message: '你必须选择数据，才能进行多选删除!',
+          type: 'warning',
         });
         return;
       }
-      this.$confirm(`确定删除么？本次删除 ${arr.length} 条数据！`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm(`确定删除么？本次删除 ${arr.length} 条数据！`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       }).then(() => {
-        this.$post("/delivery_plans/batch_delete", {
+        this.$post('/delivery_plans/batch_delete', {
           delivery_product_ids: arr.map((r) => r.delivery_product_id),
         }).then(() => {
           // 删除之后查询，并且提示删除成功!
           this.$message({
-            type: "success",
-            message: "删除成功!",
+            type: 'success',
+            message: '删除成功!',
           });
           let _this = this;
           setTimeout(() => {
@@ -222,17 +222,17 @@ export default {
     },
     summary() {
       this.$notify({
-        title: "警告",
-        message: "等接口!",
-        type: "warning",
+        title: '警告',
+        message: '等接口!',
+        type: 'warning',
       });
     },
     copyAdd() {
       if (!this.checkArr.length) {
         this.$notify({
-          title: "警告",
-          message: "最少选择一条数据!",
-          type: "warning",
+          title: '警告',
+          message: '最少选择一条数据!',
+          type: 'warning',
         });
         return;
       }
@@ -244,7 +244,7 @@ export default {
   },
   mounted() {
     this.arr[0].data = this.$vuexData.x.customer;
-    this.$bus.$on("user", () => {
+    this.$bus.$on('user', () => {
       this.arr[0].data = this.$vuexData.x.customer;
     });
     this.query();

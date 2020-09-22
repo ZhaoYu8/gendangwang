@@ -7,7 +7,7 @@
           <el-col :span="6" v-for="(item, index) in arr" :key="item.label + index">
             <el-form-item :label="item.label" class="form-item">
               <el-input v-model="item.model" :placeholder="item.placeholder || '请输入'" v-if="!item.type"></el-input>
-              <el-select v-model="item.model" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'" clearable style="width: 100%;">
+              <el-select filterable v-model="item.model" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'" clearable style="width: 100%;">
                 <el-option v-for="(list, d) in item.data" :key="d" :label="list.name" :value="list.id"></el-option>
               </el-select>
             </el-form-item>

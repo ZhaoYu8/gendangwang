@@ -1,30 +1,59 @@
 <template>
   <div class="p-10 ">
     <div class="d-f-c-s-b mb-10">
-      <el-radio-group v-model="model" @change="change">
-        <el-radio label="0">明细表</el-radio>
-        <el-radio label="1">汇总表</el-radio>
-      </el-radio-group>
+      <div class="d-f-c-s-b">
+        <el-radio-group v-model="model" @change="change">
+          <el-radio label="0">明细表</el-radio>
+          <el-radio label="1">汇总表</el-radio>
+        </el-radio-group>
+        <div class="ml-20" v-show="model === '0'">
+          销售：
+          <el-select filterable v-model="user" :placeholder="placeholder || '请选择'" clearable @change="query">
+            <el-option v-for="(list, d) in userData" :key="d" :label="list.name" :value="list.id"></el-option>
+          </el-select>
+        </div>
+        <div class="ml-20" v-show="model === '0'">
+          客户名称：
+          <el-select filterable v-model="cust" :placeholder="placeholder || '请选择'" clearable @change="query4">
+            <el-option v-for="(list, d) in custData" :key="d" :label="list.name" :value="list.id"></el-option>
+          </el-select>
+        </div>
+      </div>
       <div slot="footer">
         <el-link :underline="false" type="primary" style="margin-right: 20px" @click="fontSize--">A-</el-link>
         <el-link :underline="false" type="primary" style="margin-right: 20px" @click="fontSize++">A+</el-link>
         <el-button type="primary" ref="daochu" @click="exports">导出</el-button>
-        <el-button type="primary" v-print="'#printMe'" ref="printButton">打印</el-button>
+        <el-button type="primary" v-print="'#printMe'" ref="printButton" @click="print">打印</el-button>
       </div>
     </div>
     <!-- 头部查询条件 -->
     <div id="printMe" ref="printMe" :style="{ fontSize: fontSize + 'px' }">
-      <table border="1" cellspacing="0" class="table">
-        <tr style="background-color: #5491ff ">
-          <td :style="{ width: item.width }" v-for="item in headerArr" :key="item.label">{{ item.label }}</td>
-        </tr>
-        <template v-for="(item, index) in tableData">
-          <tr v-if="index > 0 && tableData[index - 1].receiving_unit !== tableData[index].receiving_unit" :key="item.product_name + index" style="height: 10px;"></tr>
-          <tr :key="item.receiving_unit + index">
-            <td v-for="n in headerArr" :key="n.id">{{ n.id !== 'index' ? item[n.id] : index + 1 }}</td>
+      <template v-if="!toggleType">
+        <table v-for="ge in Math.ceil(tableData.length / 18)" :key="'ss' + ge" border="1" cellspacing="0" class="table">
+          <tr style="background-color: #5491ff ">
+            <td :style="{ width: item.width }" v-for="item in headerArr" :key="item.label">{{ item.label }}</td>
           </tr>
-        </template>
-      </table>
+          <template v-for="(item, index) in tableData.slice((ge - 1) * 18, ge * 18)">
+            <tr v-if="index > 0 && tableData[index - 1].receiving_unit !== tableData[index].receiving_unit" :key="item.product_name + index" style="height: 10px;"></tr>
+            <tr :key="item.receiving_unit + index">
+              <td v-for="n in headerArr" :key="n.id">{{ n.id !== 'index' ? item[n.id] : (ge - 1) * 18 + index + 1 }}</td>
+            </tr>
+          </template>
+        </table>
+      </template>
+      <template v-if="toggleType">
+        <table border="1" cellspacing="0" class="table">
+          <tr style="background-color: #5491ff ">
+            <td :style="{ width: item.width }" v-for="item in headerArr" :key="item.label">{{ item.label }}</td>
+          </tr>
+          <template v-for="(item, index) in tableData">
+            <tr v-if="index > 0 && tableData[index - 1].receiving_unit !== tableData[index].receiving_unit" :key="item.product_name + index" style="height: 10px;"></tr>
+            <tr :key="item.receiving_unit + index">
+              <td v-for="n in headerArr" :key="n.id">{{ n.id !== 'index' ? item[n.id] : index + 1 }}</td>
+            </tr>
+          </template>
+        </table>
+      </template>
     </div>
   </div>
 </template>
@@ -36,14 +65,19 @@ export default {
   computed: {},
   data: () => {
     return {
+      toggleType: true,
       model: '0',
+      user: null,
+      userData: [],
+      cust: null,
+      custData: [],
       fontSize: 14,
       dialogVisible: false,
       tableData: [],
       headerData: {},
       headerArr: [],
       arr: [
-        { label: '序号', width: '30px', id: 'index' },
+        { label: '序号', id: 'index', width: '30px' },
         { label: '销售', id: 'saler_name' },
         { label: '跟单员', id: 'member_name' },
         { label: '分类', id: 'product_group' },
@@ -60,9 +94,19 @@ export default {
   watch: {},
   mounted() {
     this.headerArr = this.arr;
+    this.custData = this.$vuexData.x.customer;
+    this.$bus.$on('user', () => {
+      this.custData = this.$vuexData.x.customer;
+    });
     this.query();
   },
   methods: {
+    print() {
+      this.toggleType = false;
+      setTimeout(() => {
+        this.toggleType = true;
+      });
+    },
     async change() {
       if (this.model === '0') {
         this.query();
@@ -72,9 +116,12 @@ export default {
       }
     },
     async query() {
-      let res = await this.$post('yuanyi_storages/list', {});
+      let res = await this.$post('yuanyi_storages/list', {
+        cust: this.cust,
+        user: this.user,
+      });
       this.tableData = res.data.data.entries.map((r) => {
-        return { ...r, ...{ money: r.product_price * r.storage_number } };
+        return { ...r, ...{ money: r.product_price * r.storage_number, updated_at: moment(r.updated_at).format('YYYY-MM-DD') } };
       });
     },
     async query1() {
@@ -153,8 +200,8 @@ export default {
       let outputPos = Object.keys(tmpdata); //设置区域,比如表格从A1到D10
       // tmpdata["A1"] = { v: 1 };
       // outputPos = ["A1"].concat(outputPos);
-      let _arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'];
-      _arr = this.model === '0' ? _arr : _arr.slice(0, this.headerArr.length);
+      let _arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S'];
+      _arr = _arr.slice(0, this.headerArr.length);
       _arr.map((r) => {
         tmpdata[`${r}1`].s = {
           font: { sz: 14, bold: true, vertAlign: true },
@@ -232,6 +279,7 @@ export default {
         background: #5491ff !important;
         -webkit-print-color-adjust: exact;
       }
+      page-break-before: always;
     }
   }
   color: #000;

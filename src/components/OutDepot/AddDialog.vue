@@ -33,14 +33,14 @@
         <el-table-column label="产品名称" align="center" prop="product_name" header-align="center"></el-table-column>
         <el-table-column label="仓库选择" align="center" header-align="center">
           <template slot-scope="scope">
-            <el-select v-model="scope.row['inbound_warehouse_id']" placeholder="">
+            <el-select filterable v-model="scope.row['inbound_warehouse_id']" placeholder="">
               <el-option v-for="item in $vuexData.x.warehouse" :key="item.id" :label="item.name" :value="item.id"> </el-option>
             </el-select>
           </template>
         </el-table-column>
         <el-table-column label="仓位选择" align="center" header-align="center">
           <template slot-scope="scope">
-            <el-select v-model="scope.row['warehouse_location_id']" placeholder="">
+            <el-select filterable v-model="scope.row['warehouse_location_id']" placeholder="">
               <el-option v-for="item in $vuexData.x.location" :key="item.id" :label="item.name" :value="item.id"> </el-option>
             </el-select>
           </template>

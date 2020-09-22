@@ -25,7 +25,7 @@
         </el-table-column>
         <el-table-column label="库位" align="center" prop="location_id" header-align="center">
           <template slot-scope="scope">
-            <el-select v-model="scope.row['location_id']" placeholder="">
+            <el-select v-model="scope.row['location_id']" placeholder="" filterable>
               <el-option v-for="item in location_options" :key="item.id" :label="item.name" :value="item.id"> </el-option>
             </el-select>
           </template>

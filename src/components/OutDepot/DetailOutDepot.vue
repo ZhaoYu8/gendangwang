@@ -29,7 +29,7 @@
       </el-col>
     </el-row>
     <div class="pt-10" id="detailOutDepot" ref="detailOutDepot" v-show="receiptShow">
-      <div class="header">发货流程单</div>
+      <div class="header">{{ outbound_task.contact_company }} 发货流程单</div>
       <ul class="d-f-s-b">
         <li>发货单号 : {{ outbound_task.outbound_task_serial }}</li>
         <li>配货员 : {{ outbound_task.delivery_member_name }}</li>
@@ -42,14 +42,14 @@
         <tr v-for="item in arr.length" :key="`s` + item">
           <td v-for="n in arr[item - 1]" :key="n.label + item">
             <div class="d-f-c">
-              <div class="W-80 t-j">{{ n.label }}</div>
-              <div class="ml-10">{{ ': ' + (outbound_task[n.id] || '') }}</div>
+              <div class="W-80 t-j w-s-n">{{ n.label }}：</div>
+              <div>{{ outbound_task[n.id] || '' }}</div>
             </div>
           </td>
         </tr>
         <tr>
           <td colspan="3">
-            <div class="W-80 t-j">备注:{{ outbound_task.desc_note }}</div>
+            <div>备注：{{ outbound_task.desc_note }}</div>
           </td>
         </tr>
       </table>
@@ -269,8 +269,18 @@ export default {
 }
 // 打印单据
 #receipt {
+  @media print {
+    .table {
+      tr:first-child {
+        background: #909399 !important;
+        color: #fff;
+        -webkit-print-color-adjust: exact;
+      }
+    }
+  }
   font-size: 12px;
   .box {
+    page-break-before: always;
     .header {
       color: #000;
       text-align: center;
@@ -299,8 +309,8 @@ export default {
         }
       }
       tr:first-child {
-        background-color: #e3e9f6;
-        color: #000;
+        background-color: #909399;
+        color: #fff;
         td {
           white-space: nowrap;
         }

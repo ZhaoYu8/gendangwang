@@ -29,20 +29,23 @@
     <!-- 头部查询条件 -->
     <div id="printMe" ref="printMe" :style="{ fontSize: fontSize + 'px' }">
       <template v-if="!toggleType">
-        <table v-for="ge in Math.ceil(tableData.length / 18)" :key="'ss' + ge" border="1" cellspacing="0" class="table">
-          <tr style="background-color: #5491ff ">
-            <td :style="{ width: item.width }" v-for="item in headerArr" :key="item.label">{{ item.label }}</td>
-          </tr>
-          <template v-for="(item, index) in tableData.slice((ge - 1) * 18, ge * 18)">
-            <tr v-if="index > 0 && tableData[index - 1].receiving_unit !== tableData[index].receiving_unit" :key="item.product_name + index" style="height: 10px;"></tr>
-            <tr :key="item.receiving_unit + index">
-              <td v-for="n in headerArr" :key="n.id">{{ n.id !== 'index' ? item[n.id] : (ge - 1) * 18 + index + 1 }}</td>
+        <div v-for="ge in Math.ceil(tableData.length / 16)" :key="'ss' + ge" class="box">
+          <div class="header">{{ model === '0' ? '业务/车间月度库存表——明细' : `业务/车间库存表${date}` }}</div>
+          <table border="1" cellspacing="0" class="table">
+            <tr style="background-color: #5491ff ">
+              <td :style="{ width: item.width }" v-for="item in headerArr" :key="item.label">{{ item.label }}</td>
             </tr>
-          </template>
-        </table>
+            <template v-for="(item, index) in tableData.slice((ge - 1) * 16, ge * 16)">
+              <tr v-if="index > 0 && tableData[index - 1].receiving_unit !== tableData[index].receiving_unit" :key="item.product_name + index" style="height: 10px;"></tr>
+              <tr :key="item.receiving_unit + index">
+                <td v-for="n in headerArr" :key="n.id">{{ n.id !== 'index' ? item[n.id] : (ge - 1) * 16 + index + 1 }}</td>
+              </tr>
+            </template>
+          </table>
+        </div>
       </template>
       <template v-if="toggleType">
-        <table border="1" cellspacing="0" class="table">
+        <table border="1" cellspacing="0" class="table table1">
           <tr style="background-color: #5491ff ">
             <td :style="{ width: item.width }" v-for="item in headerArr" :key="item.label">{{ item.label }}</td>
           </tr>
@@ -65,6 +68,7 @@ export default {
   computed: {},
   data: () => {
     return {
+      date: '',
       toggleType: true,
       model: '0',
       user: null,
@@ -102,6 +106,7 @@ export default {
   },
   methods: {
     print() {
+      this.date = moment().format(" YYYY-MM-DD HH:mm:ss");
       this.toggleType = false;
       setTimeout(() => {
         this.toggleType = true;
@@ -274,15 +279,29 @@ export default {
 <style lang="scss" scoped>
 #printMe {
   @media print {
-    .table {
+    .box {
       tr:first-child {
         background: #5491ff !important;
         -webkit-print-color-adjust: exact;
       }
       page-break-before: always;
     }
+    .table1 {
+      tr:first-child {
+        background: #5491ff !important;
+        -webkit-print-color-adjust: exact;
+      }
+    }
   }
   color: #000;
+  .header {
+    color: #000;
+    text-align: center;
+    font-size: 26px;
+    line-height: 26px;
+    font-family: '楷体';
+    margin-bottom: 5px;
+  }
   .border {
     .el-row {
       .el-col:last-child {

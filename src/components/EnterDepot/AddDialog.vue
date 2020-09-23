@@ -6,7 +6,7 @@
         <el-form label-position="left" :inline="true">
           <el-col span="7">
             <el-form-item label="客户名称：" class="form-item">
-              <el-select v-model="cust" placeholder="请选择客户名称" filterable @change="inputModel = ''" clearable>
+              <el-select v-model="cust" placeholder="请选择客户名称" filterable @change="custChange" clearable>
                 <el-option v-for="item in this.$vuexData.x.customer" :key="item.id" :label="item.name" :value="item.id"> </el-option>
               </el-select>
             </el-form-item>
@@ -98,6 +98,10 @@ export default {
     },
   },
   methods: {
+    custChange() {
+      this.inputModel = '';
+      this.query();
+    },
     numberChange(val) {
       val.entry_number = Number(val.entry_number) || 0;
     },

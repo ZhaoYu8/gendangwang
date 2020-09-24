@@ -1,13 +1,16 @@
-import App from "./App.vue";
-import router from "./router";
-import http from "./api/index";
-import common from "./assets/common";
-import Print from "vue-print-nb";
-import global from "./assets/global";
-import store from "./store";
-import "./assets/common.scss";
-import Element from "element-ui";
-Vue.use(Element, { size: "medium" });
+import App from './App.vue';
+import router from './router';
+import http from './api/index';
+import common from './assets/common';
+import Print from 'vue-print-nb';
+import global from './assets/global';
+import store from './store';
+import './assets/common.scss';
+import Element from 'element-ui';
+import directives from './directives';
+// 全局注册指令
+Vue.use(directives);
+Vue.use(Element, { size: 'medium' });
 Vue.config.productionTip = false;
 let arr = [];
 Object.assign(Vue.prototype, {
@@ -15,9 +18,9 @@ Object.assign(Vue.prototype, {
   $get: http.get,
   $bus: new Vue(),
   $common: common,
-  $print: Print
+  $print: Print,
 });
-Vue.directive("focus", {
+Vue.directive('focus', {
   inserted: function(el) {
     arr.push(el.children[0]);
     el.onkeydown = function(event) {
@@ -36,6 +39,6 @@ let vm = new Vue({
   router,
   store,
   render: (h) => h(App),
-}).$mount("#app");
+}).$mount('#app');
 
 export default vm;

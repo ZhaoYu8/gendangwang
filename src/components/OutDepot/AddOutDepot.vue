@@ -97,7 +97,7 @@ export default {
         // { label: "发货单号", model: "", placeholder: "", id: "outbound_task_serial" },
         // { label: "运单号码", model: "", placeholder: "", id: "delivery_serial" },
         // siji : 司机
-        { label: '下单客户', model: '', placeholder: '', id: 'customer_id', type: 'select', data: [] },
+        { label: '下单客户', model: '', placeholder: '', id: 'customer_id', type: 'page', data: [] },
         { label: '发货日期', model: '', placeholder: '', id: 'delivery_date', type: 'date', data: [] },
         { label: '发货单号', model: '', placeholder: '', id: 'outbound_task_serial' },
         { label: '运单号码', model: '', placeholder: '', id: 'delivery_serial' },
@@ -251,7 +251,6 @@ export default {
         });
         this.editId = res.id;
         this.finance = res.type;
-        return;
       }
       this.init();
     });

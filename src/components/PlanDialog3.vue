@@ -1,21 +1,7 @@
 <template>
   <el-dialog title="新增特殊计划" :visible.sync="dialogVisible" width="96%" top="5vh" class="dialog" @close="cancel(false)">
     <!-- 头部查询条件 -->
-    <el-card class="mb-10">
-      <el-row :gutter="20">
-        <el-form label-position="left" :inline="true">
-          <el-col :span="item.span || 6" v-for="(item, index) in arr" :key="item.label + index">
-            <el-form-item :label="item.label + '：'" class="form-item">
-              <el-input v-model="item.model" :placeholder="item.placeholder || '请输入'" v-if="!item.type"></el-input>
-              <el-select v-model="item.model" filterable :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'" style="width: 100%;">
-                <el-option v-for="(list, d) in item.data" :key="d" :label="list.name" :value="list.id"></el-option>
-              </el-select>
-              <el-date-picker v-model="item.model" type="date" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'date'" style="width: 100%;" :clearable="false"></el-date-picker>
-            </el-form-item>
-          </el-col>
-        </el-form>
-      </el-row>
-    </el-card>
+    <Panel :arr="arr"> </Panel>
     <span slot="footer" class="dialog-footer">
       <el-button type="primary" @click="onOk" round>提交计划</el-button>
     </span>
@@ -39,11 +25,11 @@ export default {
       arr: [
         { label: "日期", model: moment().format("YYYY-MM-DD"), placeholder: "", id: "delivery_date", type: "date", data: [] },
         { label: "班次", model: "", placeholder: "", id: "delivery_shifts", type: "select", data: [] },
-        { label: "下单客户", model: "", placeholder: "", id: "customer_id", type: "select", data: [] },
+        { label: "下单客户", model: "", placeholder: "", id: "customer_id", type: "page", data: [] },
         { label: "收货单位", model: "", placeholder: "", id: "receiving_unit" },
         { label: "路线", model: "", placeholder: "请输入路线", id: "delivery_route" },
         { label: "产品名称", model: "", placeholder: "请输入产品名称", id: "product_name", noHttp: true },
-        { label: "产品所属", model: "", placeholder: "", id: "abc", type: "select", data: [], noHttp: true },
+        { label: "产品所属", model: "", placeholder: "", id: "abc", type: "page", data: [], noHttp: true },
         {
           label: "特殊事宜",
           model: "",

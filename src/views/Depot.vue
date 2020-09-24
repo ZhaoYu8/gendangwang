@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       arr: [
-        { label: '客户', model: '', placeholder: '', type: 'select', data: [], id: 'customer_id' },
+        { label: '客户', model: '', placeholder: '', type: 'page', data: [], id: 'customer_id' },
         { label: '销售', model: '', placeholder: '', type: 'select', data: [], id: 'saler_id' },
         { label: '跟单', model: '', placeholder: '', type: 'select', data: [], id: 'member_id' },
         { label: '分类', model: '', placeholder: '', type: 'select', data: [], id: 'member_id' },

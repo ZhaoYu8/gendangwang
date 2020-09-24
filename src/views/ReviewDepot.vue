@@ -52,8 +52,8 @@ export default {
       total: 1,
       arr: [
         { label: "仓库", model: "", placeholder: "", type: "select", data: [], id: "inbound_warehouse_id" },
-        { label: "仓位", model: "", placeholder: "", type: "select", data: [], id: "warehouse_location_id" },
-        { label: "客户", model: "", placeholder: "", type: "select", data: [], id: "customer_id" },
+        { label: "仓位", model: "", placeholder: "", type: "page", data: [], id: "warehouse_location_id" },
+        { label: "客户", model: "", placeholder: "", type: "page", data: [], id: "customer_id" },
         { label: "销售", model: "", placeholder: "", type: "select", data: [], id: "saler_id" },
         { label: "负责人", model: "", placeholder: "", type: "select", data: [], id: "member_id" },
         { label: "发货时间", model: "", placeholder: "", type: "daterange", span: 8, id: "delivery_date_min" },

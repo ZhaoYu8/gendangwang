@@ -6,9 +6,7 @@
         <el-form label-position="left" :inline="true">
           <el-col span="7">
             <el-form-item label="客户名称：" class="form-item">
-              <el-select v-model="cust" placeholder="请选择客户名称" filterable @change="custChange">
-                <el-option v-for="item in this.$vuexData.x.customer" :key="item.id" :label="item.name" :value="item.id"> </el-option>
-              </el-select>
+              <Page v-model="cust" placeholder="请选择客户名称" :data="$vuexData.x.customer" @change="custChange"></Page>
             </el-form-item>
           </el-col>
           <el-col span="5">
@@ -40,9 +38,7 @@
         </el-table-column>
         <el-table-column label="仓位选择" align="center" header-align="center">
           <template slot-scope="scope">
-            <el-select filterable v-model="scope.row['warehouse_location_id']" placeholder="">
-              <el-option v-for="item in $vuexData.x.location" :key="item.id" :label="item.name" :value="item.id"> </el-option>
-            </el-select>
+            <Page v-model="scope.row['warehouse_location_id']" :data="$vuexData.x.location"></Page>
           </template>
         </el-table-column>
         <el-table-column label="当前库存" align="center" prop="storage_quantity" header-align="center" width="100"></el-table-column>
@@ -69,7 +65,7 @@
 
 <script>
 export default {
-  name: "AddDialog",
+  name: 'AddDialog',
   props: {
     dialogVisibl: {
       type: Boolean,
@@ -81,7 +77,7 @@ export default {
   data: () => {
     return {
       multipleSelection: [],
-      inputModel: "",
+      inputModel: '',
       cust: null,
       custData: [], // 客户数据
       dialogVisible: false,
@@ -112,7 +108,7 @@ export default {
       this.multipleSelection = val;
     },
     cancel(type = false) {
-      this.$emit("cancel", type);
+      this.$emit('cancel', type);
       this.dialogVisible = false;
     },
     async query() {
@@ -122,7 +118,7 @@ export default {
       } else {
         obj.customer_id = this.cust;
       }
-      let res = await this.$post("outbound_tasks/choose_products", obj);
+      let res = await this.$post('outbound_tasks/choose_products', obj);
       this.tableData = res.data.data.items.map((r) => {
         return { ...r, ...{ sparetime: 0 } };
       });
@@ -130,21 +126,21 @@ export default {
     save() {
       if (!this.multipleSelection.length) {
         this.$notify({
-          title: "警告",
-          message: "你未选中任何一条数据，请检查！",
-          type: "warning",
+          title: '警告',
+          message: '你未选中任何一条数据，请检查！',
+          type: 'warning',
         });
         return;
       }
-      this.$emit("save", this.multipleSelection);
+      this.$emit('save', this.multipleSelection);
       this.cancel();
     },
   },
   beforeDestroy() {
-    this.$bus.$off("AddOutDepot");
+    this.$bus.$off('AddOutDepot');
   },
   mounted() {
-    this.$bus.$on("AddOutDepot", (val) => {
+    this.$bus.$on('AddOutDepot', (val) => {
       this.cust = val;
       this.query();
     });

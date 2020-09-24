@@ -14,9 +14,7 @@
         </div>
         <div class="ml-20" v-show="model === '0'">
           客户名称：
-          <el-select filterable v-model="cust" :placeholder="placeholder || '请选择'" clearable @change="query4">
-            <el-option v-for="(list, d) in custData" :key="d" :label="list.name" :value="list.id"></el-option>
-          </el-select>
+          <Page v-model="cust" placeholder="请选择" :data="custData" @change="query4"></Page>
         </div>
       </div>
       <div slot="footer">
@@ -106,7 +104,7 @@ export default {
   },
   methods: {
     print() {
-      this.date = moment().format(" YYYY-MM-DD HH:mm:ss");
+      this.date = moment().format(' YYYY-MM-DD HH:mm:ss');
       this.toggleType = false;
       setTimeout(() => {
         this.toggleType = true;

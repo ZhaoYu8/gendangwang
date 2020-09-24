@@ -1,39 +1,27 @@
 <template>
   <div class="plan box p-10">
     <!-- 头部查询条件 -->
-    <el-card>
-      <el-row :gutter="20">
-        <el-form label-position="left" :inline="true">
-          <el-col :span="6" v-for="(item, index) in arr" :key="item.label + index">
-            <el-form-item :label="item.label" class="form-item">
-              <el-input v-model="item.model" :placeholder="item.placeholder || '请输入'" v-if="!item.type"></el-input>
-              <el-select filterable v-model="item.model" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'" clearable style="width: 100%;">
-                <el-option v-for="(list, d) in item.data" :key="d" :label="list.name" :value="list.id"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item class="f-r">
-              <el-button type="primary" @click="moreDel">多选删除</el-button>
-              <el-button type="primary" @click="summary">汇总</el-button>
-              <el-button type="primary" @click="special">特殊计划单</el-button>
-              <el-button type="primary" @click="copyAdd">复制新建</el-button>
-              <el-button
-                type="primary"
-                @click="
-                  () => {
-                    this.checkArr = [];
-                    this.query();
-                  }
-                "
-                >查询</el-button
-              >
-              <el-button type="warning" @click="dialog1 = true">新增</el-button>
-            </el-form-item>
-          </el-col>
-        </el-form>
-      </el-row>
-    </el-card>
+    <Panel :arr="arr">
+      <el-col :span="24">
+        <el-form-item class="f-r">
+          <el-button type="primary" @click="moreDel">多选删除</el-button>
+          <el-button type="primary" @click="summary">汇总</el-button>
+          <el-button type="primary" @click="special">特殊计划单</el-button>
+          <el-button type="primary" @click="copyAdd">复制新建</el-button>
+          <el-button
+            type="primary"
+            @click="
+              () => {
+                this.checkArr = [];
+                this.query();
+              }
+            "
+            >查询</el-button
+          >
+          <el-button type="warning" @click="dialog1 = true">新增</el-button>
+        </el-form-item>
+      </el-col>
+    </Panel>
     <!-- 表格 -->
     <div class="pt-10 table">
       <el-table :data="tableData" style="width: 100%;" border ref="firstTable" @select="selected" @select-all="selectedAll">
@@ -95,7 +83,7 @@ export default {
       dialog3: false,
       paginate_meta: {}, // 分页总数数据
       arr: [
-        { label: '下单客户：', model: '', placeholder: '', type: 'select', data: [], id: 'customer_id' },
+        { label: '下单客户：', model: '', placeholder: '', type: 'page', data: [], id: 'customer_id' },
         { label: '收货单位：', model: '', placeholder: '', data: [], id: 'receiving_unit' },
         { label: '产品名称：', model: '', placeholder: '', id: 'product_name' },
       ],

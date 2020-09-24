@@ -136,7 +136,7 @@ export default {
         this.checkArr = [];
         this.currentPage = 1;
         this.query();
-        this.$vuexFn.getUser().then(() => {
+        this.$vuexFn.getCommon().then(() => {
           this.$bus.$emit('user');
         });
       }

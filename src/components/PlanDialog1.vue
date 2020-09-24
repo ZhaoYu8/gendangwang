@@ -70,7 +70,6 @@ export default {
         this.arr[6].data = this.arr[2].data = this.$vuexData.x.customer;
         this.arr[2].model = this.$vuexData.x.customer[0].id;
         this.arr[3].model = this.$vuexData.x.customer[0].name;
-        this.arr[4].model = this.$vuexData.x.customer[0].address;
         this.arr[1].data = [
           { name: '', id: '' },
           { name: '早班', id: '早班' },
@@ -88,6 +87,7 @@ export default {
         this.tableData = res.data.data;
         this.total = res.data.paginate_meta.total_count;
         this.reqeat();
+        this.arr[4].model = res.data.data.delivery_route;
       });
     },
     currentChange(index) {
@@ -98,7 +98,6 @@ export default {
       if (val.id === 'customer_id') {
         let data = val.data.filter((r) => r.id === val.model)[0];
         this.arr[3].model = data.name;
-        this.arr[4].model = data.address;
       }
       this.commonQuery(val, index);
     },

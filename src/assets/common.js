@@ -74,7 +74,7 @@ let obj = {
         val.sparetime = Math.ceil((Number(val.delivery_number) * Number(val.sparetime_percent)) / 100);
       }
       if (['delivery_shifts', 'delivery_route'].includes(item.id)) {
-        this.$vuexFn.getUser().then(() => {
+        this.$vuexFn.getCommon().then(() => {
           this.$bus.$emit('user');
         });
       }

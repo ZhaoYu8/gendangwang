@@ -17,12 +17,16 @@ export default {
   },
   methods: {
     ...mapActions({
-      getUser: 'getUser',
+      getCommon: 'getCommon',
+      getCust: 'getCust',
+      getLocation: 'getLocation',
     }),
   },
   created() {
     let obj = {
-      getUser: this.getUser,
+      getCommon: this.getCommon,
+      getCust: this.getCust,
+      getLocation: this.getLocation,
     };
     Object.assign(Vue.prototype, {
       $vuexFn: obj,

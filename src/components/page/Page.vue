@@ -121,19 +121,8 @@ export default {
         this.index = 1;
         this.options = this.data.slice((this.index - 1) * 20, this.index * 20);
       } else {
-        let arr = [];
-        if (this.value && this.multiple) {
-          arr = this.value.map((r) => {
-            let n = this.options.filter((n) => n[this.id] === (r[this.id] ? r[this.id] : r));
-            return {
-              id: r[this.id] ? r[this.id] : r,
-              fullName: n[0][this.name],
-            };
-          });
-        } else {
-          arr = this.value;
-        }
-        this.$emit('input', arr);
+        this.stop = false;
+        this.$emit('input', this.value);
       }
     },
   },

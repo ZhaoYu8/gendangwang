@@ -58,6 +58,7 @@
           <template slot-scope="scope"> <el-input v-model="scope.row['note']" placeholder=""></el-input> </template>
         </el-table-column>
       </el-table>
+      <el-pagination layout="prev, pager, next" :current-page.sync="currentPage" :total="total_count" background :page-size="20" class="pt-10 d-f-e" @current-change="currentChange"> </el-pagination>
       <!-- 第一个表格分页 -->
     </div>
   </el-dialog>
@@ -82,12 +83,15 @@ export default {
       custData: [], // 客户数据
       dialogVisible: false,
       tableData: [],
+      total_count: 1,
+      currentPage: 1,
     };
   },
   watch: {
     dialogVisibl(val) {
       if (val) {
         this.dialogVisible = true;
+        this.tableData = [];
       }
     },
   },
@@ -111,17 +115,30 @@ export default {
       this.$emit('cancel', type);
       this.dialogVisible = false;
     },
+    currentChange() {
+      this.query();
+    },
     async query() {
-      let obj = {};
+      let obj = { page: this.currentPage };
       if (this.inputModel) {
         obj.query_key = this.inputModel;
       } else {
         obj.customer_id = this.cust;
       }
       let res = await this.$post('outbound_tasks/choose_products', obj);
-      this.tableData = res.data.data.items.map((r) => {
-        return { ...r, ...{ sparetime: 0 } };
+      res = res.data.data;
+      let arr = this.multipleSelection;
+      let data = res.items.filter((r) => !this.multipleSelection.map((n) => n.product_id).includes(r.product_id));
+      data.map((r, n) => {
+        r.sparetime = 0;
       });
+      this.tableData = this.multipleSelection.concat(data);
+      this.$nextTick(() => {
+        arr.forEach((row) => {
+          this.$refs.dialog1Table.toggleRowSelection(row);
+        });
+      });
+      this.total_count = res.paginate_meta.total_count;
     },
     save() {
       if (!this.multipleSelection.length) {

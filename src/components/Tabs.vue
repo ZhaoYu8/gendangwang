@@ -6,21 +6,21 @@
 
 <script>
 export default {
-  name: "tabs",
+  name: 'tabs',
   data() {
     return {
       tabs: [
-        { label: "库存信息", key: "depotInfo" },
-        { label: "入库管理", key: "enterDepot" },
-        { label: "出库确认", key: "depot" },
-        { label: "统计报表", key: "report" },
-        { label: "发货管理", key: "outDepot" },
-        { label: "发货财务审核", key: "reviewDepot" },
-        { label: "送货计划单", key: "plan" },
-        { label: "送货派货单", key: "deliverGoods" },
-        { label: "送货单列表", key: "deliveryList" },
+        // { label: '库存信息', key: 'depotInfo' },
+        // { label: '入库管理', key: 'enterDepot' },
+        // { label: '出库确认', key: 'depot' },
+        // { label: '统计报表', key: 'report' },
+        { label: '发货管理', key: 'outDepot' },
+        { label: '发货财务审核', key: 'reviewDepot' },
+        { label: '送货计划单', key: 'plan' },
+        { label: '送货派货单', key: 'deliverGoods' },
+        { label: '送货单列表', key: 'deliveryList' },
       ],
-      activeName: "outDepot", // 切换页model
+      activeName: 'outDepot', // 切换页model
       user: [],
     };
   },
@@ -31,8 +31,12 @@ export default {
   },
   mounted() {
     // 取user数据
-    this.$vuexFn.getUser().then(() => {
-      this.$bus.$emit("user");
+
+    let a = this.$vuexFn.getCommon();
+    let b = this.$vuexFn.getCust();
+    let c = this.$vuexFn.getLocation();
+    Promise.all([a, b, c]).then(() => {
+      this.$bus.$emit('user');
     });
     setTimeout(() => {
       this.activeName = this.$route.name;

@@ -1,3 +1,5 @@
 export default {
-  SET_USER: 'SET_USER',
+  SET_COMMON: 'SET_COMMON',
+  SET_CUST: 'SET_CUST',
+  SET_LOCATION: 'SET_LOCATION',
 };

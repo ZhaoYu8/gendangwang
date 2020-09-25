@@ -22,9 +22,7 @@
       </el-table-column>
       <el-table-column label="仓位选择" align="center" header-align="center">
         <template slot-scope="scope">
-          <el-select filterable v-model="scope.row['warehouse_location_id']" placeholder="">
-            <el-option v-for="item in $vuexData.x.location" :key="item.id" :label="item.name" :value="item.id"> </el-option>
-          </el-select>
+          <Page v-model="scope.row['warehouse_location_id']" :data="$vuexData.x.location"></Page>
         </template>
       </el-table-column>
       <el-table-column label="当前库存" align="center" prop="storage_quantity" header-align="center" width="100"></el-table-column>

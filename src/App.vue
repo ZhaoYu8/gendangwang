@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <tabs> </tabs>
     <div class="concat">
       <router-view />
     </div>
@@ -23,6 +22,7 @@ export default {
     }),
   },
   created() {
+    console.log(this.$route);
     let obj = {
       getCommon: this.getCommon,
       getCust: this.getCust,
@@ -36,7 +36,7 @@ export default {
 };
 </script>
 <style lang="scss">
-#app{
+#app {
   height: 100%;
   display: flex;
   flex-direction: column;

@@ -1,7 +1,10 @@
 <template>
-  <el-tabs v-model="activeName" type="border-card" @tab-click="chenge">
-    <el-tab-pane :label="item.label" :name="item.key" v-for="(item, index) in tabs" :key="item.key + index"></el-tab-pane>
-  </el-tabs>
+  <div class="tabs">
+    <el-tabs v-model="activeName" type="border-card" @tab-click="chenge">
+      <el-tab-pane :label="item.label" :name="item.key" v-for="(item, index) in tabs" :key="item.key + index"></el-tab-pane>
+    </el-tabs>
+    <router-view />
+  </div>
 </template>
 
 <script>
@@ -10,10 +13,10 @@ export default {
   data() {
     return {
       tabs: [
-        // { label: '库存信息', key: 'depotInfo' },
-        // { label: '入库管理', key: 'enterDepot' },
-        // { label: '出库确认', key: 'depot' },
-        // { label: '统计报表', key: 'report' },
+        { label: '库存信息', key: 'depotInfo' },
+        { label: '入库管理', key: 'enterDepot' },
+        { label: '出库确认', key: 'depot' },
+        { label: '统计报表', key: 'report' },
         { label: '发货管理', key: 'outDepot' },
         { label: '发货财务审核', key: 'reviewDepot' },
         { label: '送货计划单', key: 'plan' },
@@ -31,7 +34,6 @@ export default {
   },
   mounted() {
     // 取user数据
-
     let a = this.$vuexFn.getCommon();
     let b = this.$vuexFn.getCust();
     let c = this.$vuexFn.getLocation();
@@ -45,4 +47,9 @@ export default {
 };
 </script>
 
-<style lang="" scoped></style>
+<style lang="scss" scoped>
+.tabs {
+  width: 100%;
+  height: 100%;
+}
+</style>

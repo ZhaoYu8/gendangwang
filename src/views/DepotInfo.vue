@@ -59,9 +59,7 @@
       </div>
       <template v-else>
         <template v-if="visibleType === 1">
-          <el-select v-model="locationModel" placeholder="请选择仓位！" class="w-100" filterable>
-            <el-option v-for="item in $vuexData.x.location" :key="item.id" :label="item.name" :value="item.id"> </el-option>
-          </el-select>
+          <Page v-model="locationModel" :data="$vuexData.x.location"></Page>
         </template>
         <el-input ref="input" v-model="visibleModel" placeholder="请输入数量！" @change="visibleModel = Number(visibleModel) || 0" :class="{ 'pt-10': visibleType === 1 }"></el-input>
       </template>

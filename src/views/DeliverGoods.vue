@@ -39,7 +39,7 @@
       </el-row>
     </el-card>
     <!-- 第一个表格 -->
-    <div class="pt-10 h-50 table">
+    <div class="pt-10 f-5 table">
       <el-table :data="tableData1" style="width: 100%;" border @selection-change="handleSelectionChange" ref="secondTable">
         <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
         <el-table-column label="操作" width="50" align="center" header-align="center">
@@ -66,7 +66,7 @@
     </div>
 
     <!-- 第二个 表格 -->
-    <div class="pt-10 table">
+    <div class="pt-10 f-2 table">
       <el-table :data="tableData2" style="width: 100%;" border ref="multipleTable_b">
         <el-table-column label="操作" width="200" align="center" header-align="center">
           <div slot-scope="scope" style="display: flex; justify-content: space-around;">

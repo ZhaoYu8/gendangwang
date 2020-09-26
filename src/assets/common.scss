@@ -22,6 +22,9 @@ li {
 .h-50 {
   height: 50%;
 }
+.h-60 {
+  height: 80%;
+}
 .h-100 {
   height: 100%;
 }
@@ -52,6 +55,21 @@ li {
 }
 .f-g {
   flex-grow: 1;
+}
+.f-5 {
+  flex: 5 !important;
+}
+.f-4 {
+  flex: 4 !important;
+}
+.f-3 {
+  flex: 3 !important;
+}
+.f-2 {
+  flex: 2 !important;
+}
+.f-1 {
+  flex: 1 !important;
 }
 .f-s {
   flex-shrink: 1;

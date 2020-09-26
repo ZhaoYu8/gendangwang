@@ -13,10 +13,10 @@ export default {
   data() {
     return {
       tabs: [
-        { label: '库存信息', key: 'depotInfo' },
-        { label: '入库管理', key: 'enterDepot' },
-        { label: '出库确认', key: 'depot' },
-        { label: '统计报表', key: 'report' },
+        // { label: '库存信息', key: 'depotInfo' },
+        // { label: '入库管理', key: 'enterDepot' },
+        // { label: '出库确认', key: 'depot' },
+        // { label: '统计报表', key: 'report' },
         { label: '发货管理', key: 'outDepot' },
         { label: '发货财务审核', key: 'reviewDepot' },
         { label: '送货计划单', key: 'plan' },
@@ -51,5 +51,7 @@ export default {
 .tabs {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 </style>

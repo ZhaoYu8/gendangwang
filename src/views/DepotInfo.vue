@@ -59,7 +59,7 @@
       </div>
       <template v-else>
         <template v-if="visibleType === 1">
-          <Page v-model="locationModel" :data="$vuexData.x.location"></Page>
+          <Page v-model="locationModel" :data="$vuexData.x.location" :placeholder="'请选择库位'" class="w-100"></Page>
         </template>
         <el-input ref="input" v-model="visibleModel" placeholder="请输入数量！" @change="visibleModel = Number(visibleModel) || 0" :class="{ 'pt-10': visibleType === 1 }"></el-input>
       </template>
@@ -101,12 +101,12 @@ export default {
       ],
       visibleHeader: [
         { label: '序号', type: 'serial', width: 50 },
-        { label: '变更时间', id: 'saler_name' },
-        { label: '变更类型', id: 'member_name' },
-        { label: '变更数量', id: 'product_group' },
+        { label: '变更时间', id: 'created_at' },
+        { label: '变更类型', id: 'history_source' },
+        { label: '变更数量', id: 'number_switch' },
         { label: '单价', id: 'product_price' },
-        { label: '操作人', id: 'product_name' },
-        { label: '变更后库存', id: 'product_price' },
+        { label: '操作人', id: 'created_by' },
+        { label: '变更后库存', id: 'number_current' },
       ],
       currentPage: 1,
       total: 1,
@@ -164,6 +164,7 @@ export default {
       this.visible = true;
       this.visibleType = type;
       this.visibleData = val;
+      this.locationModel = this.$vuexData.x.location[0].id
       this.$nextTick(() => {
         this.$refs.input.focus();
       });
@@ -174,14 +175,14 @@ export default {
       let res = await this.$post('yuanyi_storages/for_show', {
         storage_id: val.id,
       });
-      this.visibleTable = res.data.data.entries;
+      this.visibleTable = res.data.data.histories;
       console.log(res);
     },
   },
   mounted() {
     this.query();
     this.arr[0].data = this.$vuexData.x.customer;
-    this.$bus.$on("user", () => {
+    this.$bus.$on('user', () => {
       this.arr[0].data = this.$vuexData.x.customer;
     });
   },

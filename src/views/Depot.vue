@@ -1,7 +1,7 @@
 <template>
   <div class="p-10 box">
     <Panel :arr="arr">
-      <el-col :span="5" class="d-f-e">
+      <el-col :span="4" class="d-f-e">
         <el-button type="primary" @click="query">查询</el-button>
       </el-col>
     </Panel>
@@ -50,7 +50,7 @@ export default {
           model: 0,
           placeholder: '',
           type: 'filter',
-          span: 5,
+          span: 6,
           id: 'delivery_date_min',
           data: [
             { name: '全部', id: 0 },
@@ -63,17 +63,22 @@ export default {
       tableHeader: [
         // 类型、跟单编号、产品名称、提交人、跟单员   这些不可改
         { label: '操作', id: 'update', width: 50 },
-        { label: '出库时间', id: 'saler_name' },
+        { label: '出库时间', id: 'updated_at' },
         { label: '出库类型', id: 'member_name' },
+
         { label: '销售', id: 'saler_name' },
         { label: '负责人', id: 'member_name' },
         { label: '客户名称', id: 'customer_name' },
+
         { label: '订单编号', id: 'customer_name' },
+
         { label: '产品名称', id: 'product_name' },
-        { label: '产品编码', id: 'product_name' },
+        { label: '产品编码', id: 'product_serial' },
+
         { label: '出库数量', id: 'storage_number' },
+
         { label: '单价', id: 'product_price' },
-        { label: '库位', id: 'money' },
+        { label: '库位', id: 'location_name' },
       ],
       currentPage: 1,
       total: 1,
@@ -89,8 +94,8 @@ export default {
         obj.delivery_date_max = moment(obj.delivery_date_min[1]).format('YYYY-MM-DD');
         obj.delivery_date_min = moment(obj.delivery_date_min[0]).format('YYYY-MM-DD');
       }
-      let res = await this.$post('yuanyi_storages/list', obj);
-      this.tableData = res.data.data.entries.map((r) => {
+      let res = await this.$post('yuanyi_deliveries/list', obj);
+      this.tableData = res.data.data.items.map((r) => {
         return { ...r, ...{ money: r.product_price * r.storage_number } };
       });
       this.total = res.data.data.paginate_meta.total_count;
@@ -99,15 +104,16 @@ export default {
       this.currentPage = index;
       this.query();
     },
-    async change() {
+    async change(item) {
       this.$confirm('是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
       })
         .then(async () => {
-          return;
-          let res = await this.$post(`yuanyi_storages/${this.visibleType === 1 ? 'switch_location' : 'change_storage'}`);
+          let res = await this.$post(`yuanyi_deliveries/confirm`, {
+            id: item.id,
+          });
           this.$common.notify();
           this.query();
         })

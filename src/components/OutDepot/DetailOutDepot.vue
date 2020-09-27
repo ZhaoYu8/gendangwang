@@ -78,6 +78,10 @@
           </tr>
         </template>
       </table>
+      <!-- <ul class="bottom">
+        <li :span="6" :offset="12" class="t-r">更新日期 : {{ outbound_task.updated_at }}</li>
+        <li :span="6" class="t-r">打印日期 : {{ outbound_task.printed_at }}</li>
+      </ul> -->
     </div>
     <div id="receipt" v-show="!receiptShow">
       <div v-for="ge in Math.ceil(tableData.length / 8)" :key="'ss' + ge" class="box">

@@ -16,6 +16,7 @@
           客户名称：
           <Page v-model="cust" placeholder="请选择" :data="custData" @change="query4"></Page>
         </div>
+        <el-button type="primary" class="ml-10" plain>查询</el-button>
       </div>
       <div slot="footer">
         <el-link :underline="false" type="primary" style="margin-right: 20px" @click="fontSize--">A-</el-link>

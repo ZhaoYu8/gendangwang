@@ -106,7 +106,7 @@ export default {
         { label: '检验员', model: '', placeholder: '', id: 'check_member_id', type: 'select', data: [] }, // 7
 
         { label: '收货人', model: '', placeholder: '', id: 'contact_name' },
-        { label: '发货人', model: '', placeholder: '', id: 'signment_member_id', type: 'select', data: [] },
+        { label: '发货人', model: '', placeholder: '', id: 'signment_member_id', type: 'select', data: [] }, // 9
         { label: '放单方式', model: '', placeholder: '', id: 'fangdanfangshi', type: 'select', data: [] },
         { label: '业务员', model: '', placeholder: '', id: 'saler_id', type: 'select', data: [] }, // 11
 

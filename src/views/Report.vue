@@ -8,7 +8,7 @@
         </el-radio-group>
         <div class="ml-20" v-show="model === '0'">
           销售：
-          <el-select filterable v-model="user" :placeholder="placeholder || '请选择'" clearable @change="query">
+          <el-select filterable v-model="user" :placeholder="placeholder || '请选择'" clearable>
             <el-option v-for="(list, d) in userData" :key="d" :label="list.name" :value="list.id"></el-option>
           </el-select>
         </div>
@@ -16,7 +16,7 @@
           客户名称：
           <Page v-model="cust" placeholder="请选择" :data="custData" @change="query4"></Page>
         </div>
-        <el-button type="primary" class="ml-10" plain>查询</el-button>
+        <el-button type="primary" class="ml-10" plain v-show="model === '0'" @click="query">查询</el-button>
       </div>
       <div slot="footer">
         <el-link :underline="false" type="primary" style="margin-right: 20px" @click="fontSize--">A-</el-link>
@@ -98,8 +98,10 @@ export default {
   mounted() {
     this.headerArr = this.arr;
     this.custData = this.$vuexData.x.customer;
+    this.userData = this.$vuexData.x.member_options;
     this.$bus.$on('user', () => {
       this.custData = this.$vuexData.x.customer;
+      this.userData = this.$vuexData.x.member_options;
     });
     this.query();
   },
@@ -121,8 +123,8 @@ export default {
     },
     async query() {
       let res = await this.$post('yuanyi_storages/list', {
-        cust: this.cust,
-        user: this.user,
+        customer_id: this.$vuexData.x.customer.filter((r) => r.id === this.cust)[0].name,
+        saler_id: this.user,
       });
       this.tableData = res.data.data.entries.map((r) => {
         return { ...r, ...{ money: r.product_price * r.storage_number, updated_at: moment(r.updated_at).format('YYYY-MM-DD') } };

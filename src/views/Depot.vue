@@ -42,8 +42,8 @@ export default {
         { label: '客户', model: '', placeholder: '', type: 'page', data: [], id: 'customer_id' },
         { label: '销售', model: '', placeholder: '', type: 'select', data: [], id: 'saler_id' },
         { label: '跟单', model: '', placeholder: '', type: 'select', data: [], id: 'member_id' },
-        { label: '分类', model: '', placeholder: '', type: 'select', data: [], id: 'member_id' },
-        { label: '产品名称', model: '', placeholder: '', id: 'warehouse_location_id' },
+        { label: '分类', model: '', placeholder: '', type: 'select', data: [], id: 'product_group' },
+        { label: '产品名称', model: '', placeholder: '', id: 'product_name' },
         { label: '入库时间', model: '', placeholder: '', type: 'daterange', span: 8, id: 'delivery_date_min' },
         {
           label: '筛选内容',
@@ -51,7 +51,7 @@ export default {
           placeholder: '',
           type: 'filter',
           span: 6,
-          id: 'delivery_date_min',
+          id: 'confirm_status',
           data: [
             { name: '全部', id: 0 },
             { name: '待确认', id: 1 },
@@ -91,9 +91,13 @@ export default {
         ...{ page: this.currentPage },
       };
       if (obj.delivery_date_min) {
-        obj.delivery_date_max = moment(obj.delivery_date_min[1]).format('YYYY-MM-DD');
-        obj.delivery_date_min = moment(obj.delivery_date_min[0]).format('YYYY-MM-DD');
+        obj.created_at_max = moment(obj.delivery_date_min[1]).format('YYYY-MM-DD');
+        obj.created_at_min = moment(obj.delivery_date_min[0]).format('YYYY-MM-DD');
       }
+      if (obj.customer_id) {
+        obj.customer_id = this.$vuexData.x.customer.filter((r) => r.id === obj.customer_id)[0].name;
+      }
+      if (obj.confirm_status === 0) delete obj.confirm_status;
       let res = await this.$post('yuanyi_deliveries/list', obj);
       this.tableData = res.data.data.items.map((r) => {
         return { ...r, ...{ money: r.product_price * r.storage_number } };
@@ -120,12 +124,18 @@ export default {
         .catch(() => {});
       return;
     },
+    init() {
+      this.arr[0].data = this.$vuexData.x.customer;
+      this.arr[1].data = this.$vuexData.x.member_options;
+      this.arr[2].data = this.$vuexData.x.member_options;
+      this.arr[3].data = this.$vuexData.x.group_options;
+    },
   },
   mounted() {
     this.query();
-    if (this.$vuexData.x.location.length) this.locationModel = this.$vuexData.x.location[0].id;
+    this.init();
     this.$bus.$on('user', () => {
-      this.locationModel = this.$vuexData.x.location[0].id;
+      this.init();
     });
   },
 };

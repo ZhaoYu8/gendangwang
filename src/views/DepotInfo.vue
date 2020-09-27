@@ -80,8 +80,8 @@ export default {
         { label: '客户', model: '', placeholder: '', type: 'page', data: [], id: 'customer_id' },
         { label: '销售', model: '', placeholder: '', type: 'select', data: [], id: 'saler_id' },
         { label: '跟单', model: '', placeholder: '', type: 'select', data: [], id: 'member_id' },
-        { label: '分类', model: '', placeholder: '', type: 'select', data: [], id: 'member_id' },
-        { label: '产品名称', model: '', placeholder: '', id: 'warehouse_location_id' },
+        { label: '分类', model: '', placeholder: '', type: 'select', data: [], id: 'product_group' },
+        { label: '产品名称', model: '', placeholder: '', id: 'product_name' },
         { label: '入库时间', model: '', placeholder: '', type: 'daterange', span: 8, id: 'delivery_date_min' },
       ],
       tableData: [],
@@ -125,8 +125,11 @@ export default {
         ...{ page: this.currentPage },
       };
       if (obj.delivery_date_min) {
-        obj.delivery_date_max = moment(obj.delivery_date_min[1]).format('YYYY-MM-DD');
-        obj.delivery_date_min = moment(obj.delivery_date_min[0]).format('YYYY-MM-DD');
+        obj.created_at_max = moment(obj.delivery_date_min[1]).format('YYYY-MM-DD');
+        obj.created_at_min = moment(obj.delivery_date_min[0]).format('YYYY-MM-DD');
+      }
+      if (obj.customer_id) {
+        obj.customer_id = this.$vuexData.x.customer.filter((r) => r.id === obj.customer_id)[0].name;
       }
       let res = await this.$post('yuanyi_storages/list', obj);
       this.tableData = res.data.data.entries.map((r) => {
@@ -164,7 +167,7 @@ export default {
       this.visible = true;
       this.visibleType = type;
       this.visibleData = val;
-      this.locationModel = this.$vuexData.x.location[0].id
+      this.locationModel = this.$vuexData.x.location[0].id;
       this.$nextTick(() => {
         this.$refs.input.focus();
       });
@@ -182,8 +185,14 @@ export default {
   mounted() {
     this.query();
     this.arr[0].data = this.$vuexData.x.customer;
+    this.arr[3].data = this.$vuexData.x.group_options;
+    this.arr[1].data = this.$vuexData.x.member_options;
+    this.arr[2].data = this.$vuexData.x.member_options;
     this.$bus.$on('user', () => {
       this.arr[0].data = this.$vuexData.x.customer;
+      this.arr[3].data = this.$vuexData.x.group_options;
+      this.arr[1].data = this.$vuexData.x.member_options;
+      this.arr[2].data = this.$vuexData.x.member_options;
     });
   },
 };

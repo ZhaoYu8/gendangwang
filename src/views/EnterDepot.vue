@@ -1,10 +1,10 @@
 <template>
   <div class="p-10 box">
     <Panel :arr="arr">
-      <el-col :span="6" class="d-f-e">
+      <el-col :span="12" class="d-f-e">
         <el-button type="primary" plain @click="query">查询</el-button>
         <el-button type="primary" @click="panelChange">新增入库单</el-button>
-        <el-button type="warning" @click="visibleBatch = true">批量导入</el-button>
+        <!-- <el-button type="warning" @click="visibleBatch = true">批量导入</el-button> -->
       </el-col>
     </Panel>
     <!-- 表格 -->
@@ -61,12 +61,11 @@ export default {
       visible: false,
       visibleBatch: false,
       arr: [
-        { label: '仓库', model: '', placeholder: '', type: 'select', data: [], id: 'inbound_warehouse_id' },
-        { label: '仓位', model: '', placeholder: '', type: 'page', data: [], id: 'warehouse_location_id' },
+        { label: '仓位', model: '', placeholder: '', type: 'page', data: [], id: 'location_id' },
         { label: '客户', model: '', placeholder: '', type: 'page', data: [], id: 'customer_id' },
-        { label: '销售', model: '', placeholder: '', type: 'select', data: [], id: 'saler_id' },
+        { label: '销售', model: '', placeholder: '', type: 'select', data: [], id: 'location_id' },
         { label: '负责人', model: '', placeholder: '', type: 'select', data: [], id: 'member_id' },
-        { label: '部门', model: '', placeholder: '', type: 'select', data: [], id: 'member_id' },
+        { label: '部门', model: '', placeholder: '', type: 'select', data: [], id: 'product_group' },
         { label: '入库时间', model: '', placeholder: '', type: 'daterange', span: 6, id: 'delivery_date_min' },
       ],
       tableData: [],
@@ -82,8 +81,11 @@ export default {
         ...{ page: this.currentPage },
       };
       if (obj.delivery_date_min) {
-        obj.delivery_date_max = moment(obj.delivery_date_min[1]).format('YYYY-MM-DD');
-        obj.delivery_date_min = moment(obj.delivery_date_min[0]).format('YYYY-MM-DD');
+        obj.created_at_max = moment(obj.delivery_date_min[1]).format('YYYY-MM-DD');
+        obj.created_at_min = moment(obj.delivery_date_min[0]).format('YYYY-MM-DD');
+      }
+      if (obj.customer_id) {
+        obj.customer_id = this.$vuexData.x.customer.filter((r) => r.id === obj.customer_id)[0].name;
       }
       let res = await this.$post('yuanyi_entries/list', obj);
       this.tableData = res.data.data.entries;
@@ -97,9 +99,11 @@ export default {
       this.query();
     },
     init() {
-      this.arr[0].data = this.$vuexData.x.warehouse;
-      this.arr[1].data = this.$vuexData.x.location;
-      this.arr[2].data = this.$vuexData.x.customer;
+      this.arr[0].data = this.$vuexData.x.location;
+      this.arr[1].data = this.$vuexData.x.customer;
+      this.arr[2].data = this.$vuexData.x.member_options;
+      this.arr[3].data = this.$vuexData.x.member_options;
+      this.arr[4].data = this.$vuexData.x.group_options;
     },
     cancel(type) {
       this.visible = false;

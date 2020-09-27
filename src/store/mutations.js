@@ -20,5 +20,9 @@ const mutations = {
     state.location = data.location_options; // 仓位
     state.warehouse = data.warehouse_options; // 仓库
   },
+  [TYPES.SET_FILTER](state, data) {
+    state.group_options = data.group_options; // 分类
+    state.member_options = data.member_options; // 销售负责人
+  },
 };
 export default mutations;

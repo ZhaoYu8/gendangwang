@@ -37,7 +37,8 @@ export default {
     let a = this.$vuexFn.getCommon();
     let b = this.$vuexFn.getCust();
     let c = this.$vuexFn.getLocation();
-    Promise.all([a, b, c]).then(() => {
+    let d = this.$vuexFn.getFilter();
+    Promise.all([a, b, c, d]).then(() => {
       this.$bus.$emit('user');
     });
     setTimeout(() => {

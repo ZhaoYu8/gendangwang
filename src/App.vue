@@ -19,14 +19,15 @@ export default {
       getCommon: 'getCommon',
       getCust: 'getCust',
       getLocation: 'getLocation',
+      getFilter: 'getFilter',
     }),
   },
   created() {
-    console.log(this.$route);
     let obj = {
       getCommon: this.getCommon,
       getCust: this.getCust,
       getLocation: this.getLocation,
+      getFilter: this.getFilter,
     };
     Object.assign(Vue.prototype, {
       $vuexFn: obj,

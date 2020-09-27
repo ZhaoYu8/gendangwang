@@ -8,7 +8,7 @@
             <el-select size="small" filterable v-model="item.model" :placeholder="item.placeholder || '请选择'" v-if="item.type === 'select'" clearable style="width: 100%;" @change="change(item)">
               <el-option v-for="(list, d) in item.data" :key="list + d" :label="list.name" :value="list.id"></el-option>
             </el-select>
-            <Page v-model="item.model" :placeholder="item.placeholder || '请输入'" :data="item.data" @change="change(item)" v-if="item.type === 'page'"></Page>
+            <Page v-model="item.model" :clearable="item.clearable" :placeholder="item.placeholder || '请输入'" :data="item.data" @change="change(item)" v-if="item.type === 'page'"></Page>
             <el-date-picker
               size="small"
               v-if="item.type === 'daterange'"

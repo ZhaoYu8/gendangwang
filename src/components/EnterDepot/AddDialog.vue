@@ -6,7 +6,7 @@
         <el-form label-position="left" :inline="true">
           <el-col span="7">
             <el-form-item label="客户名称：" class="form-item">
-              <Page v-model="cust" placeholder="请选择客户名称" :data="$vuexData.x.customer" @change="custChange"></Page>
+              <Page v-model="cust" :clearable="true" placeholder="请选择客户名称" :data="$vuexData.x.customer" @change="custChange"></Page>
             </el-form-item>
           </el-col>
           <el-col span="5">
@@ -47,7 +47,7 @@
         </el-table-column>
         <el-table-column label="库位" align="center" prop="location_id" header-align="center">
           <template slot-scope="scope">
-            <Page v-model="scope.row['location_id']" placeholder="" :data="location_options"></Page>
+            <Page v-model="scope.row['location_id']" :clearable="true" placeholder="" :data="location_options"></Page>
           </template>
         </el-table-column>
         <el-table-column label="是否结束" align="center" prop="note" header-align="center">

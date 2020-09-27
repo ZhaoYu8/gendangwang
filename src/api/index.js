@@ -1,8 +1,11 @@
 import { Loading, Notification } from 'element-ui';
 let baseURL = 'https://www.gendanwang.com/v1/api';
 import router from '../router';
+console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV === 'development') {
   baseURL = '/ccc';
+} else if (process.env.NODE_ENV === 'prod') {
+  baseURL = 'http://47.103.139.147/v1/api';
 }
 let instance = axios.create({
   baseURL: baseURL,

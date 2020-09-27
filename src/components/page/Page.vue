@@ -35,7 +35,7 @@ export default {
     },
     clearable: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     value: {
       // 传值

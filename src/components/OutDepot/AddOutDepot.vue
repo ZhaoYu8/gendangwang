@@ -22,7 +22,7 @@
       </el-table-column>
       <el-table-column label="仓位选择" align="center" header-align="center">
         <template slot-scope="scope">
-          <Page v-model="scope.row['warehouse_location_id']" :data="$vuexData.x.location"></Page>
+          <Page v-model="scope.row['warehouse_location_id']" :clearable="true" :data="$vuexData.x.location"></Page>
         </template>
       </el-table-column>
       <el-table-column label="当前库存" align="center" prop="storage_quantity" header-align="center" width="100"></el-table-column>
@@ -95,7 +95,7 @@ export default {
         // { label: "发货单号", model: "", placeholder: "", id: "outbound_task_serial" },
         // { label: "运单号码", model: "", placeholder: "", id: "delivery_serial" },
         // siji : 司机
-        { label: '下单客户', model: '', placeholder: '', id: 'customer_id', type: 'page', data: [] },
+        { label: '下单客户', model: '', placeholder: '', id: 'customer_id', type: 'page', data: [], clearable: false },
         { label: '发货日期', model: '', placeholder: '', id: 'delivery_date', type: 'date', data: [] },
         { label: '发货单号', model: '', placeholder: '', id: 'outbound_task_serial' },
         { label: '运单号码', model: '', placeholder: '', id: 'delivery_serial' },

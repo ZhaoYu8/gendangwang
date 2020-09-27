@@ -14,7 +14,7 @@
         </div>
         <div class="ml-20" v-show="model === '0'">
           客户名称：
-          <Page v-model="cust" placeholder="请选择" :data="custData" @change="query4"></Page>
+          <Page v-model="cust" placeholder="请选择" :clearable="true" :data="custData" @change="query4"></Page>
         </div>
         <el-button type="primary" class="ml-10" plain v-show="model === '0'" @click="query">查询</el-button>
       </div>
@@ -122,10 +122,14 @@ export default {
       }
     },
     async query() {
-      let res = await this.$post('yuanyi_storages/list', {
-        customer_id: this.$vuexData.x.customer.filter((r) => r.id === this.cust)[0].name,
-        saler_id: this.user,
-      });
+      let obj = {};
+      if (this.cust) {
+        obj.customer_id = this.$vuexData.x.customer.filter((r) => r.id === this.cust)[0].name;
+      }
+      if (this.saler_id) {
+        obj.saler_id = this.user;
+      }
+      let res = await this.$post('yuanyi_storages/list', obj);
       this.tableData = res.data.data.entries.map((r) => {
         return { ...r, ...{ money: r.product_price * r.storage_number, updated_at: moment(r.updated_at).format('YYYY-MM-DD') } };
       });

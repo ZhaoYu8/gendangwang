@@ -59,7 +59,7 @@
       </div>
       <template v-else>
         <template v-if="visibleType === 1">
-          <Page v-model="locationModel" :data="$vuexData.x.location" :placeholder="'请选择库位'" class="w-100"></Page>
+          <Page v-model="locationModel" :data="$vuexData.x.location" :clearable="true" :placeholder="'请选择库位'" class="w-100"></Page>
         </template>
         <el-input ref="input" v-model="visibleModel" placeholder="请输入数量！" @change="visibleModel = Number(visibleModel) || 0" :class="{ 'pt-10': visibleType === 1 }"></el-input>
       </template>

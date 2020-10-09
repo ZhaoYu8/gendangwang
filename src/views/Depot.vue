@@ -100,7 +100,7 @@ export default {
       if (obj.confirm_status === 0) delete obj.confirm_status;
       let res = await this.$post('yuanyi_deliveries/list', obj);
       this.tableData = res.data.data.items.map((r) => {
-        return { ...r, ...{ money: r.product_price * r.storage_number } };
+        return { ...r, ...{ money: (r.product_price * r.storage_number).toFixed(2) } };
       });
       this.total = res.data.data.paginate_meta.total_count;
     },

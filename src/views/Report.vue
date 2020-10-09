@@ -131,7 +131,7 @@ export default {
       }
       let res = await this.$post('yuanyi_storages/list', obj);
       this.tableData = res.data.data.entries.map((r) => {
-        return { ...r, ...{ money: r.product_price * r.storage_number, updated_at: moment(r.updated_at).format('YYYY-MM-DD') } };
+        return { ...r, ...{ money: (r.product_price * r.storage_number).toFixed(2), updated_at: moment(r.updated_at).format('YYYY-MM-DD') } };
       });
     },
     async query1() {

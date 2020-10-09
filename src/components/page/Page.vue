@@ -126,7 +126,13 @@ export default {
       }
     },
   },
-  mounted() {},
+  mounted() {
+    this.$nextTick(() => {
+      if (this.value && !this.options.filter((r) => r.id === this.value).length) {
+        this.options.push(...this.data.filter((n) => n.id === this.value));
+      }
+    });
+  },
 };
 </script>
 

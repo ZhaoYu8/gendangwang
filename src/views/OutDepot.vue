@@ -33,8 +33,8 @@
       @current-change="currentChange"
     ></el-pagination>
     <el-dialog title="" :visible="dialogVisible" width="95%" top="5vh" class="dialog" @close="dialogVisible = false" :close-on-click-modal="false">
-      <AddOutDepot v-show="addOrDeatil" @cancel="cancel" @detail="detail" />
-      <DetailOutDepot v-show="!addOrDeatil" :detailData="detailData" @update="update" @cancel="cancel" />
+      <AddOutDepot v-if="addOrDeatil" @cancel="cancel" @detail="detail" />
+      <DetailOutDepot v-if="!addOrDeatil" :detailData="detailData" @update="update" @cancel="cancel" />
     </el-dialog>
   </div>
 </template>
@@ -84,7 +84,7 @@ export default {
     detail(res) {
       this.addOrDeatil = false;
       this.$nextTick(() => {
-        this.$bus.$emit("detailShow", val);
+        this.$bus.$emit("detailShow", res);
       });
     },
     // 详情跳修改

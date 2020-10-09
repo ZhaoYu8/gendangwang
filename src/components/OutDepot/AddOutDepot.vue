@@ -1,6 +1,6 @@
 <template>
   <div class="add-outdepot">
-    <Panel :arr="arr" @change="custChange" />
+    <Panel :arr="arr" @change="custChange" v-if="panelType"/>
     <!-- 第一个表格 -->
     <div :class="{ 'd-f-e': finance }" class="d-f-s-b pt-10 pb-10">
       <el-button type="primary" size="large" @click="changeDialog" v-if="!finance">选择出库产品</el-button>
@@ -68,6 +68,7 @@ export default {
   },
   data: () => {
     return {
+      panelType: false,
       finance: 0, // 是否是财务审核
       dialogShow: false,
       tableData: [],
@@ -175,7 +176,7 @@ export default {
       let data = res.data.data;
       this.arr[15].model = data.tracking_member_id; // 跟单员
       this.arr[11].model = data.saler_member_id; // 业务员
-      this.arr[5].model = data.delivery_company || '园艺包装'; // 发货单位
+      this.arr[5].model = data.delivery_company || '源艺包装'; // 发货单位
       this.arr[9].model = data.signment_member_id; // 发货人
       this.arr[13].model = data.delivery_contact_way; // 联系方式
     },
@@ -202,6 +203,7 @@ export default {
       });
       let obj = {};
       arr.map((r, i) => {
+        r.id = this.editId ? r.id : '';
         obj[i] = r;
       });
       let params = {
@@ -242,6 +244,7 @@ export default {
   },
   mounted() {
     this.$bus.$on('panelShow', (res) => {
+      this.init();
       if (res) {
         this.tableData = res.tableData;
         this.arr.map((r) => {
@@ -250,7 +253,7 @@ export default {
         this.editId = res.id;
         this.finance = res.type;
       }
-      this.init();
+      this.panelType = true;
     });
   },
 };

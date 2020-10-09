@@ -31,6 +31,14 @@
         <el-button type="primary" size="small" icon="el-icon-printer" v-show="receiptShow" v-print="'#detailOutDepot'" @click="flowPrint">打印流程单</el-button>
         <el-button type="warning" size="small" @click="updateDetail(0)">复制</el-button>
         <el-button type="primary" size="small" @click="updateDetail(editID)">修改</el-button>
+         <el-popover placement="top" width="160" v-model="visibleSelf">
+          <p>确定作废吗？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="visibleSelf = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="invalidSelf">确定</el-button>
+          </div>
+          <el-button slot="reference" type="primary" size="small" class="ml-10">作废</el-button>
+        </el-popover>
       </el-col>
     </el-row>
     <div class="pt-10" id="detailOutDepot" ref="detailOutDepot" v-show="receiptShow">
@@ -118,7 +126,7 @@
               <td class="w-s-n">{{ item.product_serial }}</td>
               <td>{{ item.product_number }}</td>
               <td>{{ noShow ? '' : item.price }}</td>
-              <td>{{ noShow ? '' : item.product_number * item.price }}</td>
+              <td>{{ noShow ? '' : (item.product_number * item.price).toFixed(2) }}</td>
               <td>{{ item.note }}</td>
             </tr>
           </template>
@@ -136,6 +144,7 @@
                       .slice((ge - 1) * 8, ge * 8)
                       .map((r) => (r.product_number || 0) * (r.price || 0))
                       .reduce((prev, cur) => prev + cur)
+                      .toFixed(2)
               }}
             </td>
             <td></td>
@@ -178,6 +187,7 @@ export default {
   },
   data: () => {
     return {
+      visibleSelf: false,
       date: '',
       fontSize: 14,
       fontSizes: 16,
@@ -251,6 +261,18 @@ export default {
         title: '提示',
         type: 'success',
         message: '审核出库成功！',
+      });
+      this.$emit('cancel');
+    },
+    async invalidSelf() {
+      this.visibleSelf = false;
+      let res = await this.$post('outbound_tasks/invalid_self', {
+        id: this.editID,
+      });
+      this.$notify({
+        title: '提示',
+        type: 'success',
+        message: '作废成功！',
       });
       this.$emit('cancel');
     },

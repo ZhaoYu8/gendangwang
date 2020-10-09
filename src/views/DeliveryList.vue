@@ -18,7 +18,7 @@
                 type="primary"
                 @click="
                   () => {
-                    this.checkArr = [];
+                    this.currentPage = 1;
                     this.query();
                   }
                 "
@@ -49,19 +49,20 @@
       </el-table>
     </div>
     <!-- 第二个表格分页 -->
-    <el-pagination background layout="total, prev, pager, next, jumper" :total="paginate_meta.total_count" class="pagination" :current-page.sync="currentPage" @current-change="currentChange"> </el-pagination>
+    <el-pagination background layout="total, prev, pager, next, jumper" :total="paginate_meta.total_count" class="pagination" :current-page.sync="currentPage" @current-change="currentChange">
+    </el-pagination>
     <Detail :centerDialogVisible="centerDialogVisible" @cancel="cancel" :detailData="detailData" />
   </div>
 </template>
 
 <script>
-import Detail from "../components/Detail";
+import Detail from '../components/Detail';
 export default {
-  name: "DeliveryList",
+  name: 'DeliveryList',
   props: {
     activeName: {
       type: String,
-      default: "third",
+      default: 'third',
     },
     user: {
       type: Array,
@@ -73,9 +74,9 @@ export default {
     return {
       arr: [
         // 头部查询条件
-        { label: "下单客户：", model: "", placeholder: "", type: "select", data: [], id: "customer_id" },
-        { label: "收货单位：", model: "", placeholder: "", data: [], id: "receiving_unit" },
-        { label: "产品名称：", model: "", placeholder: "", id: "product_name" },
+        { label: '下单客户：', model: '', placeholder: '', type: 'select', data: [], id: 'customer_id' },
+        { label: '收货单位：', model: '', placeholder: '', data: [], id: 'receiving_unit' },
+        { label: '产品名称：', model: '', placeholder: '', id: 'product_name' },
       ],
       detailData: {},
       centerDialogVisible: false, // 第一个dialog
@@ -88,7 +89,7 @@ export default {
   computed: {},
   mounted() {
     this.arr[0].data = this.$vuexData.x.customer;
-    this.$bus.$on("user", () => {
+    this.$bus.$on('user', () => {
       this.arr[0].data = this.$vuexData.x.customer;
     });
     this.query();
@@ -102,15 +103,15 @@ export default {
       }
     },
     async edit(val) {
-      await this.$confirm("确定修改状态么?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      await this.$confirm('确定修改状态么?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       }).then(() => {
-        this.$post("/delivery_plans/switch_status", { delivery_good_id: val.row.delivery_good_id || 0 }).then(() => {
+        this.$post('/delivery_plans/switch_status', { delivery_good_id: val.row.delivery_good_id || 0 }).then(() => {
           this.$message({
-            type: "success",
-            message: "更改状态成功!",
+            type: 'success',
+            message: '更改状态成功!',
           });
           let _this = this;
           setTimeout(() => {
@@ -119,7 +120,7 @@ export default {
         });
       });
     },
-    currentChange() {
+    currentChange(val) {
       this.currentPage = val;
       this.query();
     },
@@ -128,15 +129,14 @@ export default {
         ...this.$common.querySql.call(this, this.arr),
         ...{ page: this.currentPage },
       };
-      this.$post("/delivery_plans/list_schedule", obj).then((res) => {
+      this.$post('/delivery_plans/list_schedule', obj).then((res) => {
         let data = res.data.data;
         this.tableData = data;
         this.paginate_meta = res.data.paginate_meta;
       });
     },
-
     go(val) {
-      this.$post("/delivery_plans/detail", { delivery_good_id: val.row.delivery_good_id }).then((res) => {
+      this.$post('/delivery_plans/detail', { delivery_good_id: val.row.delivery_good_id }).then((res) => {
         this.detailData = res.data;
       });
       this.centerDialogVisible = true;

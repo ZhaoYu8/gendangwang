@@ -21,9 +21,14 @@
           <el-button slot="reference" type="primary" size="small" class="mr-10">审核出库</el-button>
         </el-popover>
 
-        <el-button type="primary" size="small" v-print="'#receipt'" @click="printReceipt" icon="el-icon-printer">打印单据</el-button>
-        <el-button type="primary" size="small" icon="el-icon-printer" v-print="'#receipt'" @click="print">打印单据(无金额)</el-button>
-        <el-button type="primary" size="small" icon="el-icon-printer" v-print="'#detailOutDepot'" @click="flowPrint">打印流程单</el-button>
+        <el-button type="primary" size="small" v-print="'#receipt'" v-show="!receiptShow" @click="printReceipt" icon="el-icon-printer">打印单据</el-button>
+        <el-button type="primary" size="small" icon="el-icon-printer" v-show="!receiptShow" v-print="'#receipt'" @click="print">打印单据(无金额)</el-button>
+
+        <el-button type="primary" size="small" @click="printReceipt" v-show="receiptShow" icon="el-icon-printer">打印单据</el-button>
+        <el-button type="primary" size="small" icon="el-icon-printer" v-show="receiptShow" @click="print">打印单据(无金额)</el-button>
+
+        <el-button type="primary" size="small" icon="el-icon-printer" v-show="!receiptShow" @click="flowPrint">打印流程单</el-button>
+        <el-button type="primary" size="small" icon="el-icon-printer" v-show="receiptShow" v-print="'#detailOutDepot'" @click="flowPrint">打印流程单</el-button>
         <el-button type="warning" size="small" @click="updateDetail(0)">复制</el-button>
         <el-button type="primary" size="small" @click="updateDetail(editID)">修改</el-button>
       </el-col>
@@ -78,10 +83,8 @@
           </tr>
         </template>
       </table>
-      <!-- <ul class="bottom">
-        <li :span="6" :offset="12" class="t-r">更新日期 : {{ outbound_task.updated_at }}</li>
-        <li :span="6" class="t-r">打印日期 : {{ outbound_task.printed_at }}</li>
-      </ul> -->
+
+      <div class="d-f-e mt-10 f-20">打印日期 : {{ date }}</div>
     </div>
     <div id="receipt" v-show="!receiptShow">
       <div v-for="ge in Math.ceil(tableData.length / 8)" :key="'ss' + ge" class="box">
@@ -175,6 +178,7 @@ export default {
   },
   data: () => {
     return {
+      date: '',
       fontSize: 14,
       fontSizes: 16,
       receiptShow: false, // 确定是流程图，还是单据
@@ -220,6 +224,7 @@ export default {
       this.tableData = res.data.data.products;
       this.outbound_task = res.data.data.outbound_task;
       this.editID = val.id;
+      this.date = moment().format('YYYY-MM-DD HH:mm:ss');
     },
     printReceipt() {
       // 打印单据前
@@ -234,6 +239,7 @@ export default {
     },
     flowPrint() {
       this.receiptShow = true;
+      this.date = moment().format('YYYY-MM-DD HH:mm:ss');
     },
     // 审核出库
     async audit() {

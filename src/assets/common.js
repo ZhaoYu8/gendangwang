@@ -8,7 +8,7 @@ let obj = {
     { label: '下单客户', id: 'customer_name', disabled: true },
     { label: '收货单位', id: 'receiving_unit', type: 'input', width: 140 },
     { label: '产品名称', id: 'product_name', disabled: true },
-    { label: '数量', id: 'delivery_number', type: 'input', width: 70 },
+    { label: '数量', id: 'delivery_number', type: 'input', width: 100 },
     { label: '备次', id: 'sparetime', width: 60 },
     { label: '备次率(%)', id: 'sparetime_percent', disabled: true, type: 'input', width: 80 },
     { label: '跟单员', id: 'tracking_member', disabled: true, width: 70 },

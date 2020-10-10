@@ -1,6 +1,6 @@
 <template>
   <div class="add-outdepot">
-    <Panel :arr="arr" @change="custChange" v-if="panelType"/>
+    <Panel :arr="arr" @change="custChange" v-if="panelType" />
     <!-- 第一个表格 -->
     <div :class="{ 'd-f-e': finance }" class="d-f-s-b pt-10 pb-10">
       <el-button type="primary" size="large" @click="changeDialog" v-if="!finance">选择出库产品</el-button>
@@ -126,7 +126,7 @@ export default {
     };
   },
   methods: {
-    init() {
+    async init() {
       this.arr.map((r) => {
         r.model = '';
       });
@@ -140,7 +140,7 @@ export default {
       [19, 7, 15, 11, 9].map((r) => {
         this.arr[r].data = x.member;
       });
-      this.custChange({ model: x.customer[0].id, id: 'customer_id' });
+      await this.custChange({ model: x.customer[0].id, id: 'customer_id' });
       this.arr[1].model = moment().format('YYYY-MM-DD');
       this.tableData = [];
       this.arr[17].model = '常熟市尚湖镇练墉颜巷工业园';
@@ -238,13 +238,17 @@ export default {
     cancel(type) {
       this.$emit('cancel', type);
     },
+    async getSerial() {
+      let res = await this.$post(`outbound_tasks/for_new`);
+      this.arr[2].model = res.data.data.outbound_task.outbound_task_serial;
+    },
   },
   beforeDestroy() {
     this.$bus.$off('panelShow');
   },
   mounted() {
-    this.$bus.$on('panelShow', (res) => {
-      this.init();
+    this.$bus.$on('panelShow', async (res) => {
+      await this.init();
       if (res) {
         this.tableData = res.tableData;
         this.arr.map((r) => {
@@ -252,8 +256,15 @@ export default {
         });
         this.editId = res.id;
         this.finance = res.type;
+        this.panelType = true;
+        if (!res.id) {
+          this.getSerial();
+          this.arr[1].model = moment().format('YYYY-MM-DD');
+        }
+      } else {
+        this.panelType = true;
+        this.getSerial();
       }
-      this.panelType = true;
     });
   },
 };

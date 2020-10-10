@@ -4,11 +4,11 @@ import router from '../router';
 if (process.env.NODE_ENV === 'development') {
   baseURL = '/ccc';
 } else if (process.env.VUE_APP_CURRENTMODE === 'prod') {
-  baseURL = 'http://47.103.139.147/v1/api';
+  baseURL = 'https://yy.yiyuanmaidian.com/v1/api';
 }
 let instance = axios.create({
   baseURL: baseURL,
-  timeout: 50000,
+  timeout: 30000,
   responseType: 'json',
   validateStatus(status) {
     return status === 200;

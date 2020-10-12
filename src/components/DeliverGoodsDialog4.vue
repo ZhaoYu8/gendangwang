@@ -161,8 +161,12 @@ export default {
       }
       let arr = ["delivery_number", "sparetime_percent"];
       if (arr.includes(item.id)) {
-        val[item.id] = Number(val[item.id] || 0);
-        val.sparetime = Math.ceil((Number(val.delivery_number) * Number(val.sparetime_percent)) / 100) || 0;
+        if (item.id === 'delivery_number') {
+          val[item.id] = parseInt(val[item.id]) || 0;
+        } else {
+          val[item.id] = Number(val[item.id]) || 0;
+        }
+        val.sparetime = Math.ceil((parseInt(val.delivery_number) * Number(val.sparetime_percent)) / 100) || 0;
       }
     },
     del(val) {

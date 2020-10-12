@@ -154,7 +154,7 @@ export default {
       this.tableData = this.tableData.concat(val);
     },
     numberChange(val) {
-      val.product_number = Number(val.product_number) || 0;
+      val.product_number = parseInt(val.product_number) || 0;
       val.sparetime = Math.ceil((val.product_number * val.sparetime_percent) / 100) || 0;
     },
     percentChange(val) {
@@ -162,7 +162,7 @@ export default {
       val.sparetime = Math.ceil((val.product_number * val.sparetime_percent) / 100) || 0;
     },
     numChange(val, type) {
-      val[type] = Number(val[type]) || 0;
+      val[type] = Number(Number(val[type]).toFixed(3) || 0);
     },
     del(val) {
       this.tableData.splice(val, 1);

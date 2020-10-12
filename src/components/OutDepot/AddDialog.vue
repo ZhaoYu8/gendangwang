@@ -101,7 +101,7 @@ export default {
       this.query();
     },
     numberChange(val) {
-      val.product_number = Number(val.product_number) || 0;
+      val.product_number = parseInt(val.product_number) || 0;
       val.sparetime = Math.ceil((val.product_number * val.sparetime_percent) / 100) || 0;
     },
     percentChange(val) {
@@ -119,12 +119,7 @@ export default {
       this.query();
     },
     async query() {
-      let obj = { page: this.currentPage };
-      if (this.inputModel) {
-        obj.query_key = this.inputModel;
-      } else {
-        obj.customer_id = this.cust;
-      }
+      let obj = { page: this.currentPage, query_key: this.inputModel, customer_id: this.cust };
       let res = await this.$post('outbound_tasks/choose_products', obj);
       res = res.data.data;
       let arr = this.multipleSelection;

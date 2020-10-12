@@ -60,6 +60,15 @@ let obj = {
         delivery_product: {},
         delivery_product_id: val.delivery_product_id,
       };
+      let arr = ['delivery_number', 'sparetime_percent'];
+      if (arr.includes(item.id)) {
+        if (item.id === 'delivery_number') {
+          _val = val[item.id] = parseInt(val[item.id]) || 0;
+        } else {
+          _val = val[item.id] = Number(val[item.id]) || 0;
+        }
+        val.sparetime = Math.ceil((parseInt(val.delivery_number) * Number(val.sparetime_percent)) / 100);
+      }
       obj.delivery_product[item.id] = _val;
       let count = await this.$post('/delivery_plans/update_plan', obj).then(() => {
         this.$notify({
@@ -68,11 +77,6 @@ let obj = {
           type: 'success',
         });
       });
-      let arr = ['delivery_number', 'sparetime_percent'];
-      if (arr.includes(item.id)) {
-        val[item.id] = Number(val[item.id] || 0);
-        val.sparetime = Math.ceil((Number(val.delivery_number) * Number(val.sparetime_percent)) / 100);
-      }
       if (['delivery_shifts', 'delivery_route'].includes(item.id)) {
         this.$vuexFn.getCommon().then(() => {
           this.$bus.$emit('user');

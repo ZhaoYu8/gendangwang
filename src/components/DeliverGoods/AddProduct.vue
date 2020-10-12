@@ -89,8 +89,12 @@ export default {
       }
       let arr = ['delivery_number', 'sparetime_percent'];
       if (arr.includes(item.id)) {
-        val[item.id] = Number(val[item.id] || 0);
-        val.sparetime = Math.ceil((Number(val.delivery_number) * Number(val.sparetime_percent)) / 100) || 0;
+        if (item.id === 'delivery_number') {
+          val[item.id] = parseInt(val[item.id]) || 0;
+        } else {
+          val[item.id] = Number(val[item.id]) || 0;
+        }
+        val.sparetime = Math.ceil((parseInt(val.delivery_number) * Number(val.sparetime_percent)) / 100) || 0;
       }
     },
     // 查询第一个表格数据
@@ -102,10 +106,10 @@ export default {
       await this.$post('/delivery_plans/list_plan', obj).then((res) => {
         let data = res.data.data;
         data.map((r) => {
-          if (!Number(r.delivery_number) && !Number(r.sparetime_percent)) {
+          if (!parseInt(r.delivery_number) && !Number(r.sparetime_percent)) {
             r.sparetime = 0;
           } else {
-            r.sparetime = Math.ceil((Number(r.delivery_number) * Number(r.sparetime_percent)) / 100);
+            r.sparetime = Math.ceil((parseInt(r.delivery_number) * Number(r.sparetime_percent)) / 100);
           }
         });
         this.tableData = data;

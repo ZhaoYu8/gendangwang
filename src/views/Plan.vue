@@ -151,10 +151,10 @@ export default {
       await this.$post('/delivery_plans/list_plan', obj).then((res) => {
         let data = res.data.data;
         data.map((r) => {
-          if (!Number(r.delivery_number) && !Number(r.sparetime_percent)) {
+          if (!parseInt(r.delivery_number) && !Number(r.sparetime_percent)) {
             r.sparetime = 0;
           } else {
-            r.sparetime = Math.ceil((Number(r.delivery_number) * Number(r.sparetime_percent)) / 100);
+            r.sparetime = Math.ceil((parseInt(r.delivery_number) * Number(r.sparetime_percent)) / 100);
           }
         });
         this.tableData = [];

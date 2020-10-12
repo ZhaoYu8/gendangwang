@@ -99,11 +99,7 @@ export default {
       this.query();
     },
     numberChange(val) {
-      val.entry_number = Number(val.entry_number) || 0;
-    },
-    percentChange(val) {
-      val.sparetime_percent = Number(val.sparetime_percent) || 0;
-      val.sparetime = Math.ceil((val.product_number * val.sparetime_percent) / 100) || 0;
+      val.entry_number = parseInt(val.entry_number) || 0;
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -113,12 +109,7 @@ export default {
       this.dialogVisible = false;
     },
     async query() {
-      let obj = { page: this.currentPage };
-      if (this.inputModel) {
-        obj.query_key = this.inputModel;
-      } else {
-        obj.customer_id = this.cust;
-      }
+      let obj = { page: this.currentPage, query_key: this.inputModel, customer_id: this.cust };
       let res = await this.$post('yuanyi_entries/choose_products', obj);
       res = res.data.data;
       let arr = this.multipleSelection;

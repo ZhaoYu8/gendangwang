@@ -97,7 +97,7 @@ export default {
       this.$emit('cancel', type);
     },
     numberChange(val) {
-      val.entry_number = Number(val.entry_number) || 0;
+      val.entry_number = parseInt(val.entry_number) || 0;
     },
   },
   beforeDestroy() {

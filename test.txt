@@ -1,7 +1,0 @@
-git is brabch
-这是创建了and分支的文字
-这是创建了dev分支的文字
-测试分支管理
-ceshi stash
-32132
-这是新的

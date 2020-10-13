@@ -1,2 +1,2 @@
 git is brabch
-这是创建了new分支的文字
+这是创建了and分支的文字

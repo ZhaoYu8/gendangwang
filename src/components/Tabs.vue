@@ -13,7 +13,7 @@ export default {
   data() {
     return {
       tabs: [
-        { label: '库存信息123', key: 'depotInfo' },
+        { label: '库存信息', key: 'depotInfo' },
         { label: '入库管理', key: 'enterDepot' },
         { label: '出库确认', key: 'depot' },
         { label: '统计报表', key: 'report' },

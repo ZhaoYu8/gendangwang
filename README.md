@@ -1,19 +1,2 @@
-# new-project
-
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+# 源艺包装
+[测试地址](https://zhaoyu8.github.io/gendangwang/#/plan?current_org=423&current_member=1092)

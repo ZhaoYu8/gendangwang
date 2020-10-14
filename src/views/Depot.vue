@@ -21,15 +21,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <el-pagination
-      background
-      layout="total, prev, pager, next, jumper"
-      :total="total"
-      :page-size="20"
-      class="pagination mr-10"
-      :current-page.sync="currentPage"
-      @current-change="currentChange"
-    ></el-pagination>
+    <el-pagination background layout="total, prev, pager, next, jumper" :total="total" :page-size="20" class="pagination mr-10" :current-page.sync="currentPage" @current-change="currentChange"></el-pagination>
   </div>
 </template>
 
@@ -42,7 +34,7 @@ export default {
         { label: '客户', model: '', placeholder: '', type: 'page', data: [], id: 'customer_id' },
         { label: '销售', model: '', placeholder: '', type: 'select', data: [], id: 'saler_id' },
         { label: '跟单', model: '', placeholder: '', type: 'select', data: [], id: 'member_id' },
-        { label: '分类', model: '', placeholder: '', type: 'select', data: [], id: 'product_group' },
+        { label: '分类', model: '', placeholder: '', type: 'select', data: [], id: 'confirm_type' },
         { label: '产品名称', model: '', placeholder: '', id: 'product_name' },
         { label: '入库时间', model: '', placeholder: '', type: 'daterange', span: 8, id: 'delivery_date_min' },
         {
@@ -63,19 +55,19 @@ export default {
       tableHeader: [
         // 类型、跟单编号、产品名称、提交人、跟单员   这些不可改
         { label: '操作', id: 'update', width: 50 },
-        { label: '出库时间', id: 'updated_at' },
-        { label: '出库类型', id: 'member_name' },
+        { label: '出库时间', id: 'created_at' },
+        { label: '出库类型', id: 'confirm_type' },
 
         { label: '销售', id: 'saler_name' },
         { label: '负责人', id: 'member_name' },
-        { label: '客户名称', id: 'customer_name' },
+        { label: '客户名称', id: 'customer_name', width: '240' },
 
-        { label: '订单编号', id: 'customer_name' },
+        { label: '订单编号', id: 'order_serial' },
 
-        { label: '产品名称', id: 'product_name' },
+        { label: '产品名称', id: 'product_name', width: '240' },
         { label: '产品编码', id: 'product_serial' },
 
-        { label: '出库数量', id: 'storage_number' },
+        { label: '出库数量', id: 'delivery_number' },
 
         { label: '单价', id: 'product_price' },
         { label: '库位', id: 'location_name' },
@@ -109,7 +101,7 @@ export default {
       this.query();
     },
     async change(item) {
-      this.$confirm('是否继续?', '提示', {
+      this.$confirm('是否确认?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
@@ -128,7 +120,10 @@ export default {
       this.arr[0].data = this.$vuexData.x.customer;
       this.arr[1].data = this.$vuexData.x.member_options;
       this.arr[2].data = this.$vuexData.x.member_options;
-      this.arr[3].data = this.$vuexData.x.group_options;
+      this.arr[3].data = [
+        { id: 0, name: '发货单' },
+        { id: 1, name: '送货单' },
+      ];
     },
   },
   mounted() {

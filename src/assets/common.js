@@ -88,7 +88,7 @@ let obj = {
   querySql(arr) {
     let _arr = arr
       .map((r) =>
-        r.model
+        r.model !== ''
           ? {
               id: r.id,
               model: r.model,

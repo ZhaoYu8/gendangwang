@@ -8,7 +8,7 @@
         </el-radio-group>
         <div class="ml-20" v-show="model === '0'">
           销售：
-          <el-select filterable v-model="user" :placeholder="placeholder || '请选择'" clearable>
+          <el-select filterable v-model="saler_id" :placeholder="placeholder || '请选择'" clearable>
             <el-option v-for="(list, d) in userData" :key="d" :label="list.name" :value="list.id"></el-option>
           </el-select>
         </div>
@@ -70,7 +70,7 @@ export default {
       date: '',
       toggleType: true,
       model: '0',
-      user: null,
+      saler_id: null,
       userData: [],
       cust: null,
       custData: [],
@@ -127,7 +127,7 @@ export default {
         obj.customer_id = this.$vuexData.x.customer.filter((r) => r.id === this.cust)[0].name;
       }
       if (this.saler_id) {
-        obj.saler_id = this.user;
+        obj.saler_id = this.saler_id;
       }
       let res = await this.$post('yuanyi_storages/list', obj);
       this.tableData = res.data.data.entries.map((r) => {

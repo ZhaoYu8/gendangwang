@@ -88,7 +88,6 @@ export default {
         this.total = res.data.paginate_meta.total_count;
         this.reqeat();
         this.arr[4].model = res.data.delivery_route;
-        console.log(this.arr[4]);
       });
     },
     currentChange(index) {

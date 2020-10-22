@@ -9,24 +9,32 @@
               <el-option v-for="(list, d) in item.data" :key="list + d" :label="list.name" :value="list.id"></el-option>
             </el-select>
             <Page v-model="item.model" :clearable="item.clearable" :placeholder="item.placeholder || '请输入'" :data="item.data" @change="change(item)" v-if="item.type === 'page'"></Page>
-            <el-date-picker
-              size="small"
-              v-if="item.type === 'daterange'"
-              :placeholder="item.placeholder || '请选择'"
-              v-model="item.model"
-              type="daterange"
-              align="right"
-              unlink-panels
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              @change="change(item)"
-            >
-            </el-date-picker>
+            <el-date-picker size="small" v-if="item.type === 'daterange'" :placeholder="item.placeholder || '请选择'" v-model="item.model" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" @change="change(item)"> </el-date-picker>
             <el-date-picker size="small" v-if="item.type === 'date'" :placeholder="item.placeholder || '请选择'" v-model="item.model" type="date" @change="change(item)"> </el-date-picker>
 
             <div class="radio" v-if="item.type === 'filter'">
-              <span v-for="now in item.data" :key="now.id" class="item" :class="{ active: now.id === item.model }" @click="item.model = now.id">{{ now.name }}</span>
+              <span
+                v-for="now in item.data"
+                :key="now.id"
+                class="item"
+                :class="{ active: now.id === item.model }"
+                @click="
+                  () => {
+                    item.model = now.id;
+                    change(item);
+                  }
+                "
+              >
+                <template v-if="now.name !== '自定义日期'">
+                  {{ now.name }}
+                </template>
+                <template v-else>
+                  <el-popover placement="top" v-model="visible" @after-leave="visible = false">
+                    <el-date-picker v-model="datePicker" type="daterange" @change="dateChange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"> </el-date-picker>
+                    <span slot="reference">{{ now.name }}</span>
+                  </el-popover>
+                </template>
+              </span>
             </div>
           </el-form-item>
         </el-col>
@@ -50,7 +58,10 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      datePicker: '',
+      visible: false,
+    };
   },
   methods: {
     change(val) {
@@ -58,6 +69,9 @@ export default {
       this.$nextTick(() => {
         this.$emit('change', val);
       });
+    },
+    dateChange() {
+      this.$emit('dateChange', this.datePicker);
     },
   },
   mounted() {},

@@ -51,6 +51,11 @@ const routes = [
         name: 'deliveryList',
         component: () => import(/* webpackChunkName: "DeliveryList" */ '../views/DeliveryList.vue'),
       },
+      {
+        path: '/formTable',
+        name: 'formTable',
+        component: () => import(/* webpackChunkName: "formTable" */ '../views/FormTable.vue'),
+      },
     ],
   },
   {

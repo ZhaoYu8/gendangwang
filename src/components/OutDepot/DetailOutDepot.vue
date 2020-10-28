@@ -31,7 +31,7 @@
         <el-button type="primary" size="small" icon="el-icon-printer" v-show="receiptShow" v-print="'#detailOutDepot'" @click="flowPrint">打印流程单</el-button>
         <el-button type="warning" size="small" @click="updateDetail(0)">复制</el-button>
         <el-button type="primary" size="small" @click="updateDetail(editID)">修改</el-button>
-         <el-popover placement="top" width="160" v-model="visibleSelf">
+        <el-popover placement="top" width="160" v-model="visibleSelf">
           <p>确定作废吗？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visibleSelf = false">取消</el-button>
@@ -67,20 +67,31 @@
         </tr>
       </table>
 
-      <table border="1" cellspacing="0" class="table" :style="{ fontSize: fontSizes + 'px' }">
-        <tr style="font-weight: bold;">
-          <td style="width: 30px;">编号</td>
-          <td>商品全名</td>
-          <td>代码</td>
-          <td>跟单员</td>
-          <td>数量</td>
-          <td>备次</td>
-          <td>订单编号</td>
-          <td>备注</td>
+      <table border="1" cellspacing="0" class="table" :class="{ 'always-table': n }" :style="{ fontSize: fontSizes + 'px' }" v-for="(n, i) in headerArr" :key="n">
+        <tr
+          style="font-weight: bold;"
+          class="header-tr"
+          @dblclick="
+            () => {
+              headerArr.splice(
+                headerArr.findIndex((r) => r === n),
+                1
+              );
+            }
+          "
+        >
+          <td style="width: 3%;">编号</td>
+          <td style="width: 27%;">商品全名</td>
+          <td style="width: 10%;">代码</td>
+          <td style="width: 10%;">跟单员</td>
+          <td style="width: 10%;">数量</td>
+          <td style="width: 10%;">备次</td>
+          <td style="width: 15%;">订单编号</td>
+          <td style="width: 15%;">备注</td>
         </tr>
-        <template v-for="(item, index) in tableData">
-          <tr :key="'nvb' + index">
-            <td class="t-c">{{ index + 1 }}</td>
+        <template v-for="(item, index) in tableData.slice(n, headerArr.length === 1 ? tableData.length : headerArr[i + 1])">
+          <tr :key="'nvb' + index" @dblclick="always(index + n)">
+            <td class="t-c">{{ index + n + 1 }}</td>
             <td>{{ item.product_name }}</td>
             <td>{{ item.product_code }}</td>
             <td>{{ item.tracking_member_name }}</td>
@@ -224,9 +235,16 @@ export default {
           { label: '特殊要求', id: 'spec_note' },
         ],
       ],
+      headerArr: [0],
     };
   },
   methods: {
+    always(index) {
+      if (!this.headerArr.filter((r) => r === index).length) this.headerArr.push(index);
+      this.headerArr = this.headerArr.sort((a, b) => {
+        return a - b;
+      });
+    },
     async init(val) {
       let res = await this.$post('outbound_tasks/for_show', {
         id: val.id,
@@ -377,6 +395,9 @@ export default {
         -webkit-print-color-adjust: exact;
       }
     }
+  }
+  .always-table {
+    page-break-before: always;
   }
   .header {
     color: #000;

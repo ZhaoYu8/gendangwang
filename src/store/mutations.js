@@ -23,6 +23,8 @@ const mutations = {
   [TYPES.SET_FILTER](state, data) {
     state.group_options = data.group_options; // 分类
     state.member_options = data.member_options; // 销售负责人
+    state.contact_company_options = data.contact_company_options;
+    state.contact_name_options = data.contact_name_options;
   },
 };
 export default mutations;

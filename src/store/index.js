@@ -16,6 +16,8 @@ let state = {
   warehouse: [], // 仓库
   group_options: [], // 分类
   member_options: [], // 销售，负责人
+  contact_company_options: [], // 收货人
+  contact_name_options: [], // 收货地址
 };
 
 export default new Vuex.Store({

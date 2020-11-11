@@ -1,12 +1,14 @@
 <template>
   <div class="p-10 box">
     <Panel :arr="arr">
-      <el-col :span="4" class="d-f-e">
-        <el-button type="primary" @click="query">查询</el-button>
+      <el-col :span="18" class="d-f-e">
+        <div>
+          <el-button type="primary" @click="query">查询</el-button>
+        </div>
       </el-col>
     </Panel>
     <div class="pt-10 table">
-      <el-table :data="tableData" style="width: 100%;" border ref="firstTable" stripe>
+      <el-table :show-summary="true" :summary-method="getSummaries" :data="tableData" style="width: 100%;" border ref="firstTable" stripe>
         <el-table-column header-align="center" :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index">
           <template slot-scope="scope">
             <div v-if="item.id === 'update'" class="d-f-s-a">
@@ -21,7 +23,15 @@
         </el-table-column>
       </el-table>
     </div>
-    <el-pagination background layout="total, prev, pager, next, jumper" :total="total" :page-size="20" class="pagination mr-10" :current-page.sync="currentPage" @current-change="currentChange"></el-pagination>
+    <el-pagination
+      background
+      layout="total, prev, pager, next, jumper"
+      :total="total"
+      :page-size="20"
+      class="pagination mr-10"
+      :current-page.sync="currentPage"
+      @current-change="currentChange"
+    ></el-pagination>
   </div>
 </template>
 
@@ -36,7 +46,9 @@ export default {
         { label: '跟单', model: '', placeholder: '', type: 'select', data: [], id: 'member_id' },
         { label: '分类', model: '', placeholder: '', type: 'select', data: [], id: 'confirm_type' },
         { label: '产品名称', model: '', placeholder: '', id: 'product_name' },
-        { label: '入库时间', model: '', placeholder: '', type: 'daterange', span: 8, id: 'delivery_date_min' },
+        { label: '入库时间', model: '', placeholder: '', span: 6, type: 'daterange', id: 'delivery_date_min' },
+        { label: '收货人', model: '', placeholder: '', type: 'page', data: [], id: 'contact_name' },
+        { label: '收货单位', model: '', placeholder: '', type: 'page', data: [], id: 'contact_company' },
         {
           label: '筛选内容',
           model: 0,
@@ -62,6 +74,9 @@ export default {
         { label: '负责人', id: 'member_name' },
         { label: '客户名称', id: 'customer_name', width: '240' },
 
+        { label: '收货人', id: 'contact_name' },
+        { label: '收货单位', id: 'contact_company' },
+
         { label: '订单编号', id: 'order_serial' },
 
         { label: '产品名称', id: 'product_name', width: '240' },
@@ -76,7 +91,44 @@ export default {
       total: 1,
     };
   },
+  computed: {
+    num() {
+      return this.tableData
+        .map((r) => r.delivery_number)
+        .reduce((prev, curr) => {
+          return prev + curr;
+        });
+    },
+    money() {
+      return this.tableData
+        .map((r) => r.delivery_number * r.product_price)
+        .reduce((prev, curr) => {
+          return prev + curr;
+        })
+        .toFixed(2);
+    },
+  },
   methods: {
+    getSummaries(param) {
+      const { columns, data } = param;
+      const sums = [];
+      if (this.tableData.length) {
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '合计:';
+            return;
+          }
+          if (column.label === '出库数量') {
+            sums[index] = this.num;
+          } else if (column.label === '单价') {
+            sums[index] = this.money;
+          } else {
+            sums[index] = '';
+          }
+        });
+      }
+      return sums;
+    },
     async query() {
       let obj = {
         ...this.$common.querySql.call(this, this.arr),
@@ -124,6 +176,8 @@ export default {
         { id: 0, name: '发货单' },
         { id: 1, name: '送货单' },
       ];
+      this.arr[6].data = this.$vuexData.x.contact_name_options;
+      this.arr[7].data = this.$vuexData.x.contact_company_options;
     },
   },
   mounted() {

@@ -133,5 +133,7 @@ let obj = {
       type: type ? 'warning' : 'success',
     });
   },
+  action: 'https://gendanwang.com/v1/',
+  // action: 'https://yy.yiyuanmaidian.com/v1/',
 };
 export default obj;

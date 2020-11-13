@@ -21,7 +21,7 @@
         <el-table-column label="产品名称" align="center" prop="product_name" header-align="center"> </el-table-column>
         <el-table-column label="产品编码" align="center" prop="product_serial" header-align="center"> </el-table-column>
         <el-table-column label="当前库存" align="center" prop="ccccc" header-align="center"> </el-table-column>
-        <el-table-column label="入库数量" align="center" prop="storage_number" header-align="center"> </el-table-column>
+        <el-table-column label="入库数量" align="center" prop="entry_number" header-align="center"> </el-table-column>
         <el-table-column label="库位" align="center" prop="location_name" header-align="center"> </el-table-column>
         <el-table-column label="是否结束" align="center" prop="note" header-align="center"></el-table-column>
       </el-table>
@@ -40,13 +40,16 @@
     </el-dialog>
     <el-dialog title="批量导入" :visible="visibleBatch" width="40%" top="5vh" class="dialog" @close="dialogClose">
       <div v-if="visibleBatch">
-        <el-link type="primary" class="mb-20" :underline="false" download="默认模板.xls" target="_blank" :href="action + 'yuanyi_entries/download.xlsx'">默认模板.xls</el-link>
+        <el-link type="primary" class="mb-20" :underline="false" download="默认模板.xls" target="_blank" :href="$common.action + 'yuanyi_entries/download.xlsx'"
+          >默认模板.xls</el-link
+        >
         <el-upload
           accept=".xlsx,.xls"
-          :action="action + 'api/yuanyi_entries/upload'"
+          :action="$common.action + 'api/yuanyi_entries/upload'"
           :file-list="fileList"
-          :limit="1"
           :on-success="success"
+          :on-change="onChange"
+          ref="upload"
           :data="{
             current_org: this.current_org,
             current_member: this.current_member,
@@ -88,15 +91,7 @@ export default {
     };
   },
   components: { AddEnterDepot },
-  computed: {
-    action() {
-      if (process.env.NODE_ENV === 'development') {
-        return 'https://gendanwang.com/v1/';
-      } else if (process.env.VUE_APP_CURRENTMODE === 'prod') {
-        return 'https://yy.yiyuanmaidian.com/v1/';
-      }
-    },
-  },
+  computed: {},
   methods: {
     async query() {
       let obj = {
@@ -134,6 +129,9 @@ export default {
       this.visible = false;
       if (type) this.query();
     },
+    onChange(file, fileList) {
+      this.fileList = fileList.slice(-1);
+    },
     success(val) {
       this.file = val.file;
     },
@@ -141,7 +139,10 @@ export default {
       let res = await this.$post('/yuanyi_entries/importer', {
         upload_file: this.file,
       });
-      if (!res.data.success) return;
+      if (res.data.message !== 'success') {
+        this.$common.notify(res.data.message, true);
+        return;
+      }
       this.$common.notify('导入');
       this.dialogClose();
       this.query();

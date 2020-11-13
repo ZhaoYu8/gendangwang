@@ -13,15 +13,15 @@ export default {
   data() {
     return {
       tabs: [
-        { label: '库存信息', key: 'depotInfo' },
         { label: '入库管理', key: 'enterDepot' },
         { label: '出库确认', key: 'depot' },
+        { label: '库存信息', key: 'depotInfo' },
         { label: '统计报表', key: 'report' },
         { label: '发货管理', key: 'outDepot' },
-        { label: '发货财务审核', key: 'reviewDepot' },
         { label: '送货计划单', key: 'plan' },
         { label: '送货派货单', key: 'deliverGoods' },
         { label: '送货单列表', key: 'deliveryList' },
+        { label: '发货财务审核', key: 'reviewDepot' },
         { label: '客户款项对账单', key: 'formTable' },
       ],
       activeName: 'outDepot', // 切换页model

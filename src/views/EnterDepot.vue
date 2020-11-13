@@ -40,12 +40,10 @@
     </el-dialog>
     <el-dialog title="批量导入" :visible="visibleBatch" width="40%" top="5vh" class="dialog" @close="dialogClose">
       <div v-if="visibleBatch">
-        <el-link type="primary" class="mb-20" :underline="false" download="默认模板.xls" target="_blank" href="https://gendanwang.com/v1/yuanyi_entries/download.xlsx"
-          >默认模板.xls</el-link
-        >
+        <el-link type="primary" class="mb-20" :underline="false" download="默认模板.xls" target="_blank" :href="action + 'yuanyi_entries/download.xlsx'">默认模板.xls</el-link>
         <el-upload
           accept=".xlsx,.xls"
-          action="https://gendanwang.com/v1/api/yuanyi_entries/upload"
+          :action="action + 'api/yuanyi_entries/upload'"
           :file-list="fileList"
           :limit="1"
           :on-success="success"
@@ -90,6 +88,15 @@ export default {
     };
   },
   components: { AddEnterDepot },
+  computed: {
+    action() {
+      if (process.env.NODE_ENV === 'development') {
+        return 'https://gendanwang.com/v1/';
+      } else if (process.env.VUE_APP_CURRENTMODE === 'prod') {
+        return 'https://yy.yiyuanmaidian.com/v1/';
+      }
+    },
+  },
   methods: {
     async query() {
       let obj = {

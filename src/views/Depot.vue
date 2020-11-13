@@ -153,14 +153,16 @@ export default {
       this.query();
     },
     async change(item) {
-      this.$confirm('是否确认?', '提示', {
+      this.$prompt('是否确认?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
+        inputValue: item.delivery_number,
       })
-        .then(async () => {
+        .then(async ({ value }) => {
           let res = await this.$post(`yuanyi_deliveries/confirm`, {
             id: item.id,
+            number: value
           });
           this.$common.notify();
           this.query();

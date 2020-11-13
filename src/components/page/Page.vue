@@ -104,7 +104,7 @@ export default {
       this.stop = false;
       if (query !== '') {
         this.stop = true;
-        this.options = this.data.filter((r) => r.name.indexOf(query) > -1);
+        this.options = this.data.filter((r) => r.name).filter((r) => r.name.indexOf(query) > -1);
       } else {
         this.options = this.data.slice((this.index - 1) * 20, this.index * 20);
       }

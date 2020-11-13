@@ -2,9 +2,11 @@
   <div class="p-10 box">
     <Panel :arr="arr">
       <el-col :span="12" class="d-f-e">
-        <el-button type="primary" plain @click="query">查询</el-button>
-        <el-button type="primary" @click="panelChange">新增入库单</el-button>
-        <!-- <el-button type="warning" @click="visibleBatch = true">批量导入</el-button> -->
+        <div>
+          <el-button type="primary" plain @click="query">查询</el-button>
+          <el-button type="primary" @click="panelChange">新增入库单</el-button>
+          <el-button type="warning" @click="visibleBatch = true">批量导入</el-button>
+        </div>
       </el-col>
     </Panel>
     <!-- 表格 -->
@@ -36,17 +38,29 @@
     <el-dialog title="新建入库单" :visible="visible" width="95%" top="5vh" class="dialog" @close="visible = false" :close-on-click-modal="false">
       <AddEnterDepot @cancel="cancel" />
     </el-dialog>
-    <el-dialog title="批量导入" :visible="visibleBatch" width="40%" top="5vh" class="dialog" @close="visibleBatch = false">
-      默认模板：
-      <div>xsjxsjixs.xlsx</div>
-      <el-upload class=" t-c" accept=".xlsx,.xls" drag action="https://jsonplaceholder.typicode.com/posts/">
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip" slot="tip">只能上传xlsx,xls文件</div>
-      </el-upload>
+    <el-dialog title="批量导入" :visible="visibleBatch" width="40%" top="5vh" class="dialog" @close="dialogClose">
+      <div v-if="visibleBatch">
+        <el-link type="primary" class="mb-20" :underline="false" download="默认模板.xls" target="_blank" href="https://gendanwang.com/v1/yuanyi_entries/download.xlsx"
+          >默认模板.xls</el-link
+        >
+        <el-upload
+          accept=".xlsx,.xls"
+          action="https://gendanwang.com/v1/api/yuanyi_entries/upload"
+          :file-list="fileList"
+          :limit="1"
+          :on-success="success"
+          :data="{
+            current_org: this.current_org,
+            current_member: this.current_member,
+            testing_mode: 1,
+          }"
+        >
+          <el-button slot="trigger" size="small" type="primary">选取文件上传</el-button>
+        </el-upload>
+      </div>
       <div class="d-f-e pt-10">
-        <el-button @click="visibleBatch = false">取消</el-button>
-        <el-button type="primary" @click="save">保存</el-button>
+        <el-button @click="dialogClose">取消</el-button>
+        <el-button type="primary" @click="save" :disabled="!file">确认导入</el-button>
       </div>
     </el-dialog>
   </div>
@@ -71,6 +85,8 @@ export default {
       tableData: [],
       currentPage: 1,
       total: 1,
+      fileList: [],
+      file: '',
     };
   },
   components: { AddEnterDepot },
@@ -104,10 +120,28 @@ export default {
       this.arr[2].data = this.$vuexData.x.member_options;
       this.arr[3].data = this.$vuexData.x.member_options;
       this.arr[4].data = this.$vuexData.x.group_options;
+      this.current_org = localStorage.getItem('current_org') || '423'; // 11112 423
+      this.current_member = localStorage.getItem('current_member') || '1092'; // 1 1092
     },
     cancel(type) {
       this.visible = false;
       if (type) this.query();
+    },
+    success(val) {
+      this.file = val.file;
+    },
+    async save() {
+      let res = await this.$post('/yuanyi_entries/importer', {
+        upload_file: this.file,
+      });
+      if (!res.data.success) return;
+      this.$common.notify('导入');
+      this.dialogClose();
+      this.query();
+    },
+    dialogClose() {
+      this.visibleBatch = false;
+      this.file = '';
     },
   },
   mounted() {
@@ -115,7 +149,6 @@ export default {
     this.init();
     this.$bus.$on('user', () => {
       this.init();
-      // this.arr[3].data = this.$vuexData.x.customer;
     });
   },
 };

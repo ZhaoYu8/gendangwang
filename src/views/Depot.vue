@@ -51,7 +51,7 @@ export default {
         { label: '收货单位', model: '', placeholder: '', type: 'page', data: [], id: 'contact_company' },
         {
           label: '筛选内容',
-          model: 0,
+          model: 1,
           placeholder: '',
           type: 'filter',
           span: 6,

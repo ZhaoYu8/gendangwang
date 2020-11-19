@@ -13,12 +13,12 @@
           <el-link :underline="false" type="primary" style="margin-right: 20px" @click="fontSizes++">A+</el-link>
         </template>
         <el-popover placement="top" width="160" v-model="visible">
-          <p>确定审核出库吗？</p>
+          <p>确定{{ outbound_task.status ? '红冲' : '审核出库' }}吗？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible = false">取消</el-button>
             <el-button type="primary" size="mini" @click="audit">确定</el-button>
           </div>
-          <el-button slot="reference" type="primary" size="small" class="mr-10">审核出库</el-button>
+          <el-button slot="reference" type="primary" size="small" class="mr-10">{{ outbound_task.status ? '红冲' : '审核出库' }}</el-button>
         </el-popover>
 
         <el-button type="primary" size="small" v-print="'#receipt'" v-show="!receiptShow" @click="printReceipt" icon="el-icon-printer">打印单据</el-button>
@@ -272,13 +272,13 @@ export default {
     // 审核出库
     async audit() {
       this.visible = false;
-      let res = await this.$post('outbound_tasks/pass_audit', {
+      let res = await this.$post(this.outbound_task.status ? 'outbound_tasks/red_dashed' : 'outbound_tasks/pass_audit', {
         id: this.editID,
       });
       this.$notify({
         title: '提示',
         type: 'success',
-        message: '审核出库成功！',
+        message: `${this.outbound_task.status ? '红冲' : '审核出库'}成功！`,
       });
       this.$emit('cancel');
     },

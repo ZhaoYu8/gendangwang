@@ -1,28 +1,36 @@
 <template>
   <div class="p-10 ">
-    <div class="d-f-c-s-b mb-10">
+    <div class="w-100 mb-10">
       <div class="d-f-c-s-b">
         <el-radio-group v-model="model" @change="change">
           <el-radio label="0">明细表</el-radio>
           <el-radio label="1">汇总表</el-radio>
         </el-radio-group>
-        <div class="ml-20" v-show="model === '0'">
-          销售：
-          <el-select filterable v-model="saler_id" :placeholder="placeholder || '请选择'" clearable>
-            <el-option v-for="(list, d) in userData" :key="d" :label="list.name" :value="list.id"></el-option>
-          </el-select>
+        <div slot="footer">
+          <el-link :underline="false" type="primary" style="margin-right: 20px" @click="fontSize--">A-</el-link>
+          <el-link :underline="false" type="primary" style="margin-right: 20px" @click="fontSize++">A+</el-link>
+          <el-button type="primary" class="ml-10" plain @click="query" v-show="model === '0'">查询</el-button>
+          <el-button type="primary" ref="daochu" @click="exports">导出</el-button>
+          <el-button type="primary" v-print="'#printMe'" ref="printButton" @click="print">打印</el-button>
         </div>
-        <div class="ml-20" v-show="model === '0'">
-          客户名称：
-          <Page v-model="cust" placeholder="请选择" :clearable="true" :data="custData" @change="query4"></Page>
-        </div>
-        <el-button type="primary" class="ml-10" plain v-show="model === '0'" @click="query">查询</el-button>
       </div>
-      <div slot="footer">
-        <el-link :underline="false" type="primary" style="margin-right: 20px" @click="fontSize--">A-</el-link>
-        <el-link :underline="false" type="primary" style="margin-right: 20px" @click="fontSize++">A+</el-link>
-        <el-button type="primary" ref="daochu" @click="exports">导出</el-button>
-        <el-button type="primary" v-print="'#printMe'" ref="printButton" @click="print">打印</el-button>
+      <div v-show="model === '0'" class="d-f">
+        <div>
+          销售：
+          <Page v-model="saler_id" placeholder="请选择" :clearable="true" :data="userData"></Page>
+        </div>
+        <div class="ml-20">
+          客户名称：
+          <Page v-model="cust" placeholder="请选择" :clearable="true" :data="custData"></Page>
+        </div>
+        <div class="ml-20">
+          跟单员：
+          <Page v-model="member_id" placeholder="请选择" :clearable="true" :data="userData"></Page>
+        </div>
+        <div class="ml-20">
+          分类：
+          <Page v-model="product_group" placeholder="请选择" :clearable="true" :data="productGroupData"></Page>
+        </div>
       </div>
     </div>
     <!-- 头部查询条件 -->
@@ -79,6 +87,9 @@ export default {
       tableData: [],
       headerData: {},
       headerArr: [],
+      productGroupData: [],
+      product_group: null,
+      member_id: null,
       arr: [
         { label: '序号', id: 'index', width: '30px' },
         { label: '销售', id: 'saler_name' },
@@ -99,8 +110,10 @@ export default {
     this.headerArr = this.arr;
     this.custData = this.$vuexData.x.customer;
     this.userData = this.$vuexData.x.member_options;
+    this.productGroupData = this.$vuexData.x.group_options;
     this.$bus.$on('user', () => {
       this.custData = this.$vuexData.x.customer;
+      this.productGroupData = this.$vuexData.x.group_options;
       this.userData = this.$vuexData.x.member_options;
     });
     this.query();
@@ -122,20 +135,21 @@ export default {
       }
     },
     async query() {
-      let obj = {};
+      let obj = { is_report: 1 };
       if (this.cust) {
         obj.customer_id = this.$vuexData.x.customer.filter((r) => r.id === this.cust)[0].name;
       }
-      if (this.saler_id) {
-        obj.saler_id = this.saler_id;
-      }
+      let _arr = ['saler_id', 'product_group', 'member_id'];
+      _arr.map((r) => {
+        if (this[r]) obj[r] = this[r];
+      });
       let res = await this.$post('yuanyi_storages/list', obj);
       this.tableData = res.data.data.entries.map((r) => {
         return { ...r, ...{ money: (r.product_price * r.storage_number).toFixed(2), updated_at: moment(r.updated_at).format('YYYY-MM-DD') } };
       });
     },
     async query1() {
-      let res = await this.$post('yuanyi_storages/saler_inventory', {});
+      let res = await this.$post('yuanyi_storages/saler_inventory', { is_report: 1 });
       this.headerArr = res.data.data.headers.map((r) => {
         return { label: r.name, id: r.id };
       });

@@ -2,21 +2,46 @@
   <div class="outdepot box">
     <Panel :arr="arr">
       <el-col :span="4" class="d-f-e">
-        <el-button type="primary" @click="query">查询</el-button>
-        <el-button type="warning" @click="panelChange">新增</el-button>
+        <div>
+          <el-button type="primary" @click="query">查询</el-button>
+          <el-button type="warning" @click="panelChange">新增</el-button>
+        </div>
       </el-col>
     </Panel>
     <!-- 表格 -->
     <div class="pt-10 table">
-      <el-table :data="tableData" style="width: 100%;" border ref="firstTable" stripe>
-        <el-table-column header-align="center" :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index">
+      <el-table
+        :data="tableData"
+        style="width: 100%"
+        border
+        ref="firstTable"
+        stripe
+      >
+        <el-table-column
+          header-align="center"
+          :label="item.label"
+          :width="item.width"
+          v-for="(item, index) in tableHeader"
+          :key="item.label + index"
+        >
           <template slot-scope="scope">
             <template v-if="item.id === 'outbound_task_serial'">
-              <el-link v-if="item.id === 'outbound_task_serial'" type="primary" @click="detailChange(scope.row)">{{ scope.row[item.id] }}</el-link>
+              <el-link
+                v-if="item.id === 'outbound_task_serial'"
+                type="primary"
+                @click="detailChange(scope.row)"
+                >{{ scope.row[item.id] }}</el-link
+              >
             </template>
             <template v-else>
-              <el-input v-model="scope.row[item.id]" v-if="item.type === 'input'" v-focus />
-              <div v-else-if="item.type === 'serial'" class="t-c">{{ scope.$index + 1 }}</div>
+              <el-input
+                v-model="scope.row[item.id]"
+                v-if="item.type === 'input'"
+                v-focus
+              />
+              <div v-else-if="item.type === 'serial'" class="t-c">
+                {{ scope.$index + 1 }}
+              </div>
               <div v-else>{{ scope.row[item.id] }}</div>
             </template>
           </template>
@@ -32,9 +57,22 @@
       :current-page.sync="currentPage"
       @current-change="currentChange"
     ></el-pagination>
-    <el-dialog title="" :visible="dialogVisible" width="95%" top="5vh" class="dialog" @close="dialogVisible = false" :close-on-click-modal="false">
+    <el-dialog
+      title=""
+      :visible="dialogVisible"
+      width="95%"
+      top="5vh"
+      class="dialog"
+      @close="dialogVisible = false"
+      :close-on-click-modal="false"
+    >
       <AddOutDepot v-if="addOrDeatil" @cancel="cancel" @detail="detail" />
-      <DetailOutDepot v-if="!addOrDeatil" :detailData="detailData" @update="update" @cancel="cancel" />
+      <DetailOutDepot
+        v-if="!addOrDeatil"
+        :detailData="detailData"
+        @update="update"
+        @cancel="cancel"
+      />
     </el-dialog>
   </div>
 </template>
@@ -52,13 +90,60 @@ export default {
       currentPage: 1,
       total: 1,
       arr: [
-        { label: "仓库", model: "", placeholder: "", type: "select", data: [], id: "inbound_warehouse_id" },
-        { label: "仓位", model: "", placeholder: "", type: "page", data: [], id: "warehouse_location_id" },
-        { label: "客户", model: "", placeholder: "", type: "page", data: [], id: "customer_id" },
-        { label: "销售", model: "", placeholder: "", type: "select", data: [], id: "saler_id" },
-        { label: "负责人", model: "", placeholder: "", type: "select", data: [], id: "member_id" },
-        { label: "发货时间", model: "", placeholder: "", type: "daterange", span: 8, id: "delivery_date_min" },
-        { label: "关键字", model: "", placeholder: "订单编号/产品名称/收货人/收货单位", id: "query_key" },
+        {
+          label: "仓库",
+          model: "",
+          placeholder: "",
+          type: "select",
+          data: [],
+          id: "inbound_warehouse_id",
+        },
+        {
+          label: "仓位",
+          model: "",
+          placeholder: "",
+          type: "page",
+          data: [],
+          id: "warehouse_location_id",
+        },
+        {
+          label: "客户",
+          model: "",
+          placeholder: "",
+          type: "page",
+          data: [],
+          id: "customer_id",
+        },
+        {
+          label: "销售",
+          model: "",
+          placeholder: "",
+          type: "select",
+          data: [],
+          id: "saler_id",
+        },
+        {
+          label: "负责人",
+          model: "",
+          placeholder: "",
+          type: "select",
+          data: [],
+          id: "member_id",
+        },
+        {
+          label: "发货时间",
+          model: "",
+          placeholder: "",
+          type: "daterange",
+          span: 8,
+          id: "delivery_date_min",
+        },
+        {
+          label: "关键字",
+          model: "",
+          placeholder: "订单编号/产品名称/收货人/收货单位",
+          id: "query_key",
+        },
       ],
       tableData: [],
       tableHeader: [
@@ -120,8 +205,12 @@ export default {
         ...{ page: this.currentPage },
       };
       if (obj.delivery_date_min) {
-        obj.delivery_date_max = moment(obj.delivery_date_min[1]).format("YYYY-MM-DD");
-        obj.delivery_date_min = moment(obj.delivery_date_min[0]).format("YYYY-MM-DD");
+        obj.delivery_date_max = moment(obj.delivery_date_min[1]).format(
+          "YYYY-MM-DD"
+        );
+        obj.delivery_date_min = moment(obj.delivery_date_min[0]).format(
+          "YYYY-MM-DD"
+        );
       }
       let res = await this.$post("outbound_tasks/list", obj);
       this.tableData = res.data.data.items;

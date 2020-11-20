@@ -23,6 +23,7 @@ export default {
         { label: '送货单列表', key: 'deliveryList' },
         { label: '发货财务审核', key: 'reviewDepot' },
         { label: '客户款项对账单', key: 'formTable' },
+        { label: '出入库详情', key: 'depotDetail' },
       ],
       activeName: 'outDepot', // 切换页model
       user: [],

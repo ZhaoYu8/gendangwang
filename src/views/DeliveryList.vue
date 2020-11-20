@@ -1,7 +1,7 @@
 <template>
-  <div class="second box">
+  <div class="second box p-10">
     <!-- 头部查询条件 -->
-    <el-card class="p-10">
+    <el-card>
       <el-row :gutter="20">
         <el-form label-position="left" :inline="true">
           <el-col :span="6" v-for="(item, index) in arr" :key="item.label + index">

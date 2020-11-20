@@ -12,6 +12,7 @@
               :placeholder="item.placeholder || '请选择'"
               v-if="item.type === 'select'"
               clearable
+              :multiple="item.multiple"
               style="width: 100%;"
               @change="change(item)"
             >

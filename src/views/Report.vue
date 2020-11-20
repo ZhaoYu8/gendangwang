@@ -42,44 +42,60 @@
             >
           </div>
         </div>
-        <div v-show="model === '0'" class="d-f">
-          <div>
-            销售：
-            <Page
-              v-model="saler_id"
-              placeholder="请选择"
-              :clearable="true"
-              :data="userData"
-            ></Page>
-          </div>
-          <div class="ml-20">
-            客户名称：
-            <Page
-              v-model="cust"
-              placeholder="请选择"
-              :clearable="true"
-              :data="custData"
-            ></Page>
-          </div>
-          <div class="ml-20">
-            跟单员：
-            <Page
-              v-model="member_id"
-              placeholder="请选择"
-              :clearable="true"
-              :data="userData"
-            ></Page>
-          </div>
-          <div class="ml-20">
-            分类：
-            <Page
-              v-model="product_group"
-              placeholder="请选择"
-              :clearable="true"
-              :data="productGroupData"
-            ></Page>
-          </div>
-        </div>
+
+        <el-form label-position="left" class="d-f f-w mt-10" :inline="true">
+          <el-row :gutter="20" v-show="model === '0'" class="w-100">
+            <el-col :span="4">
+              <el-form-item label="销售：" class="form-item">
+                <Page
+                  v-model="saler_id"
+                  placeholder="请选择"
+                  :clearable="true"
+                  :data="userData"
+                ></Page>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="客户名称：" class="form-item">
+                <Page
+                  v-model="cust"
+                  placeholder="请选择"
+                  :clearable="true"
+                  :data="custData"
+                ></Page>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="跟单员：" class="form-item">
+                <Page
+                  v-model="member_id"
+                  placeholder="请选择"
+                  :clearable="true"
+                  :data="userData"
+                ></Page>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6" class="d-f-c">
+              <el-form-item label="分类：" class="form-item">
+                <el-select
+                  filterable
+                  v-model="product_group"
+                  :placeholder="'请选择'"
+                  clearable
+                  multiple
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="(list, d) in productGroupData"
+                    :key="list + d"
+                    :label="list.name"
+                    :value="list.id"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
       </el-card>
     </div>
     <!-- 头部查询条件 -->
@@ -258,7 +274,13 @@ export default {
       this.headerArr = res.data.data.headers.map((r) => {
         return { label: r.name, id: r.id };
       });
-      this.tableData = res.data.data.items;
+      this.tableData = res.data.data.items.map((r) => {
+        let obj = {};
+        this.headerArr.map((n) => {
+          obj[n.id] = typeof r[n.id] === 'number' ? r[n.id].toFixed(3) : r[n.id];
+        });
+        return obj;
+      });
     },
     exports() {
       //表格标题

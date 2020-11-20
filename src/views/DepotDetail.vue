@@ -86,6 +86,7 @@ export default {
           type: "select",
           data: [],
           id: "product_group",
+          multiple: true,
         },
         {
           label: "关键字搜索",

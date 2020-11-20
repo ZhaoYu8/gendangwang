@@ -176,6 +176,7 @@ export default {
           type: "select",
           data: [],
           id: "product_group",
+          multiple: true
         },
         { label: "产品名称", model: "", placeholder: "", id: "product_name" },
         {

@@ -76,6 +76,7 @@
             <el-link :underline="false" type="primary" @click="print(scope)">打印</el-link>
           </div>
         </el-table-column>
+        <el-table-column label="最后操作人" prop="member_name" header-align="center" />
         <el-table-column label="配货员" prop="allocate_member" header-align="center" />
         <el-table-column label="跟车员" prop="with_member" header-align="center" />
         <el-table-column label="派货员" prop="delivery_member" header-align="center" />

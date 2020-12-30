@@ -81,13 +81,14 @@
           "
         >
           <td style="width: 3%;">编号</td>
-          <td style="width: 27%;">商品全名</td>
-          <td style="width: 10%;">代码</td>
-          <td style="width: 10%;">跟单员</td>
+          <td style="width: 25%;">商品全名</td>
+          <td style="width: 8%;">代码</td>
+          <td style="width: 8%;">跟单员</td>
+          <td style="width: 8%;">代码2</td>
           <td style="width: 10%;">数量</td>
           <td style="width: 10%;">备次</td>
-          <td style="width: 15%;">订单编号</td>
-          <td style="width: 15%;">备注</td>
+          <td style="width: 14%;">订单编号</td>
+          <td style="width: 14%;">备注</td>
         </tr>
         <template v-for="(item, index) in tableData.slice(n, headerArr.length === 1 ? tableData.length : headerArr[i + 1])">
           <tr :key="'nvb' + index" @dblclick="always(index + n)">
@@ -95,6 +96,7 @@
             <td>{{ item.product_name }}</td>
             <td>{{ item.product_code }}</td>
             <td>{{ item.tracking_member_name }}</td>
+            <td>{{ item.product_code2 }}</td>
             <td>{{ item.product_number }}</td>
             <td>{{ item.sparetime }}</td>
             <td>{{ item.order_serial }}</td>

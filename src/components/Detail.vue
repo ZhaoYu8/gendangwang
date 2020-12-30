@@ -84,6 +84,7 @@ export default {
         { label: "商品全名", width: "16%", id: "product_name" },
         { label: "代码", width: "50px", id: "product_code" },
         { label: "跟单员", width: "50px", id: "order_member" },
+        { label: "代码2", width: "50px", id: "product_code2" },
         { label: "数量", width: "50px", id: "delivery_number" },
         { label: "备次", width: "30px", id: "sparetime" },
         { label: "订单编号", width: "100px", id: "order_serial" },
@@ -178,7 +179,7 @@ export default {
         return data;
       });
       let data = this.headerData;
-      let letter = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
+      let letter = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"];
       let header = [
         "日期:",
         data.delivery_date,
@@ -212,7 +213,7 @@ export default {
       let outputPos = Object.keys(tmpdata); //设置区域,比如表格从A1到D10
       // tmpdata["A1"] = { v: 1 };
       // outputPos = ["A1"].concat(outputPos);
-      ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"].map((r) => {
+      ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"].map((r) => {
         tmpdata[`${r}2`].s = {
           font: { sz: 14, bold: true, vertAlign: true },
           alignment: { vertical: "center", horizontal: "center" },
@@ -240,6 +241,7 @@ export default {
         { wpx: 80 },
         { wpx: 80 },
         { wpx: 80 },
+        { wpx: 100 },
         { wpx: 100 },
         { wpx: 100 },
       ]; //<====设置一列宽度

@@ -82,7 +82,7 @@
         >
           <td style="width: 3%;">编号</td>
           <td style="width: 25%;">商品全名</td>
-          <td style="width: 8%;">代码</td>
+          <td style="width: 8%;">代码1</td>
           <td style="width: 8%;">跟单员</td>
           <td style="width: 8%;">代码2</td>
           <td style="width: 10%;">数量</td>
@@ -94,9 +94,9 @@
           <tr :key="'nvb' + index" @dblclick="always(index + n)">
             <td class="t-c">{{ index + n + 1 }}</td>
             <td>{{ item.product_name }}</td>
-            <td>{{ item.product_code }}</td>
-            <td>{{ item.tracking_member_name }}</td>
             <td>{{ item.product_code2 }}</td>
+            <td>{{ item.tracking_member_name }}</td>
+            <td>{{ item.product_code }}</td>
             <td>{{ item.product_number }}</td>
             <td>{{ item.sparetime }}</td>
             <td>{{ item.order_serial }}</td>
@@ -130,7 +130,8 @@
             <td>数量</td>
             <td>单价</td>
             <td>金额</td>
-            <td style="width: 20%;">备注</td>
+            <td style="width: 20%;">备注/库位</td>
+            <td>合同号</td>
           </tr>
           <template v-for="(item, index) in tableData.slice((ge - 1) * 8, ge * 8)">
             <tr :key="'nvb' + index">
@@ -140,7 +141,8 @@
               <td>{{ item.product_number }}</td>
               <td>{{ noShow ? '' : item.price }}</td>
               <td>{{ noShow ? '' : (item.product_number * item.price).toFixed(2) }}</td>
-              <td>{{ item.note }}</td>
+              <td>{{ item.note + item.warehouse_location}}</td>
+              <td>{{item.contract_serial}}</td>
             </tr>
           </template>
           <tr>
@@ -160,6 +162,7 @@
                       .toFixed(2)
               }}
             </td>
+            <td></td>
             <td></td>
           </tr>
         </table>

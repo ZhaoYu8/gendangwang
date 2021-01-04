@@ -41,7 +41,7 @@
             <Page v-model="scope.row['warehouse_location_id']" :clearable="true" :data="$vuexData.x.location"></Page>
           </template>
         </el-table-column>
-        <el-table-column label="当前库存" align="center" prop="storage_quantity" header-align="center" width="100"></el-table-column>
+        <el-table-column label="当前库存" align="center" prop="current_storage" header-align="center" width="100"></el-table-column>
         <el-table-column label="出库数量" align="center" header-align="center" width="100">
           <template slot-scope="scope">
             <el-input v-model="scope.row['product_number']" placeholder="" @change="numberChange(scope.row)"></el-input>

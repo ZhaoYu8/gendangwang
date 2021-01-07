@@ -82,7 +82,7 @@ export default {
         { label: "班次", width: "30px", id: "delivery_shifts" },
         { label: "收货单位", width: "100px", id: "receiving_unit" },
         { label: "商品全名", width: "16%", id: "product_name" },
-        { label: "代码", width: "50px", id: "product_code" },
+        { label: "CB", width: "50px", id: "product_code1" },
         { label: "跟单员", width: "50px", id: "order_member" },
         { label: "代码2", width: "50px", id: "product_code2" },
         { label: "数量", width: "50px", id: "delivery_number" },

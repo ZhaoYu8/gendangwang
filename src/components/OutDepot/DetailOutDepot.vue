@@ -31,6 +31,7 @@
           <el-button type="primary" size="small" icon="el-icon-printer" @click="print">打印单据(无金额)</el-button>
           <el-button type="primary" size="small" icon="el-icon-printer" v-print="'#detailOutDepot'" @click="flowPrint(true)">合同号流程单</el-button>
           <el-button type="primary" size="small" icon="el-icon-printer" v-print="'#detailOutDepot'" @click="flowPrint(false)">打印流程单</el-button>
+          <el-button type="primary" size="small" @click="hideLineFn">{{ hideLine ? "隐藏" : "显示" }}</el-button>
         </div>
 
         <el-button type="warning" size="small" @click="updateDetail(0)" class="ml-10">复制</el-button>
@@ -58,20 +59,28 @@
       <table border="1" cellspacing="0" class="table">
         <tr v-for="item in arr.length" :key="`s` + item">
           <td v-for="n in arr[item - 1]" :key="n.label + item">
-            <div class="d-f-c">
+            <div class="d-f-c" v-if="!n.hideLine">
               <div class="W-80 t-j w-s-n">{{ n.label }}：</div>
               <div>{{ outbound_task[n.id] || "" }}</div>
             </div>
           </td>
         </tr>
-        <tr>
+        <tr v-if="hideLine">
           <td colspan="3">
             <div>备注：{{ outbound_task.desc_note }}</div>
           </td>
         </tr>
       </table>
 
-      <table border="1" cellspacing="0" class="table" :class="{ 'always-table': n }" :style="{ fontSize: fontSizes + 'px' }" v-for="(n, i) in headerArr" :key="n">
+      <table
+        border="1"
+        cellspacing="0"
+        class="table"
+        :class="{ 'always-table': n }"
+        :style="{ fontSize: fontSizes + 'px' }"
+        v-for="(n, i) in headerArr"
+        :key="n"
+      >
         <tr
           style="font-weight: bold;"
           class="header-tr"
@@ -86,9 +95,9 @@
         >
           <td style="width: 3%;">编号</td>
           <td style="width: 25%;">商品全名</td>
-          <td style="width: 8%;">CB</td>
+          <td style="width: 8%;" v-if="hideLine">CB</td>
           <td style="width: 8%;">跟单员</td>
-          <td style="width: 8%;">代码2</td>
+          <td style="width: 8%;" v-if="hideLine">代码2</td>
           <td style="width: 8%;">数量</td>
           <td style="width: 8%;">备次</td>
           <td style="width: 10%;">订单编号</td>
@@ -99,9 +108,9 @@
           <tr :key="'nvb' + index" @dblclick="always(index + n)">
             <td class="t-c">{{ index + n + 1 }}</td>
             <td>{{ item.product_name }}</td>
-            <td>{{ item.product_code1 }}</td>
+            <td v-if="hideLine">{{ item.product_code1 }}</td>
             <td>{{ item.tracking_member_name }}</td>
-            <td>{{ item.product_code2 }}</td>
+            <td v-if="hideLine">{{ item.product_code2 }}</td>
             <td>{{ item.product_number }}</td>
             <td>{{ item.sparetime }}</td>
             <td>{{ item.order_serial }}</td>
@@ -184,7 +193,8 @@
             注：1. 需方在签收货物前对货物数量、规格、包装进行核对检验，核对无异后签收，签收后视为数量、规格、包装无异议；
           </li>
           <li>
-            2. 质量异议期：如有异议，需方自签收之日起三日内向供方提出书面异议并需妥善保管货物不得使用货物；逾期未提异议或已使用货物的视为货物质量合格；
+            2.
+            质量异议期：如有异议，需方自签收之日起三日内向供方提出书面异议并需妥善保管货物不得使用货物；逾期未提异议或已使用货物的视为货物质量合格；
           </li>
           <li>
             3. 油质，染料，化学剂，高温烫气及其他造成色纱，退色或污染，均非本公司产品瑕疵，需方使用前，请自行彻底测试。
@@ -221,6 +231,7 @@ export default {
   },
   data: () => {
     return {
+      hideLine: true,
       visibleSelf: false,
       date: "",
       fontSize: 14,
@@ -239,22 +250,22 @@ export default {
           { label: "发货日期", width: "25", id: "delivery_date" }
         ],
         [
-          { label: "收货单位", id: "contact_company" },
+          { label: "收货单位", id: "contact_company", hideLine: false },
           { label: "发货单位", id: "delivery_company" },
           { label: "货运方式", id: "huoyunfangshi" }
         ],
         [
-          { label: "收货人", id: "contact_name" },
+          { label: "收货人", id: "contact_name", hideLine: false },
           { label: "发货人", id: "signment_member_name" },
           { label: "放单方式", id: "fangdanfangshi" }
         ],
         [
-          { label: "联系方式", id: "contact_way" },
+          { label: "联系方式", id: "contact_way", hideLine: false },
           { label: "联系方式", id: "delivery_contact_way" },
           { label: "付费方式", id: "fufeifangshi" }
         ],
         [
-          { label: "收货地址", id: "delivery_address" },
+          { label: "收货地址", id: "delivery_address", hideLine: false },
           { label: "发货地址", id: "delivery_from" },
           { label: "特殊要求", id: "spec_note" }
         ]
@@ -263,6 +274,18 @@ export default {
     };
   },
   methods: {
+    hideLineFn() {
+      this.hideLine = !this.hideLine;
+      this.arr.map((r) => {
+        r.map((n) => {
+          if (n.hideLine === false) {
+            n.hideLine = true;
+          } else if (n.hideLine === true) {
+            n.hideLine = false;
+          }
+        });
+      });
+    },
     always(index) {
       if (!this.headerArr.filter((r) => r === index).length) this.headerArr.push(index);
       this.headerArr = this.headerArr.sort((a, b) => {

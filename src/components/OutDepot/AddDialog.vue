@@ -14,7 +14,12 @@
               <el-input v-model="inputModel" placeholder="订单编号/产品名称"></el-input>
             </el-form-item>
           </el-col>
-          <el-col span="12">
+          <el-col span="5">
+            <el-form-item label="" class="form-item">
+              <el-input v-model="contract_serial" placeholder="合同号"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col span="7">
             <el-form-item label="" class="form-item">
               <el-button type="primary" class="f-r ml-10" @click="save">保存</el-button>
               <el-button type="warning" class="f-r" @click="query">查询</el-button>
@@ -66,25 +71,26 @@
 
 <script>
 export default {
-  name: 'AddDialog',
+  name: "AddDialog",
   props: {
     dialogVisibl: {
       type: Boolean,
       default: () => {
         return false;
-      },
-    },
+      }
+    }
   },
   data: () => {
     return {
       multipleSelection: [],
-      inputModel: '',
+      inputModel: "",
+      contract_serial: "",
       cust: null,
       custData: [], // 客户数据
       dialogVisible: false,
       tableData: [],
       total_count: 1,
-      currentPage: 1,
+      currentPage: 1
     };
   },
   watch: {
@@ -93,11 +99,12 @@ export default {
         this.dialogVisible = true;
         this.tableData = [];
       }
-    },
+    }
   },
   methods: {
     custChange() {
-      this.inputModel = '';
+      this.inputModel = "";
+      this.contract_serial = "";
       this.query();
     },
     numberChange(val) {
@@ -112,15 +119,15 @@ export default {
       this.multipleSelection = val;
     },
     cancel(type = false) {
-      this.$emit('cancel', type);
+      this.$emit("cancel", type);
       this.dialogVisible = false;
     },
     currentChange() {
       this.query();
     },
     async query() {
-      let obj = { page: this.currentPage, query_key: this.inputModel, customer_id: this.cust };
-      let res = await this.$post('outbound_tasks/choose_products', obj);
+      let obj = { page: this.currentPage, query_key: this.inputModel, customer_id: this.cust, contract_serial: this.contract_serial };
+      let res = await this.$post("outbound_tasks/choose_products", obj);
       res = res.data.data;
       let arr = this.multipleSelection;
       let data = res.items.filter((r) => !this.multipleSelection.map((n) => n.product_id).includes(r.product_id));
@@ -138,25 +145,25 @@ export default {
     save() {
       if (!this.multipleSelection.length) {
         this.$notify({
-          title: '警告',
-          message: '你未选中任何一条数据，请检查！',
-          type: 'warning',
+          title: "警告",
+          message: "你未选中任何一条数据，请检查！",
+          type: "warning"
         });
         return;
       }
-      this.$emit('save', this.multipleSelection);
+      this.$emit("save", this.multipleSelection);
       this.cancel();
-    },
+    }
   },
   beforeDestroy() {
-    this.$bus.$off('AddOutDepot');
+    this.$bus.$off("AddOutDepot");
   },
   mounted() {
-    this.$bus.$on('AddOutDepot', (val) => {
+    this.$bus.$on("AddOutDepot", (val) => {
       this.cust = val;
       this.query();
     });
-  },
+  }
 };
 </script>
 

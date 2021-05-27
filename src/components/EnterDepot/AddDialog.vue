@@ -39,6 +39,9 @@
         <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center"> </el-table-column>
         <el-table-column label="产品名称" align="center" prop="product_name" header-align="center"> </el-table-column>
         <el-table-column label="产品编码" align="center" prop="product_serial" header-align="center"> </el-table-column>
+
+        <el-table-column label="订单数量" align="center" prop="order_quantity" header-align="center"> </el-table-column>
+
         <el-table-column label="当前库存" align="center" prop="ccccc" header-align="center"> </el-table-column>
         <el-table-column label="入库数量" align="center" prop="entry_number" header-align="center">
           <template slot-scope="scope">
@@ -55,33 +58,42 @@
         ></el-table-column>
       </el-table>
       <!-- 第一个表格分页 -->
-      <el-pagination layout="prev, pager, next" :current-page.sync="currentPage" :total="total_count" background :page-size="20" class="pt-10 d-f-e" @current-change="currentChange"> </el-pagination>
+      <el-pagination
+        layout="prev, pager, next"
+        :current-page.sync="currentPage"
+        :total="total_count"
+        background
+        :page-size="20"
+        class="pt-10 d-f-e"
+        @current-change="currentChange"
+      >
+      </el-pagination>
     </div>
   </el-dialog>
 </template>
 
 <script>
 export default {
-  name: 'AddDialog',
+  name: "AddDialog",
   props: {
     visible: {
       type: Boolean,
       default: () => {
         return false;
-      },
-    },
+      }
+    }
   },
   data: () => {
     return {
       multipleSelection: [],
-      inputModel: '',
+      inputModel: "",
       cust: null,
       custData: [], // 客户数据
       dialogVisible: false,
       tableData: [],
       location_options: [],
       total_count: 1,
-      currentPage: 1,
+      currentPage: 1
     };
   },
   watch: {
@@ -91,11 +103,11 @@ export default {
         this.multipleSelection = [];
         this.query();
       }
-    },
+    }
   },
   methods: {
     custChange() {
-      this.inputModel = '';
+      this.inputModel = "";
       this.query();
     },
     numberChange(val) {
@@ -105,18 +117,18 @@ export default {
       this.multipleSelection = val;
     },
     cancel(type = false) {
-      this.$emit('cancel', type);
+      this.$emit("cancel", type);
       this.dialogVisible = false;
     },
     async query() {
       let obj = { page: this.currentPage, query_key: this.inputModel, customer_id: this.cust };
-      let res = await this.$post('yuanyi_entries/choose_products', obj);
+      let res = await this.$post("yuanyi_entries/choose_products", obj);
       res = res.data.data;
       let arr = this.multipleSelection;
       let data = res.products.filter((r) => !this.multipleSelection.map((n) => n.id).includes(r.id));
       data.map((r, n) => {
         r.location_id = res.location_options.length ? res.location_options[0].id : null;
-        r.entried_at = moment().format('YYYY-MM-DD');
+        r.entried_at = moment().format("YYYY-MM-DD");
       });
       this.tableData = this.multipleSelection.concat(data);
       this.$nextTick(() => {
@@ -130,21 +142,21 @@ export default {
     save() {
       if (!this.multipleSelection.length) {
         this.$notify({
-          title: '警告',
-          message: '你未选中任何一条数据，请检查！',
-          type: 'warning',
+          title: "警告",
+          message: "你未选中任何一条数据，请检查！",
+          type: "warning"
         });
         return;
       }
-      this.$emit('save', this.multipleSelection, this.location_options);
+      this.$emit("save", this.multipleSelection, this.location_options);
       this.cancel();
     },
     currentChange() {
       this.query();
-    },
+    }
   },
   beforeDestroy() {},
-  mounted() {},
+  mounted() {}
 };
 </script>
 

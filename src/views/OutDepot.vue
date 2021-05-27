@@ -10,35 +10,14 @@
     </Panel>
     <!-- 表格 -->
     <div class="pt-10 table">
-      <el-table
-        :data="tableData"
-        style="width: 100%"
-        border
-        ref="firstTable"
-        stripe
-      >
-        <el-table-column
-          header-align="center"
-          :label="item.label"
-          :width="item.width"
-          v-for="(item, index) in tableHeader"
-          :key="item.label + index"
-        >
+      <el-table :data="tableData" style="width: 100%" border ref="firstTable" stripe>
+        <el-table-column header-align="center" :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index">
           <template slot-scope="scope">
             <template v-if="item.id === 'outbound_task_serial'">
-              <el-link
-                v-if="item.id === 'outbound_task_serial'"
-                type="primary"
-                @click="detailChange(scope.row)"
-                >{{ scope.row[item.id] }}</el-link
-              >
+              <el-link v-if="item.id === 'outbound_task_serial'" type="primary" @click="detailChange(scope.row)">{{ scope.row[item.id] }}</el-link>
             </template>
             <template v-else>
-              <el-input
-                v-model="scope.row[item.id]"
-                v-if="item.type === 'input'"
-                v-focus
-              />
+              <el-input v-model="scope.row[item.id]" v-if="item.type === 'input'" v-focus />
               <div v-else-if="item.type === 'serial'" class="t-c">
                 {{ scope.$index + 1 }}
               </div>
@@ -57,22 +36,9 @@
       :current-page.sync="currentPage"
       @current-change="currentChange"
     ></el-pagination>
-    <el-dialog
-      title=""
-      :visible="dialogVisible"
-      width="95%"
-      top="5vh"
-      class="dialog"
-      @close="dialogVisible = false"
-      :close-on-click-modal="false"
-    >
+    <el-dialog title="" :visible="dialogVisible" width="95%" top="5vh" class="dialog" @close="dialogVisible = false" :close-on-click-modal="false">
       <AddOutDepot v-if="addOrDeatil" @cancel="cancel" @detail="detail" />
-      <DetailOutDepot
-        v-if="!addOrDeatil"
-        :detailData="detailData"
-        @update="update"
-        @cancel="cancel"
-      />
+      <DetailOutDepot v-if="!addOrDeatil" :detailData="detailData" @update="update" @cancel="cancel" />
     </el-dialog>
   </div>
 </template>
@@ -96,7 +62,7 @@ export default {
           placeholder: "",
           type: "select",
           data: [],
-          id: "inbound_warehouse_id",
+          id: "inbound_warehouse_id"
         },
         {
           label: "仓位",
@@ -104,7 +70,7 @@ export default {
           placeholder: "",
           type: "page",
           data: [],
-          id: "warehouse_location_id",
+          id: "warehouse_location_id"
         },
         {
           label: "客户",
@@ -112,7 +78,7 @@ export default {
           placeholder: "",
           type: "page",
           data: [],
-          id: "customer_id",
+          id: "customer_id"
         },
         {
           label: "销售",
@@ -120,7 +86,7 @@ export default {
           placeholder: "",
           type: "select",
           data: [],
-          id: "saler_id",
+          id: "saler_id"
         },
         {
           label: "负责人",
@@ -128,7 +94,7 @@ export default {
           placeholder: "",
           type: "select",
           data: [],
-          id: "member_id",
+          id: "member_id"
         },
         {
           label: "发货时间",
@@ -136,14 +102,14 @@ export default {
           placeholder: "",
           type: "daterange",
           span: 8,
-          id: "delivery_date_min",
+          id: "delivery_date_min"
         },
         {
           label: "关键字",
           model: "",
           placeholder: "订单编号/产品名称/收货人/收货单位",
-          id: "query_key",
-        },
+          id: "query_key"
+        }
       ],
       tableData: [],
       tableHeader: [
@@ -157,13 +123,13 @@ export default {
         { label: "发货总数", id: "outbound_number" },
         { label: "当前状态", id: "status_name" },
         { label: "更新时间", id: "updated_at" },
-        { label: "最后操作人", id: "updator" },
-      ],
+        { label: "最后操作人", id: "updator" }
+      ]
     };
   },
   components: {
     AddOutDepot,
-    DetailOutDepot,
+    DetailOutDepot
   },
   methods: {
     detail(res) {
@@ -202,15 +168,11 @@ export default {
     async query() {
       let obj = {
         ...this.$common.querySql.call(this, this.arr),
-        ...{ page: this.currentPage },
+        ...{ page: this.currentPage }
       };
       if (obj.delivery_date_min) {
-        obj.delivery_date_max = moment(obj.delivery_date_min[1]).format(
-          "YYYY-MM-DD"
-        );
-        obj.delivery_date_min = moment(obj.delivery_date_min[0]).format(
-          "YYYY-MM-DD"
-        );
+        obj.delivery_date_max = moment(obj.delivery_date_min[1]).format("YYYY-MM-DD");
+        obj.delivery_date_min = moment(obj.delivery_date_min[0]).format("YYYY-MM-DD");
       }
       let res = await this.$post("outbound_tasks/list", obj);
       this.tableData = res.data.data.items;
@@ -228,7 +190,7 @@ export default {
       [3, 4].map((r) => {
         this.arr[r].data = x.member;
       });
-    },
+    }
   },
   mounted() {
     this.query();
@@ -236,7 +198,7 @@ export default {
     this.$bus.$on("user", () => {
       this.init();
     });
-  },
+  }
 };
 </script>
 

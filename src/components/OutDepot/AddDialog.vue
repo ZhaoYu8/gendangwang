@@ -58,12 +58,25 @@
             <el-input v-model="scope.row['sparetime_percent']" placeholder="" @change="percentChange(scope.row)"></el-input>
           </template>
         </el-table-column>
-        <el-table-column label="产品单价" align="center" header-align="center" prop="price" width="100"> </el-table-column>
+        <el-table-column label="产品单价" align="center" header-align="center" prop="price" width="100">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row['price']" placeholder="" @change="scope.row['price'] = Number(parseFloat(scope.row['price']).toFixed(3)) || 0"></el-input>
+          </template>
+        </el-table-column>
         <el-table-column label="备注" align="center" header-align="center">
           <template slot-scope="scope"> <el-input v-model="scope.row['note']" placeholder=""></el-input> </template>
         </el-table-column>
       </el-table>
-      <el-pagination layout="prev, pager, next" :current-page.sync="currentPage" :total="total_count" background :page-size="20" class="pt-10 d-f-e" @current-change="currentChange"> </el-pagination>
+      <el-pagination
+        layout="prev, pager, next"
+        :current-page.sync="currentPage"
+        :total="total_count"
+        background
+        :page-size="20"
+        class="pt-10 d-f-e"
+        @current-change="currentChange"
+      >
+      </el-pagination>
       <!-- 第一个表格分页 -->
     </div>
   </el-dialog>

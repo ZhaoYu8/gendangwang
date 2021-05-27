@@ -20,6 +20,7 @@
         <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center"> </el-table-column>
         <el-table-column label="产品名称" align="center" prop="product_name" header-align="center"> </el-table-column>
         <el-table-column label="产品编码" align="center" prop="product_serial" header-align="center"> </el-table-column>
+        <el-table-column label="订单数量" align="center" prop="order_quantity" header-align="center"> </el-table-column>
         <el-table-column label="当前库存" align="center" prop="ccccc" header-align="center"> </el-table-column>
         <el-table-column label="入库数量" align="center" prop="entry_number" header-align="center"> </el-table-column>
         <el-table-column label="库位" align="center" prop="location_name" header-align="center"> </el-table-column>

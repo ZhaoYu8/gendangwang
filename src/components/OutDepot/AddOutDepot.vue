@@ -25,6 +25,7 @@
           <Page v-model="scope.row['warehouse_location_id']" :clearable="true" :data="$vuexData.x.location"></Page>
         </template>
       </el-table-column>
+      <el-table-column label="订单数量" align="center" prop="order_quantity" header-align="center"> </el-table-column>
       <el-table-column label="当前库存" align="center" prop="storage_quantity" header-align="center" width="100"></el-table-column>
       <el-table-column label="出库数量" align="center" header-align="center" width="100">
         <template slot-scope="scope">

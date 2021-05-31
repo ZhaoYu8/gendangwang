@@ -1,6 +1,6 @@
 <template>
   <div class="p-10 box">
-    <Panel :arr="arr">
+    <Panel :arr="arr" @change="panelChange">
       <el-col :span="18" class="d-f-e">
         <div>
           <el-button type="primary" @click="query">查询</el-button>
@@ -110,6 +110,11 @@ export default {
     }
   },
   methods: {
+    panelChange(val) {
+      if (val.id === "confirm_status") {
+        this.query();
+      }
+    },
     getSummaries(param) {
       const { columns, data } = param;
       const sums = [];

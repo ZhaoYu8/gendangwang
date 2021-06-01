@@ -5,7 +5,7 @@
       <el-col :span="24">
         <el-form-item class="f-r">
           <el-button type="primary" @click="moreDel">多选删除</el-button>
-          <el-button type="primary" @click="summary">汇总</el-button>
+          <!-- <el-button type="primary" @click="summary">汇总</el-button> -->
           <el-button type="primary" @click="special">特殊计划单</el-button>
           <el-button type="primary" @click="copyAdd">复制新建</el-button>
           <el-button
@@ -64,17 +64,17 @@
 </template>
 
 <script>
-import Dialog1 from '../components/PlanDialog1';
-import Dialog2 from '../components/PlanDialog2';
-import Dialog3 from '../components/PlanDialog3';
+import Dialog1 from "../components/PlanDialog1";
+import Dialog2 from "../components/PlanDialog2";
+import Dialog3 from "../components/PlanDialog3";
 
 export default {
-  name: 'Plan',
+  name: "Plan",
   props: {},
   components: {
     Dialog1,
     Dialog2,
-    Dialog3,
+    Dialog3
   },
   data: () => {
     return {
@@ -83,20 +83,22 @@ export default {
       dialog3: false,
       paginate_meta: {}, // 分页总数数据
       arr: [
-        { label: '下单客户：', model: '', placeholder: '', type: 'page', data: [], id: 'customer_id' },
-        { label: '收货单位：', model: '', placeholder: '', data: [], id: 'receiving_unit' },
-        { label: '产品名称：', model: '', placeholder: '', id: 'product_name' },
+        { label: "下单客户：", model: "", placeholder: "", type: "page", data: [], id: "customer_id" },
+        { label: "收货单位：", model: "", placeholder: "", data: [], id: "receiving_unit" },
+        { label: "产品名称：", model: "", placeholder: "", id: "product_name" }
       ],
       currentPage: 1, // 第一个表格分页
       tableData: [], // 表格数据
-      checkArr: [], // 已经勾选了选项合集
+      checkArr: [] // 已经勾选了选项合集
     };
   },
   watch: {},
   computed: {
     tableHeader() {
-      return this.$common.tableHeader;
-    },
+      let arr = [...this.$common.tableHeader];
+      arr.splice(7, 0, { label: "单价", id: "product_price", type: "input", width: 100 });
+      return arr;
+    }
   },
   methods: {
     selected(val, row) {
@@ -137,7 +139,7 @@ export default {
         this.currentPage = 1;
         this.query();
         this.$vuexFn.getCommon().then(() => {
-          this.$bus.$emit('user');
+          this.$bus.$emit("user");
         });
       }
       this.dialog3 = this.dialog2 = this.dialog1 = false;
@@ -146,9 +148,9 @@ export default {
     async query() {
       let obj = {
         ...this.$common.querySql.call(this, this.arr),
-        ...{ page: this.currentPage },
+        ...{ page: this.currentPage }
       };
-      await this.$post('/delivery_plans/list_plan', obj).then((res) => {
+      await this.$post("/delivery_plans/list_plan", obj).then((res) => {
         let data = res.data.data;
         data.map((r) => {
           if (!parseInt(r.delivery_number) && !Number(r.sparetime_percent)) {
@@ -179,24 +181,24 @@ export default {
       let arr = this.checkArr;
       if (!arr.length) {
         this.$notify({
-          title: '警告',
-          message: '你必须选择数据，才能进行多选删除!',
-          type: 'warning',
+          title: "警告",
+          message: "你必须选择数据，才能进行多选删除!",
+          type: "warning"
         });
         return;
       }
-      this.$confirm(`确定删除么？本次删除 ${arr.length} 条数据！`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
+      this.$confirm(`确定删除么？本次删除 ${arr.length} 条数据！`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       }).then(() => {
-        this.$post('/delivery_plans/batch_delete', {
-          delivery_product_ids: arr.map((r) => r.delivery_product_id),
+        this.$post("/delivery_plans/batch_delete", {
+          delivery_product_ids: arr.map((r) => r.delivery_product_id)
         }).then(() => {
           // 删除之后查询，并且提示删除成功!
           this.$message({
-            type: 'success',
-            message: '删除成功!',
+            type: "success",
+            message: "删除成功!"
           });
           let _this = this;
           setTimeout(() => {
@@ -210,17 +212,17 @@ export default {
     },
     summary() {
       this.$notify({
-        title: '警告',
-        message: '等接口!',
-        type: 'warning',
+        title: "警告",
+        message: "等接口!",
+        type: "warning"
       });
     },
     copyAdd() {
       if (!this.checkArr.length) {
         this.$notify({
-          title: '警告',
-          message: '最少选择一条数据!',
-          type: 'warning',
+          title: "警告",
+          message: "最少选择一条数据!",
+          type: "warning"
         });
         return;
       }
@@ -228,15 +230,15 @@ export default {
     },
     special() {
       this.dialog3 = true;
-    },
+    }
   },
   mounted() {
     this.arr[0].data = this.$vuexData.x.customer;
-    this.$bus.$on('user', () => {
+    this.$bus.$on("user", () => {
       this.arr[0].data = this.$vuexData.x.customer;
     });
     this.query();
-  },
+  }
 };
 </script>
 

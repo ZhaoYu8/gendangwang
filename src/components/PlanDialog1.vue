@@ -11,6 +11,7 @@
         <el-table-column label="所属客户" align="center" prop="customer_name" header-align="center"></el-table-column>
         <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center"></el-table-column>
         <el-table-column label="订单数量" align="center" prop="order_quantity" header-align="center"></el-table-column>
+        <el-table-column label="单价" align="center" prop="product_price" header-align="center"></el-table-column>
         <el-table-column label="总库存数量" align="center" prop="storage_quantity" header-align="center"></el-table-column>
       </el-table>
       <!-- 第一个表格分页 -->

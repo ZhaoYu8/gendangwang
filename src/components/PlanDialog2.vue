@@ -6,13 +6,27 @@
         <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
         <el-table-column :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index" header-align="center">
           <template slot-scope="scope">
-            <el-date-picker :clearable="false" v-model="scope.row[item.id]" type="date" :placeholder="item.placeholder || '请选择'" style="width: 100%;" v-if="item.type === 'date'"></el-date-picker>
+            <el-date-picker
+              :clearable="false"
+              v-model="scope.row[item.id]"
+              type="date"
+              :placeholder="item.placeholder || '请选择'"
+              style="width: 100%;"
+              v-if="item.type === 'date'"
+            ></el-date-picker>
             <div v-else>{{ scope.row[item.id] }}</div>
           </template>
         </el-table-column>
       </el-table>
       <!-- 第一个表格分页 -->
-      <el-pagination background layout="total, prev, pager, next, jumper" :total="total" class="pagination" :current-page.sync="currentPage1" @current-change="currentChange"></el-pagination>
+      <el-pagination
+        background
+        layout="total, prev, pager, next, jumper"
+        :total="total"
+        class="pagination"
+        :current-page.sync="currentPage1"
+        @current-change="currentChange"
+      ></el-pagination>
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button type="primary" @click="onOk" round>提交计划</el-button>
@@ -28,14 +42,14 @@ export default {
       type: Boolean,
       default: () => {
         return false;
-      },
+      }
     },
     selectArr: {
       type: Array,
       default: () => {
         return [];
-      },
-    },
+      }
+    }
   },
   data: () => {
     return {
@@ -43,13 +57,15 @@ export default {
       currentPage1: 1,
       total: 1,
       tableData: [],
-      checkArr: [], // 已经勾选了选项合集
+      checkArr: [] // 已经勾选了选项合集
     };
   },
   computed: {
     tableHeader() {
-      return this.$common.tableHeader;
-    },
+      let arr = [...this.$common.tableHeader];
+      arr.splice(7, 0, { label: "单价", id: "product_price", type: "input", width: 100 });
+      return arr;
+    }
   },
   watch: {
     dialogVisibl(val) {
@@ -66,7 +82,7 @@ export default {
           this.$refs.dialog2Table.toggleAllSelection();
         });
       }
-    },
+    }
   },
   methods: {
     currentChange(val) {
@@ -86,21 +102,21 @@ export default {
         this.$notify({
           title: "警告",
           message: "最少选择一条产品数据!",
-          type: "warning",
+          type: "warning"
         });
         return;
       }
       let arr = this.checkArr.map((r) => {
         return {
           delivery_product_id: r.delivery_product_id,
-          delivery_date: this.$common.format(r.delivery_date),
+          delivery_date: this.$common.format(r.delivery_date)
         };
       });
       this.$post("/delivery_plans/clone_plans", { clone_objects: arr }).then((res) => {
         this.$notify({
           title: "提示",
           message: "新增工作计划成功!",
-          type: "success",
+          type: "success"
         });
         this.cancel(true);
       });
@@ -122,8 +138,8 @@ export default {
         let index = this.checkArr.findIndex((r) => r.delivery_product_id === row.delivery_product_id);
         this.checkArr.splice(index, 1);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

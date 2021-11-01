@@ -88,7 +88,7 @@ export default {
         this.tableData = res.data.data;
         this.total = res.data.paginate_meta.total_count;
         this.reqeat();
-        this.arr[4].model = res.data.delivery_route;
+        // this.arr[4].model = res.data.delivery_route;
       });
     },
     currentChange(index) {

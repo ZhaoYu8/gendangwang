@@ -1,5 +1,13 @@
 <template>
-  <el-dialog title="出入库产品选择" :visible.sync="dialogVisible" width="85%" top="5vh" class="dialog" @close="cancel(false)" append-to-body>
+  <el-dialog
+    title="出入库产品选择"
+    :visible.sync="dialogVisible"
+    width="85%"
+    top="5vh"
+    class="dialog"
+    @close="cancel(false)"
+    append-to-body
+  >
     <!-- 头部查询条件 -->
     <el-card class="mb-10">
       <el-row :gutter="20">
@@ -11,7 +19,7 @@
           </el-col>
           <el-col span="5">
             <el-form-item label="" class="form-item">
-              <el-input v-model="inputModel" placeholder="订单编号/产品名称"></el-input>
+              <el-input v-model="inputModel" placeholder="订单编号/产品名称" @keyup.enter.native="query"></el-input>
             </el-form-item>
           </el-col>
           <el-col span="5">
@@ -29,8 +37,8 @@
       </el-row>
     </el-card>
     <!-- 第一个表格 -->
-    <div class="pt-10 ">
-      <el-table :data="tableData" style="width: 100%;" border height="500" ref="dialog1Table" @selection-change="handleSelectionChange">
+    <div class="pt-10">
+      <el-table :data="tableData" style="width: 100%" border height="500" ref="dialog1Table" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
         <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center"></el-table-column>
         <el-table-column label="产品名称" align="center" prop="product_name" header-align="center"></el-table-column>
@@ -50,22 +58,48 @@
         <el-table-column label="当前库存" align="center" prop="current_storage" header-align="center" width="100"></el-table-column>
         <el-table-column label="出库数量" align="center" header-align="center" width="100">
           <template slot-scope="scope">
-            <el-input v-model="scope.row['product_number']" placeholder="" @change="numberChange(scope.row)"></el-input>
+            <el-input
+              v-model="scope.row['product_number']"
+              placeholder=""
+              @change="numberChange(scope.row)"
+              v-focuss="{
+                index: scope.$index,
+                name: 'product_number'
+              }"
+            ></el-input>
           </template>
         </el-table-column>
         <el-table-column label="备次" align="center" prop="sparetime" header-align="center" width="100"> </el-table-column>
         <el-table-column label="备次率(%)" align="center" header-align="center" width="100">
           <template slot-scope="scope">
-            <el-input v-model="scope.row['sparetime_percent']" placeholder="" @change="percentChange(scope.row)"></el-input>
+            <el-input
+              v-model="scope.row['sparetime_percent']"
+              placeholder=""
+              @change="percentChange(scope.row)"
+              v-focuss="{
+                index: scope.$index,
+                name: 'sparetime_percent'
+              }"
+            ></el-input>
           </template>
         </el-table-column>
         <el-table-column label="产品单价" align="center" header-align="center" prop="price" width="100">
           <template slot-scope="scope">
-            <el-input v-model="scope.row['price']" placeholder="" @change="scope.row['price'] = Number(parseFloat(scope.row['price']).toFixed(3)) || 0"></el-input>
+            <el-input
+              v-model="scope.row['price']"
+              placeholder=""
+              @change="scope.row['price'] = Number(parseFloat(scope.row['price']).toFixed(3)) || 0"
+              v-focuss="{
+                index: scope.$index,
+                name: 'price'
+              }"
+            ></el-input>
           </template>
         </el-table-column>
         <el-table-column label="备注" align="center" header-align="center">
-          <template slot-scope="scope"> <el-input v-model="scope.row['note']" placeholder=""></el-input> </template>
+          <template slot-scope="scope">
+            <el-input v-model="scope.row['note']" placeholder=""></el-input>
+          </template>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -85,7 +119,7 @@
 
 <script>
 export default {
-  name: "AddDialog",
+  name: 'AddDialog',
   props: {
     dialogVisibl: {
       type: Boolean,
@@ -97,8 +131,8 @@ export default {
   data: () => {
     return {
       multipleSelection: [],
-      inputModel: "",
-      contract_serial: "",
+      inputModel: '',
+      contract_serial: '',
       cust: null,
       custData: [], // 客户数据
       dialogVisible: false,
@@ -117,8 +151,8 @@ export default {
   },
   methods: {
     custChange() {
-      this.inputModel = "";
-      this.contract_serial = "";
+      this.inputModel = '';
+      this.contract_serial = '';
       this.query();
     },
     numberChange(val) {
@@ -133,15 +167,20 @@ export default {
       this.multipleSelection = val;
     },
     cancel(type = false) {
-      this.$emit("cancel", type);
+      this.$emit('cancel', type);
       this.dialogVisible = false;
     },
     currentChange() {
       this.query();
     },
     async query() {
-      let obj = { page: this.currentPage, query_key: this.inputModel, customer_id: this.cust, contract_serial: this.contract_serial };
-      let res = await this.$post("outbound_tasks/choose_products", obj);
+      let obj = {
+        page: this.currentPage,
+        query_key: this.inputModel,
+        customer_id: this.cust,
+        contract_serial: this.contract_serial
+      };
+      let res = await this.$post('outbound_tasks/choose_products', obj);
       res = res.data.data;
       let arr = this.multipleSelection;
       let data = res.items.filter((r) => !this.multipleSelection.map((n) => n.product_id).includes(r.product_id));
@@ -159,21 +198,21 @@ export default {
     save() {
       if (!this.multipleSelection.length) {
         this.$notify({
-          title: "警告",
-          message: "你未选中任何一条数据，请检查！",
-          type: "warning"
+          title: '警告',
+          message: '你未选中任何一条数据，请检查！',
+          type: 'warning'
         });
         return;
       }
-      this.$emit("save", this.multipleSelection);
+      this.$emit('save', this.multipleSelection);
       this.cancel();
     }
   },
   beforeDestroy() {
-    this.$bus.$off("AddOutDepot");
+    this.$bus.$off('AddOutDepot');
   },
   mounted() {
-    this.$bus.$on("AddOutDepot", (val) => {
+    this.$bus.$on('AddOutDepot', (val) => {
       this.cust = val;
       this.query();
     });

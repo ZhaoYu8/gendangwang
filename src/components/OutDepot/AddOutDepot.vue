@@ -29,17 +29,43 @@
       <el-table-column label="当前库存" align="center" prop="storage_quantity" header-align="center" width="100"></el-table-column>
       <el-table-column label="出库数量" align="center" header-align="center" width="100">
         <template slot-scope="scope">
-          <el-input v-model="scope.row['product_number']" placeholder="" @change="numberChange(scope.row)"></el-input>
+          <el-input
+            v-model="scope.row['product_number']"
+            placeholder=""
+            @change="numberChange(scope.row)"
+            v-focuss="{
+              index: scope.$index,
+              name: 'product_number'
+            }"
+          ></el-input>
         </template>
       </el-table-column>
       <el-table-column label="备次" align="center" prop="sparetime" header-align="center" width="100"> </el-table-column>
       <el-table-column label="备次率(%)" align="center" header-align="center" width="100">
         <template slot-scope="scope">
-          <el-input v-model="scope.row['sparetime_percent']" placeholder="" @change="percentChange(scope.row)"></el-input>
+          <el-input
+            v-model="scope.row['sparetime_percent']"
+            placeholder=""
+            @change="percentChange(scope.row)"
+            v-focuss="{
+              index: scope.$index,
+              name: 'sparetime_percent'
+            }"
+          ></el-input>
         </template>
       </el-table-column>
       <el-table-column label="产品单价" align="center" header-align="center" prop="price" width="100">
-        <template slot-scope="scope"> <el-input v-model="scope.row['price']" placeholder="" @change="numChange(scope.row, 'price')"></el-input></template>
+        <template slot-scope="scope">
+          <el-input
+            v-model="scope.row['price']"
+            placeholder=""
+            @change="numChange(scope.row, 'price')"
+            v-focuss="{
+              index: scope.$index,
+              name: 'price'
+            }"
+          ></el-input
+        ></template>
       </el-table-column>
       <el-table-column label="备注" align="center" header-align="center">
         <template slot-scope="scope">
@@ -57,9 +83,9 @@
 </template>
 
 <script>
-import AddDialog from "@/components/OutDepot/AddDialog";
+import AddDialog from '@/components/OutDepot/AddDialog';
 export default {
-  name: "add",
+  name: 'add',
   props: {},
   components: {
     AddDialog
@@ -94,39 +120,39 @@ export default {
         // { label: "发货单号", model: "", placeholder: "", id: "outbound_task_serial" },
         // { label: "运单号码", model: "", placeholder: "", id: "delivery_serial" },
         // siji : 司机
-        { label: "下单客户", model: "", placeholder: "", id: "customer_id", type: "page", data: [], clearable: false },
-        { label: "发货日期", model: "", placeholder: "", id: "delivery_date", type: "date", data: [] },
-        { label: "发货单号", model: "", placeholder: "", id: "outbound_task_serial" },
-        { label: "运单号码", model: "", placeholder: "", id: "delivery_serial" },
+        { label: '下单客户', model: '', placeholder: '', id: 'customer_id', type: 'page', data: [], clearable: false },
+        { label: '发货日期', model: '', placeholder: '', id: 'delivery_date', type: 'date', data: [] },
+        { label: '发货单号', model: '', placeholder: '', id: 'outbound_task_serial' },
+        { label: '运单号码', model: '', placeholder: '', id: 'delivery_serial' },
 
-        { label: "收货单位", model: "", placeholder: "", id: "contact_company" },
-        { label: "发货单位", model: "", placeholder: "", id: "delivery_company" },
-        { label: "货运方式", model: "", placeholder: "", id: "huoyunfangshi", type: "select", data: [] },
-        { label: "检验员", model: "", placeholder: "", id: "check_member_id", type: "select", data: [] }, // 7
+        { label: '收货单位', model: '', placeholder: '', id: 'contact_company' },
+        { label: '发货单位', model: '', placeholder: '', id: 'delivery_company' },
+        { label: '货运方式', model: '', placeholder: '', id: 'huoyunfangshi', type: 'select', data: [] },
+        { label: '检验员', model: '', placeholder: '', id: 'check_member_id', type: 'select', data: [] }, // 7
 
-        { label: "收货人", model: "", placeholder: "", id: "contact_name" },
-        { label: "发货人", model: "", placeholder: "", id: "signment_member_id", type: "select", data: [] }, // 9
-        { label: "放单方式", model: "", placeholder: "", id: "fangdanfangshi", type: "select", data: [] },
-        { label: "业务员", model: "", placeholder: "", id: "saler_id", type: "select", data: [] }, // 11
+        { label: '收货人', model: '', placeholder: '', id: 'contact_name' },
+        { label: '发货人', model: '', placeholder: '', id: 'signment_member_id', type: 'select', data: [] }, // 9
+        { label: '放单方式', model: '', placeholder: '', id: 'fangdanfangshi', type: 'select', data: [] },
+        { label: '业务员', model: '', placeholder: '', id: 'saler_id', type: 'select', data: [] }, // 11
 
-        { label: "联系方式", model: "", placeholder: "收货人联系方式", id: "contact_way" },
-        { label: "联系方式", model: "", placeholder: "发货人联系方式", id: "delivery_contact_way" },
-        { label: "付费方式", model: "", placeholder: "", id: "fufeifangshi", type: "select", data: [] },
-        { label: "跟单员", model: "", placeholder: "", id: "tracking_member_id", type: "select", data: [] }, // 15
+        { label: '联系方式', model: '', placeholder: '收货人联系方式', id: 'contact_way' },
+        { label: '联系方式', model: '', placeholder: '发货人联系方式', id: 'delivery_contact_way' },
+        { label: '付费方式', model: '', placeholder: '', id: 'fufeifangshi', type: 'select', data: [] },
+        { label: '跟单员', model: '', placeholder: '', id: 'tracking_member_id', type: 'select', data: [] }, // 15
 
-        { label: "收货地址", model: "", placeholder: "", id: "delivery_address" },
-        { label: "发货地址", model: "", placeholder: "", id: "delivery_from" },
-        { label: "特殊要求", model: "", placeholder: "", id: "spec_note" },
-        { label: "配货员", model: "", placeholder: "", id: "delivery_member_id", type: "select", data: [] }, // 19
+        { label: '收货地址', model: '', placeholder: '', id: 'delivery_address' },
+        { label: '发货地址', model: '', placeholder: '', id: 'delivery_from' },
+        { label: '特殊要求', model: '', placeholder: '', id: 'spec_note' },
+        { label: '配货员', model: '', placeholder: '', id: 'delivery_member_id', type: 'select', data: [] }, // 19
 
-        { label: "备注说明", model: "", placeholder: "", id: "desc_note", class: "w-100" }
+        { label: '备注说明', model: '', placeholder: '', id: 'desc_note', class: 'w-100' }
       ]
     };
   },
   methods: {
     async init() {
       this.arr.map((r) => {
-        r.model = "";
+        r.model = '';
       });
       let x = this.$vuexData.x;
       this.arr[0].data = x.customer;
@@ -138,14 +164,14 @@ export default {
       [19, 7, 15, 11, 9].map((r) => {
         this.arr[r].data = x.member;
       });
-      await this.custChange({ model: x.customer[0].id, id: "customer_id" });
-      this.arr[1].model = moment().format("YYYY-MM-DD");
+      await this.custChange({ model: x.customer[0].id, id: 'customer_id' });
+      this.arr[1].model = moment().format('YYYY-MM-DD');
       this.tableData = [];
-      this.arr[17].model = "常熟市尚湖镇练墉颜巷工业园";
+      this.arr[17].model = '常熟市尚湖镇练墉颜巷工业园';
     },
     changeDialog() {
       this.dialogShow = true;
-      this.$bus.$emit("AddOutDepot", this.arr[0].model);
+      this.$bus.$emit('AddOutDepot', this.arr[0].model);
     },
     // 选择出库产品得出的数据
     dialogSave(val) {
@@ -166,15 +192,15 @@ export default {
       this.tableData.splice(val, 1);
     },
     async custChange(val) {
-      if (val.id !== "customer_id") return;
+      if (val.id !== 'customer_id') return;
       this.arr[4].model = this.$vuexData.x.customer.filter((r) => r.id === val.model)[0].name;
-      let res = await this.$post("outbound_tasks/switch_customer", {
+      let res = await this.$post('outbound_tasks/switch_customer', {
         customer_id: val.model
       });
       let data = res.data.data;
       this.arr[15].model = data.tracking_member_id; // 跟单员
       this.arr[11].model = data.saler_member_id; // 业务员
-      this.arr[5].model = data.delivery_company || "源艺包装"; // 发货单位
+      this.arr[5].model = data.delivery_company || '源艺包装'; // 发货单位
       this.arr[9].model = data.signment_member_id; // 发货人
       this.arr[13].model = data.delivery_contact_way; // 联系方式
     },
@@ -184,7 +210,7 @@ export default {
         outbound_task[r.id] = r.model;
       });
       // 日期单独处理一下
-      outbound_task.delivery_date = moment(outbound_task.delivery_date).format("YYYY-MM-DD");
+      outbound_task.delivery_date = moment(outbound_task.delivery_date).format('YYYY-MM-DD');
       let arr = this.tableData.map((r) => {
         return {
           ...{
@@ -201,7 +227,7 @@ export default {
       });
       let obj = {};
       arr.map((r, i) => {
-        r.id = this.editId ? r.id : "";
+        r.id = this.editId ? r.id : '';
         obj[i] = r;
       });
       let params = {
@@ -211,30 +237,30 @@ export default {
       if (this.editId) params.id = this.editId;
       if (this.finance) {
         params.status = 2;
-        let update = await this.$post(`outbound_tasks/${this.editId ? "for_update" : "for_create"}`, params);
+        let update = await this.$post(`outbound_tasks/${this.editId ? 'for_update' : 'for_create'}`, params);
         let res = await this.$post(`outbound_tasks/finacal_audit`, { id: this.editId });
         this.$notify({
-          title: "提示",
-          type: "success",
+          title: '提示',
+          type: 'success',
           message: `财务审核成功！`
         });
         this.cancel();
         return;
       }
-      let res = await this.$post(`outbound_tasks/${this.editId ? "for_update" : "for_create"}`, params);
+      let res = await this.$post(`outbound_tasks/${this.editId ? 'for_update' : 'for_create'}`, params);
       this.$notify({
-        title: "提示",
-        type: "success",
-        message: `${this.editId ? "修改" : "创建"}成功！`
+        title: '提示',
+        type: 'success',
+        message: `${this.editId ? '修改' : '创建'}成功！`
       });
       if (this.editId) {
-        this.$emit("detail", { id: this.editId });
+        this.$emit('detail', { id: this.editId });
         return;
       }
       this.cancel();
     },
     cancel(type) {
-      this.$emit("cancel", type);
+      this.$emit('cancel', type);
     },
     async getSerial() {
       let res = await this.$post(`outbound_tasks/for_new`);
@@ -242,10 +268,10 @@ export default {
     }
   },
   beforeDestroy() {
-    this.$bus.$off("panelShow");
+    this.$bus.$off('panelShow');
   },
   mounted() {
-    this.$bus.$on("panelShow", async (res) => {
+    this.$bus.$on('panelShow', async (res) => {
       await this.init();
       if (res) {
         this.tableData = res.tableData;
@@ -257,7 +283,7 @@ export default {
         this.panelType = true;
         if (!res.id) {
           this.getSerial();
-          this.arr[1].model = moment().format("YYYY-MM-DD");
+          this.arr[1].model = moment().format('YYYY-MM-DD');
         }
       } else {
         this.panelType = true;

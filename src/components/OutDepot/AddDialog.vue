@@ -24,7 +24,7 @@
           </el-col>
           <el-col span="5">
             <el-form-item label="" class="form-item">
-              <el-input v-model="contract_serial" placeholder="合同号"></el-input>
+              <el-input v-model="contract_serial" placeholder="合同号" @keyup.enter.native="query"></el-input>
             </el-form-item>
           </el-col>
           <el-col span="7">

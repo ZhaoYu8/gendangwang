@@ -1,6 +1,6 @@
 <template>
   <div class="outdepot box">
-    <Panel :arr="arr">
+    <Panel :arr="arr" @change="handleChange">
       <el-col :span="4" class="d-f-e">
         <div>
           <el-button type="primary" @click="query">查询</el-button>
@@ -44,10 +44,10 @@
 </template>
 
 <script>
-import AddOutDepot from "../components/OutDepot/AddOutDepot";
-import DetailOutDepot from "../components/OutDepot/DetailOutDepot";
+import AddOutDepot from '../components/OutDepot/AddOutDepot';
+import DetailOutDepot from '../components/OutDepot/DetailOutDepot';
 export default {
-  name: "outDepot",
+  name: 'outDepot',
   data() {
     return {
       detailData: {},
@@ -56,74 +56,67 @@ export default {
       currentPage: 1,
       total: 1,
       arr: [
+        { label: '仓库', model: '', placeholder: '', type: 'select', data: [], id: 'inbound_warehouse_id' },
         {
-          label: "仓库",
-          model: "",
-          placeholder: "",
-          type: "select",
+          label: '仓位',
+          model: '',
+          placeholder: '',
+          type: 'page',
           data: [],
-          id: "inbound_warehouse_id"
+          id: 'warehouse_location_id'
         },
         {
-          label: "仓位",
-          model: "",
-          placeholder: "",
-          type: "page",
+          label: '客户',
+          model: '',
+          placeholder: '',
+          type: 'page',
           data: [],
-          id: "warehouse_location_id"
+          id: 'customer_id'
         },
         {
-          label: "客户",
-          model: "",
-          placeholder: "",
-          type: "page",
+          label: '销售',
+          model: '',
+          placeholder: '',
+          type: 'select',
           data: [],
-          id: "customer_id"
+          id: 'saler_id'
         },
         {
-          label: "销售",
-          model: "",
-          placeholder: "",
-          type: "select",
+          label: '负责人',
+          model: '',
+          placeholder: '',
+          type: 'select',
           data: [],
-          id: "saler_id"
+          id: 'member_id'
         },
         {
-          label: "负责人",
-          model: "",
-          placeholder: "",
-          type: "select",
-          data: [],
-          id: "member_id"
-        },
-        {
-          label: "发货时间",
-          model: "",
-          placeholder: "",
-          type: "daterange",
+          label: '发货时间',
+          model: '',
+          placeholder: '',
+          type: 'daterange',
           span: 8,
-          id: "delivery_date_min"
+          id: 'delivery_date_min'
         },
         {
-          label: "关键字",
-          model: "",
-          placeholder: "订单编号/产品名称/收货人/收货单位",
-          id: "query_key"
+          label: '关键字',
+          model: '',
+          placeholder: '订单编号/产品名称/收货人/收货单位',
+          id: 'query_key'
         }
       ],
       tableData: [],
       tableHeader: [
         // 类型、跟单编号、产品名称、提交人、跟单员   这些不可改
-        { label: "序号", id: "id", width: 70, type: "serial" },
-        { label: "发货时间", id: "delivery_date" },
-        { label: "收货人", id: "contact_name" },
-        { label: "收货单位", id: "contact_company" },
-        { label: "客户", id: "customer_name" },
-        { label: "出库单号", id: "outbound_task_serial" },
-        { label: "发货总数", id: "outbound_number" },
-        { label: "当前状态", id: "status_name" },
-        { label: "更新时间", id: "updated_at" },
-        { label: "最后操作人", id: "updator" }
+        { label: '序号', id: 'id', width: 70, type: 'serial' },
+        { label: '发货时间', id: 'delivery_date' },
+        { label: '收货人', id: 'contact_name' },
+        { label: '收货单位', id: 'contact_company' },
+        { label: '客户', id: 'customer_name' },
+        { label: '出库单号', id: 'outbound_task_serial' },
+        { label: '发货总数', id: 'outbound_number' },
+        { label: '当前状态', id: 'status_name' },
+        { label: '更新时间', id: 'updated_at' },
+        { label: '最后操作人', id: 'updator' }
       ]
     };
   },
@@ -132,17 +125,23 @@ export default {
     DetailOutDepot
   },
   methods: {
+    // 单独给关键字加查询
+    handleChange(val) {
+      if (val.id === 'query_key') {
+        this.query();
+      }
+    },
     detail(res) {
       this.addOrDeatil = false;
       this.$nextTick(() => {
-        this.$bus.$emit("detailShow", res);
+        this.$bus.$emit('detailShow', res);
       });
     },
     // 详情跳修改
     update(res) {
       this.addOrDeatil = true;
       this.$nextTick(() => {
-        this.$bus.$emit("panelShow", res);
+        this.$bus.$emit('panelShow', res);
       });
     },
     // 新增成功更新页面
@@ -156,13 +155,13 @@ export default {
       this.dialogVisible = true;
       this.addOrDeatil = false;
       this.$nextTick(() => {
-        this.$bus.$emit("detailShow", val);
+        this.$bus.$emit('detailShow', val);
       });
     },
     panelChange() {
       this.addOrDeatil = this.dialogVisible = true;
       this.$nextTick(() => {
-        this.$bus.$emit("panelShow");
+        this.$bus.$emit('panelShow');
       });
     },
     async query() {
@@ -171,10 +170,10 @@ export default {
         ...{ page: this.currentPage }
       };
       if (obj.delivery_date_min) {
-        obj.delivery_date_max = moment(obj.delivery_date_min[1]).format("YYYY-MM-DD");
-        obj.delivery_date_min = moment(obj.delivery_date_min[0]).format("YYYY-MM-DD");
+        obj.delivery_date_max = moment(obj.delivery_date_min[1]).format('YYYY-MM-DD');
+        obj.delivery_date_min = moment(obj.delivery_date_min[0]).format('YYYY-MM-DD');
       }
-      let res = await this.$post("outbound_tasks/list", obj);
+      let res = await this.$post('outbound_tasks/list', obj);
       this.tableData = res.data.data.items;
       this.total = res.data.data.paginate_meta.total_count;
     },
@@ -195,7 +194,7 @@ export default {
   mounted() {
     this.query();
     this.init();
-    this.$bus.$on("user", () => {
+    this.$bus.$on('user', () => {
       this.init();
     });
   }

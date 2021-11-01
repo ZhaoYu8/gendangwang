@@ -13,7 +13,7 @@
               v-if="item.type === 'select'"
               clearable
               :multiple="item.multiple"
-              style="width: 100%;"
+              style="width: 100%"
               @change="change(item)"
             >
               <el-option v-for="(list, d) in item.data" :key="list + d" :label="list.name" :value="list.id"></el-option>
@@ -82,17 +82,17 @@ export default {
   props: {
     arr: {
       type: Array,
-      default: [],
+      default: []
     },
     special: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   data() {
     return {
       datePicker: '',
-      visible: false,
+      visible: false
     };
   },
   methods: {
@@ -104,9 +104,9 @@ export default {
     },
     dateChange() {
       this.$emit('dateChange', this.datePicker);
-    },
+    }
   },
-  mounted() {},
+  mounted() {}
 };
 </script>
 

@@ -35,7 +35,7 @@
             </el-col>
             <el-col :span="4">
               <el-form-item label="产品名称：" class="form-item">
-                <el-input v-model="product_name" placeholder="请输入产品名称"></el-input>
+                <el-input v-model="product_name" placeholder="请输入产品名称" @keyup.enter.native="query"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6" class="d-f-c">

@@ -11,7 +11,7 @@
           </el-col>
           <el-col span="5">
             <el-form-item label="" class="form-item">
-              <el-input v-model="inputModel" placeholder="订单编号/产品名称/产品编号"></el-input>
+              <el-input v-model="inputModel" placeholder="订单编号/产品名称/产品编号" @keyup.enter.native="query"></el-input>
             </el-form-item>
           </el-col>
           <el-col span="12">
@@ -24,8 +24,8 @@
       </el-row>
     </el-card>
     <!-- 第一个表格 -->
-    <div class="pt-10 ">
-      <el-table :data="tableData" style="width: 100%;" border height="600" ref="table" @selection-change="handleSelectionChange">
+    <div class="pt-10">
+      <el-table :data="tableData" style="width: 100%" border height="600" ref="table" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
         <el-table-column label="入库日期" align="center" prop="entried_at" header-align="center">
           <template slot-scope="scope">
@@ -45,7 +45,15 @@
         <el-table-column label="当前库存" align="center" prop="ccccc" header-align="center"> </el-table-column>
         <el-table-column label="入库数量" align="center" prop="entry_number" header-align="center">
           <template slot-scope="scope">
-            <el-input v-model="scope.row['entry_number']" placeholder="" @change="numberChange(scope.row)"></el-input>
+            <el-input
+              v-model="scope.row['entry_number']"
+              placeholder=""
+              @change="numberChange(scope.row)"
+              v-focuss="{
+                index: scope.$index,
+                name: 'entry_number'
+              }"
+            ></el-input>
           </template>
         </el-table-column>
         <el-table-column label="库位" align="center" prop="location_id" header-align="center">
@@ -74,7 +82,7 @@
 
 <script>
 export default {
-  name: "AddDialog",
+  name: 'AddDialog',
   props: {
     visible: {
       type: Boolean,
@@ -86,7 +94,7 @@ export default {
   data: () => {
     return {
       multipleSelection: [],
-      inputModel: "",
+      inputModel: '',
       cust: null,
       custData: [], // 客户数据
       dialogVisible: false,
@@ -107,7 +115,7 @@ export default {
   },
   methods: {
     custChange() {
-      this.inputModel = "";
+      this.inputModel = '';
       this.query();
     },
     numberChange(val) {
@@ -117,18 +125,22 @@ export default {
       this.multipleSelection = val;
     },
     cancel(type = false) {
-      this.$emit("cancel", type);
+      this.$emit('cancel', type);
       this.dialogVisible = false;
     },
     async query() {
-      let obj = { page: this.currentPage, query_key: this.inputModel, customer_id: this.cust };
-      let res = await this.$post("yuanyi_entries/choose_products", obj);
+      let obj = {
+        page: this.currentPage,
+        query_key: this.inputModel,
+        customer_id: this.cust
+      };
+      let res = await this.$post('yuanyi_entries/choose_products', obj);
       res = res.data.data;
       let arr = this.multipleSelection;
       let data = res.products.filter((r) => !this.multipleSelection.map((n) => n.id).includes(r.id));
       data.map((r, n) => {
         r.location_id = res.location_options.length ? res.location_options[0].id : null;
-        r.entried_at = moment().format("YYYY-MM-DD");
+        r.entried_at = moment().format('YYYY-MM-DD');
       });
       this.tableData = this.multipleSelection.concat(data);
       this.$nextTick(() => {
@@ -142,13 +154,13 @@ export default {
     save() {
       if (!this.multipleSelection.length) {
         this.$notify({
-          title: "警告",
-          message: "你未选中任何一条数据，请检查！",
-          type: "warning"
+          title: '警告',
+          message: '你未选中任何一条数据，请检查！',
+          type: 'warning'
         });
         return;
       }
-      this.$emit("save", this.multipleSelection, this.location_options);
+      this.$emit('save', this.multipleSelection, this.location_options);
       this.cancel();
     },
     currentChange() {

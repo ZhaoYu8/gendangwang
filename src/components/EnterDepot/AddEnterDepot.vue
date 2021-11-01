@@ -2,8 +2,8 @@
   <div>
     <!-- 第一个表格 -->
     <el-button type="warning" class="f-r mb-10" @click="visible = true">选择入库产品</el-button>
-    <div class="pt-10 ">
-      <el-table :data="tableData" style="width: 100%;" border height="600" ref="table" @selection-change="handleSelectionChange">
+    <div class="pt-10">
+      <el-table :data="tableData" style="width: 100%" border height="600" ref="table" @selection-change="handleSelectionChange">
         <el-table-column type="index" label="序号" width="50" align="center" header-align="center"></el-table-column>
         <el-table-column label="入库日期" align="center" prop="entried_at" header-align="center">
           <template slot-scope="scope">
@@ -13,15 +13,23 @@
         <el-table-column label="销售" align="center" prop="saler_name" header-align="center"></el-table-column>
         <el-table-column label="负责人" align="center" prop="member_name" header-align="center"> </el-table-column>
         <el-table-column label="分类" align="center" prop="product_group" header-align="center"> </el-table-column>
-        <el-table-column label="客户名称" align="center" prop="customer_name" header-align="center" ></el-table-column>
-        <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center" > </el-table-column>
-        <el-table-column label="产品名称" align="center" prop="product_name" header-align="center" > </el-table-column>
-        <el-table-column label="产品编码" align="center" prop="product_serial" header-align="center" > </el-table-column>
+        <el-table-column label="客户名称" align="center" prop="customer_name" header-align="center"></el-table-column>
+        <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center"> </el-table-column>
+        <el-table-column label="产品名称" align="center" prop="product_name" header-align="center"> </el-table-column>
+        <el-table-column label="产品编码" align="center" prop="product_serial" header-align="center"> </el-table-column>
         <el-table-column label="订单数量" align="center" prop="order_quantity" header-align="center"> </el-table-column>
-        <el-table-column label="当前库存" align="center" prop="ccccc" header-align="center" > </el-table-column>
+        <el-table-column label="当前库存" align="center" prop="ccccc" header-align="center"> </el-table-column>
         <el-table-column label="入库数量" align="center" prop="entry_number" header-align="center">
           <template slot-scope="scope">
-            <el-input v-model="scope.row['entry_number']" placeholder="" @change="numberChange(scope.row)"></el-input>
+            <el-input
+              v-model="scope.row['entry_number']"
+              placeholder=""
+              @change="numberChange(scope.row)"
+              v-focuss="{
+                index: scope.$index,
+                name: 'entry_number'
+              }"
+            ></el-input>
           </template>
         </el-table-column>
         <el-table-column label="库位" align="center" prop="location_id" header-align="center">
@@ -35,7 +43,7 @@
           <template slot-scope="scope"> <el-input v-model="scope.row['note']" placeholder=""></el-input> </template
         ></el-table-column>
         <el-table-column label="操作" width="50" align="center" header-align="center">
-          <div slot-scope="scope" style="display: flex; justify-content: space-around;">
+          <div slot-scope="scope" style="display: flex; justify-content: space-around">
             <el-link :underline="false" type="danger" @click="del(scope.$index)">删除</el-link>
           </div>
         </el-table-column>
@@ -62,7 +70,7 @@ export default {
       tableData: [],
       visible: false,
       location_options: [],
-      date: moment().format('YYYY-MM-DD'),
+      date: moment().format('YYYY-MM-DD')
     };
   },
   components: { AddDialogs },
@@ -81,7 +89,7 @@ export default {
         this.$notify({
           title: '警告',
           message: '数据为空,不能保存。请增加数据!',
-          type: 'warning',
+          type: 'warning'
         });
         return;
       }
@@ -90,7 +98,9 @@ export default {
         r.entried_at = moment(r.entried_at).format('YYYY-MM-DD');
         data[n] = r;
       });
-      let res = await this.$post('yuanyi_entries/for_create', { products: data });
+      let res = await this.$post('yuanyi_entries/for_create', {
+        products: data
+      });
       this.cancel(true);
     },
     cancel(type = false) {
@@ -99,7 +109,7 @@ export default {
     },
     numberChange(val) {
       val.entry_number = parseInt(val.entry_number) || 0;
-    },
+    }
   },
   beforeDestroy() {
     this.$bus.$off('AddOutDepot');
@@ -108,7 +118,7 @@ export default {
     this.$bus.$on('AddOutDepot', (val) => {
       console.log(val);
     });
-  },
+  }
 };
 </script>
 

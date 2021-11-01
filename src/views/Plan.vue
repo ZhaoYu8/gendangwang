@@ -1,7 +1,7 @@
 <template>
   <div class="plan box p-10">
     <!-- 头部查询条件 -->
-    <Panel :arr="arr">
+    <Panel :arr="arr" @change="handleChange">
       <el-col :span="24">
         <el-form-item class="f-r">
           <el-button type="primary" @click="moreDel">多选删除</el-button>
@@ -101,6 +101,12 @@ export default {
     }
   },
   methods: {
+    // 单独给关键字加查询
+    handleChange(val) {
+      if (val.id === 'product_name') {
+        this.query();
+      }
+    },
     selected(val, row) {
       if (val.filter((r) => r.id === row.id).length) {
         // 证明是选中

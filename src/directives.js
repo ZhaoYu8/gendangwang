@@ -16,27 +16,48 @@ export default MyPlugin.install = function(vue, options) {
           binding.value();
         }
       });
-    },
+    }
   });
   Vue.directive('focuss', {
     // bind只调用一次，指令第一次绑定到元素时调用。在这里可以进行一次性的初始化设置
     bind(el, binding, vnode) {
-      // 直接自定义事件，使用 Event 构造函数：
-      let event = new CustomEvent(binding.value.name, {
-        detail: {
-          value: binding.value.index,
-        },
-      });
-      el.addEventListener('keyup', (val) => {
-        if (val.which === 13) {
-          document.dispatchEvent(event);
+      el.addEventListener('keyup', val => {
+        // 上下不需要很多判断直接 执行事件就好了
+        if ([38, 40].includes(val.which)) {
+          document.dispatchEvent(
+            new CustomEvent(binding.value.name, {
+              detail: {
+                value: binding.value.index,
+                which: val.which
+              }
+            })
+          );
+        }
+        // 左右需要单独判读。 arr 参数是重点
+        if ([37, 39].includes(val.which) && binding.value.arr != null) {
+          let len = binding.value.arr.findIndex(r => r === binding.value.name);
+          let str = binding.value.arr[len + { 37: -1, 39: 1 }[val.which]];
+          document.dispatchEvent(
+            new CustomEvent(str, {
+              detail: {
+                value: binding.value.index,
+                which: val.which
+              }
+            })
+          );
         }
       });
-      document.addEventListener(binding.value.name, (val) => {
-        if (val.detail.value === binding.value.index - 1) {
-          vnode.elm.lastElementChild.focus();
+      document.addEventListener(binding.value.name, val => {
+        let obj = { 38: 1, 40: -1 };
+        // 如果是左右 直接focus就好了。 如果是上下 需要进行判断上下是哪一位
+        if (val.detail.value === binding.value.index + ([38, 40].includes(val.detail.which) ? obj[val.detail.which] : 0)) {
+          if (vnode.elm && vnode.elm.lastElementChild) {
+            vnode.elm.lastElementChild.focus();
+            // 这个是为了让focus 之后光标是在最后一个。
+            vnode.elm.lastElementChild.setSelectionRange(999, 999);
+          }
         }
       });
-    },
+    }
   });
 };

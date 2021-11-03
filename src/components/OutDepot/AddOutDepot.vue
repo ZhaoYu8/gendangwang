@@ -35,7 +35,8 @@
             @change="numberChange(scope.row)"
             v-focuss="{
               index: scope.$index,
-              name: 'product_number'
+              name: 'product_number',
+              arr: focussArr
             }"
           ></el-input>
         </template>
@@ -49,7 +50,8 @@
             @change="percentChange(scope.row)"
             v-focuss="{
               index: scope.$index,
-              name: 'sparetime_percent'
+              name: 'sparetime_percent',
+              arr: focussArr
             }"
           ></el-input>
         </template>
@@ -62,7 +64,8 @@
             @change="numChange(scope.row, 'price')"
             v-focuss="{
               index: scope.$index,
-              name: 'price'
+              name: 'price',
+              arr: focussArr
             }"
           ></el-input
         ></template>
@@ -92,6 +95,7 @@ export default {
   },
   data: () => {
     return {
+      focussArr: ['product_number', 'sparetime_percent', 'price'],
       panelType: false,
       finance: 0, // 是否是财务审核
       dialogShow: false,

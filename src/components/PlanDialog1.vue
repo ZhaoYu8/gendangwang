@@ -3,8 +3,8 @@
     <!-- 头部查询条件 -->
     <Panel :arr="arr" @change="onChange"> </Panel>
     <!-- 第一个表格 -->
-    <div class="pt-10 ">
-      <el-table :data="tableData" style="width: 100%;" border height="400" @select="selected" @select-all="selectedAll" ref="dialog1Table">
+    <div class="pt-10">
+      <el-table :data="tableData" style="width: 100%" border height="400" @select="selected" @select-all="selectedAll" ref="dialog1Table">
         <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
         <el-table-column label="产品名称" align="center" prop="product_name" header-align="center" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="产品编号" align="center" prop="product_serial" header-align="center"></el-table-column>
@@ -15,7 +15,14 @@
         <el-table-column label="总库存数量" align="center" prop="storage_quantity" header-align="center"></el-table-column>
       </el-table>
       <!-- 第一个表格分页 -->
-      <el-pagination background layout="total, prev, pager, next, jumper" :total="total" class="pagination" :current-page.sync="currentPage" @current-change="currentChange"></el-pagination>
+      <el-pagination
+        background
+        layout="total, prev, pager, next, jumper"
+        :total="total"
+        class="pagination"
+        :current-page.sync="currentPage"
+        @current-change="currentChange"
+      ></el-pagination>
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button type="primary" @click="onOk" round>提交计划</el-button>
@@ -31,8 +38,8 @@ export default {
       type: Boolean,
       default: () => {
         return false;
-      },
-    },
+      }
+    }
   },
   data: () => {
     return {
@@ -56,39 +63,45 @@ export default {
           type: 'select',
           data: [
             { name: '是', id: '是' },
-            { name: '否', id: '否' },
-          ],
+            { name: '否', id: '否' }
+          ]
         },
-        { label: '交代说明', model: '', placeholder: '输入备注说明或需要交代的事项', id: 'note', span: 24 },
+        { label: '交代说明', model: '', placeholder: '输入备注说明或需要交代的事项', id: 'note', span: 24 }
       ],
-      checkArr: [],
+      checkArr: []
     };
   },
   watch: {
-    dialogVisibl(val) {
-      if (val) {
-        this.dialogVisible = true;
-        this.arr[6].data = this.arr[2].data = this.$vuexData.x.customer;
-        this.arr[2].model = this.$vuexData.x.customer[0].id;
-        this.arr[3].model = this.$vuexData.x.customer[0].name;
-        this.arr[1].data = [
-          { name: '', id: '' },
-          { name: '早班', id: '早班' },
-          { name: '中班', id: '中班' },
-        ];
-        this.onChange(this.arr[2]);
-        this.checkArr = [];
-      }
-    },
+    dialogVisibl: {
+      handler(val) {
+        if (val) {
+          this.arr = this.$options.data().arr;
+          this.dialogVisible = true;
+          this.arr[6].data = this.arr[2].data = this.$vuexData.x.customer;
+          this.arr[2].model = this.$vuexData.x.customer[0].id;
+          this.arr[3].model = this.$vuexData.x.customer[0].name;
+          this.arr[1].data = [
+            { name: '', id: '' },
+            { name: '早班', id: '早班' },
+            { name: '中班', id: '中班' }
+          ];
+          this.onChange(this.arr[2]);
+          this.checkArr = [];
+        }
+      },
+      immediate: true
+    }
   },
   methods: {
-    queryProduct(obj = {}) {
+    queryProduct(obj = {}, val) {
       obj.page = this.currentPage;
       this.$post('/delivery_plans/order_products', obj).then((res) => {
         this.tableData = res.data.data;
         this.total = res.data.paginate_meta.total_count;
         this.reqeat();
-        // this.arr[4].model = res.data.delivery_route;
+        if (val.id === 'customer_id') {
+          this.arr[4].model = res.data.delivery_route;
+        }
       });
     },
     currentChange(index) {
@@ -116,14 +129,14 @@ export default {
       let _obj = {
         arr: [obj.customer_id || 0, obj.abc || 0],
         customer_ids: [],
-        product_name: obj.product_name,
+        product_name: obj.product_name
       };
       _obj.arr.map((r) => {
         if (r) {
           _obj.customer_ids.push(r);
         }
       });
-      this.queryProduct(_obj);
+      this.queryProduct(_obj, val);
     },
     cancel(type = false) {
       this.$emit('cancel', type);
@@ -143,7 +156,7 @@ export default {
           this.$notify({
             title: '提示',
             message: '新增工作计划成功!',
-            type: 'success',
+            type: 'success'
           });
           this.cancel(true);
         });
@@ -151,7 +164,7 @@ export default {
         this.$notify({
           title: '警告',
           message: '最少选择一条产品数据!',
-          type: 'warning',
+          type: 'warning'
         });
       }
     },
@@ -183,8 +196,8 @@ export default {
           this.checkArr.push({ name: r.product_name, id: r.id });
         });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

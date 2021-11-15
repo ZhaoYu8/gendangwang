@@ -101,7 +101,12 @@
         </el-table-column>
         <el-table-column label="备注" align="center" header-align="center">
           <template slot-scope="scope">
-            <el-input v-model="scope.row['note']" placeholder=""></el-input>
+            <el-input v-model="scope.row['note']" placeholder="" 
+              v-focuss="{
+                index: scope.$index,
+                name: 'note',
+                arr: focussArr
+              }"></el-input>
           </template>
         </el-table-column>
       </el-table>
@@ -133,7 +138,7 @@ export default {
   },
   data: () => {
     return {
-      focussArr: ['product_number', 'sparetime_percent', 'price'],
+      focussArr: ['product_number', 'sparetime_percent', 'price', 'note'],
       multipleSelection: [],
       inputModel: '',
       contract_serial: '',

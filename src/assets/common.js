@@ -14,7 +14,7 @@ let obj = {
     { label: '跟单员', id: 'tracking_member', disabled: true, width: 70 },
     { label: '订单编号', id: 'order_serial', disabled: true, width: 120 },
     { label: '库位', id: 'warehouse_name', type: 'input', width: 80 },
-    { label: '备注', id: 'note', type: 'input' },
+    { label: '备注', id: 'note', type: 'input' }
   ],
   format(date) {
     date = new Date(date);
@@ -33,16 +33,16 @@ let obj = {
       let data = await this.$confirm('确定删除么?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       });
       if (data === 'confirm') {
         this.$post('/delivery_plans/delete_plan', {
-          delivery_product_id: val.row.delivery_product_id || 0,
+          delivery_product_id: val.row.delivery_product_id || 0
         }).then(() => {
           // 删除之后查询，并且提示删除成功!
           this.$message({
             type: 'success',
-            message: '删除成功!',
+            message: '删除成功!'
           });
         });
       }
@@ -58,7 +58,7 @@ let obj = {
       }
       let obj = {
         delivery_product: {},
-        delivery_product_id: val.delivery_product_id,
+        delivery_product_id: val.delivery_product_id
       };
       let arr = ['delivery_number', 'sparetime_percent'];
       if (arr.includes(item.id)) {
@@ -74,7 +74,7 @@ let obj = {
         this.$notify({
           title: '提示',
           message: '更新成功!',
-          type: 'success',
+          type: 'success'
         });
       });
       if (['delivery_shifts', 'delivery_route'].includes(item.id)) {
@@ -87,18 +87,18 @@ let obj = {
   },
   querySql(arr) {
     let _arr = arr
-      .map((r) =>
+      .map(r =>
         r.model !== ''
           ? {
               id: r.id,
-              model: r.model,
+              model: r.model
             }
           : ''
       )
-      .filter((r) => r);
+      .filter(r => r);
     let obj = {};
     if (_arr.length) {
-      _arr.map((r) => {
+      _arr.map(r => {
         obj[r.id] = r.model;
       });
     }
@@ -110,8 +110,8 @@ let obj = {
   getSelection(val) {
     // 二维数组转一维
     let arr = [];
-    val.map((r) => {
-      r.map((n) => {
+    val.map(r => {
+      r.map(n => {
         arr.push(n);
       });
     });
@@ -130,10 +130,67 @@ let obj = {
     Notification({
       title: type ? '提示' : '成功',
       message: message + (type ? '' : '成功'),
-      type: type ? 'warning' : 'success',
+      type: type ? 'warning' : 'success'
     });
   },
   // action: 'https://gendanwang.com/v1/',
   action: 'https://yy.yiyuanmaidian.com/v1/',
+  toThousands(num) {
+    return (num || 0).toString().replace(/(\d)(?=(\d{3})+\b)/g, '$1,');
+  },
+  bigNumTransform(value) {
+    const newValue = ['', '', ''];
+    let fr = 1000;
+    let num = 3;
+    let text1 = '';
+    let fm = 1;
+    while (value / fr >= 1) {
+      fr *= 10;
+      num += 1;
+    }
+    if (num <= 4) {
+      // 千
+      newValue[0] = parseInt(value / 1000) + '';
+      newValue[1] = '千';
+    } else if (num <= 8) {
+      // 万
+      text1 = parseInt(num - 4) / 3 > 1 ? '千万' : '万';
+      // tslint:disable-next-line:no-shadowed-variable
+      fm = text1 === '万' ? 10000 : 10000000;
+      if (value % fm === 0) {
+        newValue[0] = parseInt(value / fm) + '';
+      } else {
+        newValue[0] = parseFloat(value / fm).toFixed(2) + '';
+      }
+      newValue[1] = text1;
+    } else if (num <= 16) {
+      // 亿
+      text1 = (num - 8) / 3 > 1 ? '千亿' : '亿';
+      text1 = (num - 8) / 4 > 1 ? '万亿' : text1;
+      text1 = (num - 8) / 7 > 1 ? '千万亿' : text1;
+      // tslint:disable-next-line:no-shadowed-variable
+      fm = 1;
+      if (text1 === '亿') {
+        fm = 100000000;
+      } else if (text1 === '千亿') {
+        fm = 100000000000;
+      } else if (text1 === '万亿') {
+        fm = 1000000000000;
+      } else if (text1 === '千万亿') {
+        fm = 1000000000000000;
+      }
+      if (value % fm === 0) {
+        newValue[0] = parseInt(value / fm) + '';
+      } else {
+        newValue[0] = parseFloat(value / fm).toFixed(2) + '';
+      }
+      newValue[1] = text1;
+    }
+    if (value < 1000) {
+      newValue[0] = value + '';
+      newValue[1] = '';
+    }
+    return newValue.join('');
+  }
 };
 export default obj;

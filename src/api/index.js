@@ -1,10 +1,8 @@
 import { Loading, Notification } from 'element-ui';
-let baseURL = 'https://www.gendanwang.com/v1/api';
+let baseURL = '/api';
 import router from '../router';
-if (process.env.NODE_ENV === 'development') {
-  baseURL = '/ccc';
-} else if (process.env.VUE_APP_CURRENTMODE === 'prod') {
-  baseURL = 'https://yy.yiyuanmaidian.com/v1/api';
+if (process.env.VUE_APP_CURRENTMODE === 'prod') {
+  baseURL = '/api';
 }
 let instance = axios.create({
   baseURL: baseURL,
@@ -12,13 +10,13 @@ let instance = axios.create({
   responseType: 'json',
   validateStatus(status) {
     return status === 200;
-  },
+  }
 });
 let loading;
 let _error;
 // 拦截请求
 instance.interceptors.request.use(
-  (config) => {
+  config => {
     let params = {};
     let current_org;
     let current_member;
@@ -29,8 +27,8 @@ instance.interceptors.request.use(
       current_member = router.currentRoute.query.current_member;
     } else {
       if (process.env.NODE_ENV === 'development') {
-        current_org = localStorage.getItem('current_org') || '423'; // 11112 423
-        current_member = localStorage.getItem('current_member') || '1092'; // 1 1092
+        current_org = localStorage.getItem('current_org') || '17152'; // 11112 423
+        current_member = localStorage.getItem('current_member') || '43482'; // 1 1092
       } else {
         current_org = localStorage.getItem('current_org'); // 11112 423
         current_member = localStorage.getItem('current_member'); // 1 1092
@@ -43,37 +41,37 @@ instance.interceptors.request.use(
         message: '因你清除了浏览器数据！所以需要从跟单王重新进去此页面！',
         onClose: () => {
           _error = false;
-        },
+        }
       });
     }
     params = {
       current_org: current_org, // 11112 423
-      current_member: current_member, // 1 1092
+      current_member: current_member // 1 1092
     };
     config.data = {
       ...params,
-      ...config.data,
+      ...config.data
     };
     if (loading) loading.close();
     loading = Loading.service({
       lock: true,
       text: '玩命加载中...',
       background: 'transparent',
-      target: '.content-box',
+      target: '.content-box'
     });
     return config;
   },
-  (error) => {
+  error => {
     return Promise.reject(error);
   }
 );
 
 instance.interceptors.response.use(
-  (response) => {
+  response => {
     loading.close();
     return response;
   },
-  (error) => {
+  error => {
     loading.close();
     let errorMessage = '请求错误！请刷新页面再试！';
     if (error.response) {
@@ -87,7 +85,7 @@ instance.interceptors.response.use(
       duration: 2000,
       onClose: () => {
         _error = false;
-      },
+      }
     });
     return Promise.reject(error);
   }
@@ -99,9 +97,9 @@ const request = {
     }
     return instance.post(url, params, {
       headers: {
-        'Content-Type': 'application/json',
-      },
+        'Content-Type': 'application/json'
+      }
     });
-  },
+  }
 };
 export default request;

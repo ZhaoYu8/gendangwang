@@ -13,12 +13,12 @@
           <el-link :underline="false" type="primary" style="margin-right: 20px" @click="fontSizes++">A+</el-link>
         </template>
         <el-popover placement="top" width="160" v-model="visible">
-          <p>确定{{ outbound_task.status ? "红冲" : "审核出库" }}吗？</p>
+          <p>确定{{ outbound_task.status ? '红冲' : '审核出库' }}吗？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible = false">取消</el-button>
             <el-button type="primary" size="mini" @click="audit">确定</el-button>
           </div>
-          <el-button slot="reference" type="primary" size="small" class="mr-10">{{ outbound_task.status ? "红冲" : "审核出库" }}</el-button>
+          <el-button slot="reference" type="primary" size="small" class="mr-10">{{ outbound_task.status ? '红冲' : '审核出库' }}</el-button>
         </el-popover>
         <div v-show="!receiptShow">
           <el-button type="primary" size="small" v-print="'#receipt'" @click="printReceipt" icon="el-icon-printer">打印单据</el-button>
@@ -29,9 +29,13 @@
         <div v-show="receiptShow">
           <el-button type="primary" size="small" @click="printReceipt" icon="el-icon-printer">打印单据</el-button>
           <el-button type="primary" size="small" icon="el-icon-printer" @click="print">打印单据(无金额)</el-button>
-          <el-button type="primary" size="small" icon="el-icon-printer" v-print="'#detailOutDepot'" @click="flowPrint(true)">合同号流程单</el-button>
-          <el-button type="primary" size="small" icon="el-icon-printer" v-print="'#detailOutDepot'" @click="flowPrint(false)">打印流程单</el-button>
-          <el-button type="primary" size="small" @click="hideLineFn">{{ hideLine ? "隐藏" : "显示" }}</el-button>
+          <el-button type="primary" size="small" icon="el-icon-printer" v-print="'#detailOutDepot'" @click="flowPrint(true)"
+            >合同号流程单</el-button
+          >
+          <el-button type="primary" size="small" icon="el-icon-printer" v-print="'#detailOutDepot'" @click="flowPrint(false)"
+            >打印流程单</el-button
+          >
+          <el-button type="primary" size="small" @click="hideLineFn">{{ hideLine ? '隐藏' : '显示' }}</el-button>
         </div>
 
         <el-button type="warning" size="small" @click="updateDetail(0)" class="ml-10">复制</el-button>
@@ -61,7 +65,7 @@
           <td v-for="n in arr[item - 1]" :key="n.label + item">
             <div class="d-f-c" v-if="!n.hideLine">
               <div class="W-80 t-j w-s-n">{{ n.label }}：</div>
-              <div>{{ outbound_task[n.id] || "" }}</div>
+              <div>{{ outbound_task[n.id] || '' }}</div>
             </div>
           </td>
         </tr>
@@ -82,7 +86,7 @@
         :key="n"
       >
         <tr
-          style="font-weight: bold;"
+          style="font-weight: bold"
           class="header-tr"
           @dblclick="
             () => {
@@ -93,16 +97,16 @@
             }
           "
         >
-          <td style="width: 3%;">编号</td>
-          <td style="width: 25%;">商品全名</td>
-          <td style="width: 8%;" v-if="hideLine">CB</td>
-          <td style="width: 8%;">跟单员</td>
-          <td style="width: 8%;" v-if="hideLine">代码2</td>
-          <td style="width: 8%;">数量</td>
-          <td style="width: 8%;">备次</td>
-          <td style="width: 10%;">订单编号</td>
-          <td style="width: 14%;">备注 / 库位</td>
-          <td style="width: 8%;" v-if="contract_serial">合同号</td>
+          <td style="width: 3%">编号</td>
+          <td style="width: 25%">商品全名</td>
+          <td style="width: 8%" v-if="hideLine">CB</td>
+          <td style="width: 8%">跟单员</td>
+          <td style="width: 8%" v-if="hideLine">代码2</td>
+          <td style="width: 8%">数量</td>
+          <td style="width: 8%">备次</td>
+          <td style="width: 10%">订单编号</td>
+          <td style="width: 14%">备注 / 库位</td>
+          <td style="width: 8%" v-if="contract_serial">合同号</td>
         </tr>
         <template v-for="(item, index) in tableData.slice(n, headerArr.length === 1 ? tableData.length : headerArr[i + 1])">
           <tr :key="'nvb' + index" @dblclick="always(index + n)">
@@ -115,7 +119,7 @@
             <td>{{ item.sparetime }}</td>
             <td>{{ item.order_serial }}</td>
             <td>
-              {{ (item.note || "") + " / " + (item.warehouse_location || "") }}
+              {{ (item.note || '') + ' / ' + (item.warehouse_location || '') }}
             </td>
             <td v-if="contract_serial">{{ item.contract_serial }}</td>
           </tr>
@@ -142,12 +146,12 @@
         <table border="1" cellspacing="0" class="table" :style="{ fontSize: fontSize + 'px' }">
           <tr :style="{ fontWeight: 'bold' }">
             <td>商品编号</td>
-            <td style="width: 34%;">商品全名</td>
+            <td style="width: 34%">商品全名</td>
             <td class="w-s-n">单位</td>
             <td>数量</td>
             <td>单价</td>
             <td>金额</td>
-            <td style="width: 20%;">备注 / 库位</td>
+            <td style="width: 20%">备注 / 库位</td>
             <td>合同号</td>
           </tr>
           <template v-for="(item, index) in tableData.slice((ge - 1) * 8, ge * 8)">
@@ -156,12 +160,12 @@
               <td>{{ item.product_name }}</td>
               <td class="w-s-n">{{ item.product_serial }}</td>
               <td>{{ item.product_number }}</td>
-              <td>{{ noShow ? "" : item.price }}</td>
+              <td>{{ noShow ? '' : item.price }}</td>
               <td>
-                {{ noShow ? "" : (item.product_number * item.price).toFixed(2) }}
+                {{ noShow ? '' : (item.product_number * item.price).toFixed(2) }}
               </td>
               <td>
-                {{ (item.note || "") + " / " + (item.warehouse_location || "") }}
+                {{ (item.note || '') + ' / ' + (item.warehouse_location || '') }}
               </td>
               <td>{{ item.contract_serial }}</td>
             </tr>
@@ -175,7 +179,7 @@
             <td>
               {{
                 noShow
-                  ? ""
+                  ? ''
                   : tableData
                       .slice((ge - 1) * 8, ge * 8)
                       .map((r) => (r.product_number || 0) * (r.price || 0))
@@ -189,16 +193,12 @@
         </table>
 
         <ul class="note">
-          <li>
-            注：1. 需方在签收货物前对货物数量、规格、包装进行核对检验，核对无异后签收，签收后视为数量、规格、包装无异议；
-          </li>
+          <li>注：1. 需方在签收货物前对货物数量、规格、包装进行核对检验，核对无异后签收，签收后视为数量、规格、包装无异议；</li>
           <li>
             2.
             质量异议期：如有异议，需方自签收之日起三日内向供方提出书面异议并需妥善保管货物不得使用货物；逾期未提异议或已使用货物的视为货物质量合格；
           </li>
-          <li>
-            3. 油质，染料，化学剂，高温烫气及其他造成色纱，退色或污染，均非本公司产品瑕疵，需方使用前，请自行彻底测试。
-          </li>
+          <li>3. 油质，染料，化学剂，高温烫气及其他造成色纱，退色或污染，均非本公司产品瑕疵，需方使用前，请自行彻底测试。</li>
           <li>4. 货物交付履行地：常熟。</li>
         </ul>
         <el-row class="d-f-s-b mb-5 mt-5">
@@ -218,7 +218,7 @@
 
 <script>
 export default {
-  name: "DetailOutDepot",
+  name: 'DetailOutDepot',
   props: {},
   components: {},
   props: {
@@ -233,7 +233,7 @@ export default {
     return {
       hideLine: true,
       visibleSelf: false,
-      date: "",
+      date: '',
       fontSize: 14,
       fontSizes: 16,
       receiptShow: false, // 确定是流程图，还是单据
@@ -245,29 +245,29 @@ export default {
       editID: 0,
       arr: [
         [
-          { label: "跟单员", width: "25", id: "tracking_member_name" },
-          { label: "业务员", width: "50", id: "saler_name" },
-          { label: "发货日期", width: "25", id: "delivery_date" }
+          { label: '跟单员', width: '25', id: 'tracking_member_name' },
+          { label: '业务员', width: '50', id: 'saler_name' },
+          { label: '发货日期', width: '25', id: 'delivery_date' }
         ],
         [
-          { label: "收货单位", id: "contact_company", hideLine: false },
-          { label: "发货单位", id: "delivery_company" },
-          { label: "货运方式", id: "huoyunfangshi" }
+          { label: '收货单位', id: 'contact_company', hideLine: false },
+          { label: '发货单位', id: 'delivery_company' },
+          { label: '货运方式', id: 'huoyunfangshi' }
         ],
         [
-          { label: "收货人", id: "contact_name", hideLine: false },
-          { label: "发货人", id: "signment_member_name" },
-          { label: "放单方式", id: "fangdanfangshi" }
+          { label: '收货人', id: 'contact_name', hideLine: false },
+          { label: '发货人', id: 'signment_member_name' },
+          { label: '放单方式', id: 'fangdanfangshi' }
         ],
         [
-          { label: "联系方式", id: "contact_way", hideLine: false },
-          { label: "联系方式", id: "delivery_contact_way" },
-          { label: "付费方式", id: "fufeifangshi" }
+          { label: '联系方式', id: 'contact_way', hideLine: false },
+          { label: '联系方式', id: 'delivery_contact_way' },
+          { label: '付费方式', id: 'fufeifangshi' }
         ],
         [
-          { label: "收货地址", id: "delivery_address", hideLine: false },
-          { label: "发货地址", id: "delivery_from" },
-          { label: "特殊要求", id: "spec_note" }
+          { label: '收货地址', id: 'delivery_address', hideLine: false },
+          { label: '发货地址', id: 'delivery_from' },
+          { label: '特殊要求', id: 'spec_note' }
         ]
       ],
       headerArr: [0]
@@ -293,13 +293,13 @@ export default {
       });
     },
     async init(val) {
-      let res = await this.$post("outbound_tasks/for_show", {
+      let res = await this.$post('outbound_tasks/for_show', {
         id: val.id
       });
       this.tableData = res.data.data.products;
       this.outbound_task = res.data.data.outbound_task;
       this.editID = val.id;
-      this.date = moment().format("YYYY-MM-DD HH:mm:ss");
+      this.date = moment().format('YYYY-MM-DD HH:mm:ss');
     },
     printReceipt() {
       // 打印单据前
@@ -316,35 +316,46 @@ export default {
     flowPrint(type) {
       this.receiptShow = true;
       this.contract_serial = type;
-      this.date = moment().format("YYYY-MM-DD HH:mm:ss");
+      this.date = moment().format('YYYY-MM-DD HH:mm:ss');
     },
     // 审核出库
     async audit() {
+      if (!this.outbound_task.status) {
+        let obj = this.tableData.find((r) => !r.product_number);
+        if (obj) {
+          this.$notify({
+            title: '提示',
+            type: 'error',
+            message: `${obj.product_name} 数量为0不允许审核出库！`
+          });
+          return;
+        }
+      }
       this.visible = false;
-      let res = await this.$post(this.outbound_task.status ? "outbound_tasks/red_dashed" : "outbound_tasks/pass_audit", {
+      let res = await this.$post(this.outbound_task.status ? 'outbound_tasks/red_dashed' : 'outbound_tasks/pass_audit', {
         id: this.editID
       });
       this.$notify({
-        title: "提示",
-        type: "success",
-        message: `${this.outbound_task.status ? "红冲" : "审核出库"}成功！`
+        title: '提示',
+        type: 'success',
+        message: `${this.outbound_task.status ? '红冲' : '审核出库'}成功！`
       });
-      this.$emit("cancel");
+      this.$emit('cancel');
     },
     async invalidSelf() {
       this.visibleSelf = false;
-      let res = await this.$post("outbound_tasks/invalid_self", {
+      let res = await this.$post('outbound_tasks/invalid_self', {
         id: this.editID
       });
       this.$notify({
-        title: "提示",
-        type: "success",
-        message: "作废成功！"
+        title: '提示',
+        type: 'success',
+        message: '作废成功！'
       });
-      this.$emit("cancel");
+      this.$emit('cancel');
     },
     updateDetail(id = 0) {
-      this.$emit("update", {
+      this.$emit('update', {
         outbound_task: this.outbound_task,
         tableData: this.tableData,
         id: id
@@ -352,10 +363,10 @@ export default {
     }
   },
   beforeDestroy() {
-    this.$bus.$off("detailShow");
+    this.$bus.$off('detailShow');
   },
   mounted() {
-    this.$bus.$on("detailShow", (res) => {
+    this.$bus.$on('detailShow', (res) => {
       this.init(res);
     });
   }
@@ -385,7 +396,7 @@ export default {
       text-align: center;
       font-size: 26px;
       line-height: 26px;
-      font-family: "楷体";
+      font-family: '楷体';
       margin-bottom: 5px;
       margin-top: 35px;
     }
@@ -453,7 +464,7 @@ export default {
     text-align: center;
     font-size: 26px;
     line-height: 26px;
-    font-family: "楷体";
+    font-family: '楷体';
     margin-bottom: 10px;
   }
   .table {

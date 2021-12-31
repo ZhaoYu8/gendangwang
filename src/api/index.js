@@ -2,7 +2,7 @@ import { Loading, Notification } from 'element-ui';
 let baseURL = '/api';
 import router from '../router';
 if (process.env.VUE_APP_CURRENTMODE === 'prod') {
-  baseURL = '/api';
+  baseURL = 'https://yy.yiyuanmaidian.com/v1/api';
 }
 let instance = axios.create({
   baseURL: baseURL,
@@ -27,8 +27,8 @@ instance.interceptors.request.use(
       current_member = router.currentRoute.query.current_member;
     } else {
       if (process.env.NODE_ENV === 'development') {
-        current_org = localStorage.getItem('current_org') || '17152'; // 11112 423
-        current_member = localStorage.getItem('current_member') || '43482'; // 1 1092
+        current_org = localStorage.getItem('current_org') || '423'; // 11112 423
+        current_member = localStorage.getItem('current_member') || '1092'; // 1 1092
       } else {
         current_org = localStorage.getItem('current_org'); // 11112 423
         current_member = localStorage.getItem('current_member'); // 1 1092

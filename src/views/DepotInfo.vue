@@ -255,7 +255,7 @@ export default {
       this.query();
     },
     async save() {
-      if (!this.visibleModel) {
+      if (this.visibleModel == null || this.visibleModel === '') {
         this.$notify({
           title: "错误",
           message: "数量不能为空！",

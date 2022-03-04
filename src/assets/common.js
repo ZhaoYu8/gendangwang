@@ -191,6 +191,10 @@ let obj = {
       newValue[1] = '';
     }
     return newValue.join('');
-  }
+  },
+  decimal(val = '') {
+    val = parseFloat(val) || 0;
+    return (val + '').replace(/([0-9]+.[0-9]{2})[0-9]*/, '$1') || 0;
+  },
 };
 export default obj;

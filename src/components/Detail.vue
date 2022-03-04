@@ -1,12 +1,5 @@
 <template>
-  <el-dialog
-    title
-    :visible.sync="dialogVisible"
-    width="96%"
-    top="10vh"
-    class="dialog"
-    @close="cancel(false)"
-  >
+  <el-dialog title :visible.sync="dialogVisible" width="96%" top="10vh" class="dialog" @close="cancel(false)">
     <!-- 头部查询条件 -->
     <div id="printMe" ref="printMe" :style="{ fontSize: fontSize + 'px' }">
       <ul class="top">
@@ -22,21 +15,20 @@
           <td :style="{ width: item.width }" v-for="item in arr" :key="item.label">{{ item.label }}</td>
         </tr>
         <template v-for="(item, index) in tableData">
-          <tr
-            v-if="index > 0 && tableData[index - 1].receiving_unit !== tableData[index].receiving_unit"
-            :key="item.product_name + index"
-            style="height: 10px;"
-          ></tr>
+          <tr v-if="index > 0 && tableData[index - 1].receiving_unit !== tableData[index].receiving_unit" :key="item.product_name + index" style="height: 10px;"></tr>
           <tr :key="item.receiving_unit + index">
-            <td v-for="n in arr" :key="n.id">{{ n.id !== "index" ? item[n.id] : index + 1 }}</td>
+            <td v-for="n in arr" :key="n.id">{{ n.id !== 'index' ? item[n.id] : index + 1 }}</td>
           </tr>
         </template>
       </table>
 
-      <ul class="bottom">
-        <li :span="6" :offset="12" class="t-r">更新日期 : {{ headerData.updated_at }}</li>
-        <li :span="6" class="t-r">打印日期 : {{ headerData.printed_at }}</li>
-      </ul>
+      <div class="d-f-s-b d-f-c">
+        <span> {{ $common.toThousands($common.decimal(amount)) }}</span>
+        <ul class="bottom">
+          <li :span="6" :offset="12" class="t-r">更新日期 : {{ headerData.updated_at }}</li>
+          <li :span="6" class="t-r">打印日期 : {{ headerData.printed_at }}</li>
+        </ul>
+      </div>
     </div>
     <span slot="footer">
       <el-link :underline="false" type="primary" style="margin-right: 20px" @click="fontSize--">A-</el-link>
@@ -50,26 +42,25 @@
 
 <script>
 export default {
-  name: "Dialog5",
+  name: 'Dialog5',
   props: {
     centerDialogVisible: {
       type: Boolean,
       default: () => {
         return false;
-      },
+      }
     },
     detailData: {
       type: Object,
       default: () => {
         return {};
-      },
+      }
     },
     print: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
-  computed: {},
   data: () => {
     return {
       fontSize: 14,
@@ -77,20 +68,20 @@ export default {
       tableData: [],
       headerData: {},
       arr: [
-        { label: "行号", width: "30px", id: "index" },
-        { label: "路线", width: "30px", id: "delivery_route" },
-        { label: "班次", width: "30px", id: "delivery_shifts" },
-        { label: "收货单位", width: "100px", id: "receiving_unit" },
-        { label: "商品全名", width: "16%", id: "product_name" },
-        { label: "CB", width: "50px", id: "product_code1" },
-        { label: "跟单员", width: "50px", id: "order_member" },
-        { label: "代码2", width: "50px", id: "product_code2" },
-        { label: "数量", width: "50px", id: "delivery_number" },
-        { label: "备次", width: "30px", id: "sparetime" },
-        { label: "订单编号", width: "100px", id: "order_serial" },
-        { label: "库位", width: "100px", id: "warehouse_name" },
-        { label: "备注", width: "10%", id: "note" },
-      ],
+        { label: '行号', width: '30px', id: 'index' },
+        { label: '路线', width: '30px', id: 'delivery_route' },
+        { label: '班次', width: '30px', id: 'delivery_shifts' },
+        { label: '收货单位', width: '100px', id: 'receiving_unit' },
+        { label: '商品全名', width: '16%', id: 'product_name' },
+        { label: 'CB', width: '50px', id: 'product_code1' },
+        { label: '跟单员', width: '50px', id: 'order_member' },
+        { label: '代码2', width: '50px', id: 'product_code2' },
+        { label: '数量', width: '50px', id: 'delivery_number' },
+        { label: '备次', width: '30px', id: 'sparetime' },
+        { label: '订单编号', width: '100px', id: 'order_serial' },
+        { label: '库位', width: '100px', id: 'warehouse_name' },
+        { label: '备注', width: '10%', id: 'note' }
+      ]
     };
   },
   watch: {
@@ -112,25 +103,35 @@ export default {
           this.$refs.printButton.$el.click();
         });
       }
-    },
+    }
+  },
+
+  computed: {
+    amount() {
+      let count = 0;
+      this.tableData.map(r => {
+        count += r.product_code2 * r.delivery_number;
+      });
+      return count;
+    }
   },
   methods: {
     exports() {
       //表格标题
-      let dataTitle = "用户统计2020-01-10-2020-01-12";
+      let dataTitle = '用户统计2020-01-10-2020-01-12';
       // 配置文件类型
       const wopts = {
-        bookType: "xlsx",
+        bookType: 'xlsx',
         bookSST: true,
-        type: "binary",
-        cellStyles: true,
+        type: 'binary',
+        cellStyles: true
       };
       let data = JSON.parse(JSON.stringify(this.tableData));
       let arr = [];
       data.map((r, i) => {
         arr[i] = {};
-        this.arr.map((n) => {
-          arr[i][n.label] = n.id === "index" ? i + 1 : r[n.id];
+        this.arr.map(n => {
+          arr[i][n.label] = n.id === 'index' ? i + 1 : r[n.id];
         });
         // Object.keys(r).map((n) => {
         //   arr[i][this.arr[n]] = r[n];
@@ -140,16 +141,16 @@ export default {
     },
     // 下载功能
     saveAs(obj, fileName) {
-      let tmpa = document.createElement("a");
-      tmpa.download = fileName || "未命名";
+      let tmpa = document.createElement('a');
+      tmpa.download = fileName || '未命名';
       // 兼容ie
-      if ("msSaveOrOpenBlob" in navigator) {
-        window.navigator.msSaveOrOpenBlob(obj, "下载的文件名" + ".xlsx");
+      if ('msSaveOrOpenBlob' in navigator) {
+        window.navigator.msSaveOrOpenBlob(obj, '下载的文件名' + '.xlsx');
       } else {
         tmpa.href = URL.createObjectURL(obj);
       }
       tmpa.click();
-      setTimeout(function () {
+      setTimeout(function() {
         URL.revokeObjectURL(obj);
       }, 100);
     },
@@ -170,35 +171,33 @@ export default {
             {},
             {
               v: v[k],
-              position:
-                (j > 25 ? this.getCharCol(j) : String.fromCharCode(65 + j)) +
-                (i + 2),
+              position: (j > 25 ? this.getCharCol(j) : String.fromCharCode(65 + j)) + (i + 2)
             }
           );
         });
         return data;
       });
       let data = this.headerData;
-      let letter = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"];
+      let letter = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'];
       let header = [
-        "日期:",
+        '日期:',
         data.delivery_date,
-        "车号:",
+        '车号:',
         data.delivery_train,
-        "司机:",
+        '司机:',
         data.delivery_member,
-        "跟车:",
+        '跟车:',
         data.with_member,
-        "配货员:",
+        '配货员:',
         data.allocate_member,
-        "单号:",
-        data.delivery_serial,
+        '单号:',
+        data.delivery_serial
       ];
       arr.unshift(
         header.map((r, j) => {
           return {
-            v: r || "",
-            position: letter[j] + "1",
+            v: r || '',
+            position: letter[j] + '1'
           };
         })
       );
@@ -207,17 +206,17 @@ export default {
         .forEach(
           (v, i) =>
             (tmpdata[v.position] = {
-              v: v.v,
+              v: v.v
             })
         );
       let outputPos = Object.keys(tmpdata); //设置区域,比如表格从A1到D10
       // tmpdata["A1"] = { v: 1 };
       // outputPos = ["A1"].concat(outputPos);
-      ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"].map((r) => {
+      ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'].map(r => {
         tmpdata[`${r}2`].s = {
           font: { sz: 14, bold: true, vertAlign: true },
-          alignment: { vertical: "center", horizontal: "center" },
-          fill: { bgColor: { rgb: "5491ff" }, fgColor: { rgb: "5491ff" } },
+          alignment: { vertical: 'center', horizontal: 'center' },
+          fill: { bgColor: { rgb: '5491ff' }, fgColor: { rgb: '5491ff' } }
         };
       });
       //<====设置xlsx单元格样式
@@ -232,31 +231,19 @@ export default {
       //   },
       // ]; //<====合并单元格
 
-      tmpdata["!cols"] = [
-        { wpx: 50 },
-        { wpx: 80 },
-        { wpx: 80 },
-        { wpx: 130 },
-        { wpx: 130 },
-        { wpx: 80 },
-        { wpx: 80 },
-        { wpx: 80 },
-        { wpx: 100 },
-        { wpx: 100 },
-        { wpx: 100 },
-      ]; //<====设置一列宽度
+      tmpdata['!cols'] = [{ wpx: 50 }, { wpx: 80 }, { wpx: 80 }, { wpx: 130 }, { wpx: 130 }, { wpx: 80 }, { wpx: 80 }, { wpx: 80 }, { wpx: 100 }, { wpx: 100 }, { wpx: 100 }]; //<====设置一列宽度
 
       let tmpWB = {
-        SheetNames: ["mySheet"], //保存的表标题
+        SheetNames: ['mySheet'], //保存的表标题
         Sheets: {
           mySheet: Object.assign(
             {},
             tmpdata, //内容
             {
-              "!ref": outputPos[0] + ":" + outputPos[outputPos.length - 1], //设置填充区域
+              '!ref': outputPos[0] + ':' + outputPos[outputPos.length - 1] //设置填充区域
             }
-          ),
-        },
+          )
+        }
       };
       let tmpDown = new Blob(
         [
@@ -264,28 +251,23 @@ export default {
             XLSX.write(
               tmpWB,
               {
-                bookType: type == undefined ? "xlsx" : type.bookType,
+                bookType: type == undefined ? 'xlsx' : type.bookType,
                 bookSST: false,
-                type: "binary",
+                type: 'binary'
               } //这里的数据是用来定义导出的格式类型
             )
-          ),
+          )
         ],
         {
-          type: "",
+          type: ''
         }
       );
-      this.saveAs(
-        tmpDown,
-        `${new Date()}` +
-          "." +
-          (type.bookType == "biff2" ? "xls" : type.bookType)
-      );
+      this.saveAs(tmpDown, `${new Date()}` + '.' + (type.bookType == 'biff2' ? 'xls' : type.bookType));
     },
     // 获取26个英文字母用来表示excel的列
     getCharCol(n) {
-      let temCol = "",
-        s = "",
+      let temCol = '',
+        s = '',
         m = 0;
       while (n > 0) {
         m = (n % 26) + 1;
@@ -295,7 +277,7 @@ export default {
       return s;
     },
     s2ab(s) {
-      if (typeof ArrayBuffer !== "undefined") {
+      if (typeof ArrayBuffer !== 'undefined') {
         let buf = new ArrayBuffer(s.length);
         let view = new Uint8Array(buf);
         for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
@@ -307,10 +289,10 @@ export default {
       }
     },
     cancel(type = false) {
-      this.$emit("cancel", type);
+      this.$emit('cancel', type);
       this.dialogVisible = false;
-    },
-  },
+    }
+  }
 };
 </script>
 

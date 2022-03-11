@@ -91,7 +91,7 @@
           @dblclick="
             () => {
               headerArr.splice(
-                headerArr.findIndex((r) => r === n),
+                headerArr.findIndex(r => r === n),
                 1
               );
             }
@@ -119,14 +119,42 @@
             <td>{{ item.sparetime }}</td>
             <td>{{ item.order_serial }}</td>
             <td>
-              {{ (item.note || '') + ' / ' + (item.warehouse_location || '') }}
+              {{ item.note || item.warehouse_location ? (item.note || ' ') + ' / ' + (item.warehouse_location || ' ') : '' }}
             </td>
             <td v-if="contract_serial">{{ item.contract_serial }}</td>
           </tr>
         </template>
       </table>
 
-      <div class="d-f-e mt-10 f-20">打印日期 : {{ date }}</div>
+      <div class="d-f-e mt-10 f-20 mb-20">打印日期 : {{ date }}</div>
+      <table class="w-100 pure-table">
+        <thead>
+          <tr>
+            <th style="width: 140px">单号</th>
+            <th>配货员</th>
+            <th>检验员</th>
+            <th style="width: 100px">条数</th>
+            <th style="width: 120px">编码</th>
+            <th>特殊</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ outbound_task.outbound_task_serial }}</td>
+            <td>{{ outbound_task.delivery_member_name }}</td>
+            <td>{{ outbound_task.check_member_name }}</td>
+            <td>{{ tableData.length }}</td>
+            <td>
+              {{
+                $common.decimal(
+                  tableData.map(r => Number(r.product_code2.replace(',', '') * Number(r.product_number))).reduce((l, r) => l + r, 0)
+                ) + '#'
+              }}
+            </td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div id="receipt" v-show="!receiptShow">
       <div v-for="ge in Math.ceil(tableData.length / 8)" :key="'ss' + ge" class="box">
@@ -165,7 +193,7 @@
                 {{ noShow ? '' : (item.product_number * item.price).toFixed(2) }}
               </td>
               <td>
-                {{ (item.note || '') + ' / ' + (item.warehouse_location || '') }}
+                {{ item.note || item.warehouse_location ? (item.note || '') + ' / ' + (item.warehouse_location || '') : '' }}
               </td>
               <td>{{ item.contract_serial }}</td>
             </tr>
@@ -182,7 +210,7 @@
                   ? ''
                   : tableData
                       .slice((ge - 1) * 8, ge * 8)
-                      .map((r) => (r.product_number || 0) * (r.price || 0))
+                      .map(r => (r.product_number || 0) * (r.price || 0))
                       .reduce((prev, cur) => prev + cur)
                       .toFixed(2)
               }}
@@ -276,8 +304,8 @@ export default {
   methods: {
     hideLineFn() {
       this.hideLine = !this.hideLine;
-      this.arr.map((r) => {
-        r.map((n) => {
+      this.arr.map(r => {
+        r.map(n => {
           if (n.hideLine === false) {
             n.hideLine = true;
           } else if (n.hideLine === true) {
@@ -287,7 +315,7 @@ export default {
       });
     },
     always(index) {
-      if (!this.headerArr.filter((r) => r === index).length) this.headerArr.push(index);
+      if (!this.headerArr.filter(r => r === index).length) this.headerArr.push(index);
       this.headerArr = this.headerArr.sort((a, b) => {
         return a - b;
       });
@@ -321,7 +349,7 @@ export default {
     // 审核出库
     async audit() {
       if (!this.outbound_task.status) {
-        let obj = this.tableData.find((r) => !r.product_number);
+        let obj = this.tableData.find(r => !r.product_number);
         if (obj) {
           this.$notify({
             title: '提示',
@@ -366,7 +394,7 @@ export default {
     this.$bus.$off('detailShow');
   },
   mounted() {
-    this.$bus.$on('detailShow', (res) => {
+    this.$bus.$on('detailShow', res => {
       this.init(res);
     });
   }
@@ -447,6 +475,9 @@ export default {
 }
 #detailOutDepot {
   font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   @media print {
     .table {
       tr:first-child {
@@ -494,6 +525,40 @@ export default {
     ::v-deep td {
       border-bottom: 1px solid #000;
       border-right: 1px solid #000;
+    }
+  }
+}
+
+.pure-table {
+  border-spacing: 0;
+  border: 1px solid #000;
+  border-bottom: 0;
+  border-right: 0;
+  td,
+  th {
+    font-size: inherit;
+    overflow: visible;
+    padding: 8px 12px;
+    min-width: 0;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    border-bottom: 1px solid #000;
+    border-right: 1px solid #000;
+    font-size: 14px;
+  }
+  thead {
+    tr {
+      background-color: #909399;
+      color: #fff;
+    }
+  }
+  tbody {
+    tr {
+      transition: background-color 0.25s ease;
+      &:hover {
+        background-color: #909399;
+      }
     }
   }
 }

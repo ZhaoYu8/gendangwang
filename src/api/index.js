@@ -1,3 +1,11 @@
+/*
+ * @Author: 赵宇
+ * @Description: 
+ * @Date: 2022-07-25 16:22:40
+ * @LastEditTime: 2023-01-07 13:47:10
+ * @LastEditors: zhao 13370229059@163.com
+ * @FilePath: \yuanyibaozhuang\src\api\index.js
+ */
 import { Loading, Notification } from 'element-ui';
 let baseURL = '/api';
 import router from '../router';
@@ -27,8 +35,8 @@ instance.interceptors.request.use(
       current_member = router.currentRoute.query.current_member;
     } else {
       if (process.env.NODE_ENV === 'development') {
-        current_org = localStorage.getItem('current_org') || '423'; // 11112 423
-        current_member = localStorage.getItem('current_member') || '1092'; // 1 1092
+        current_org = localStorage.getItem('current_org') || '17869'; // 11112 423
+        current_member = localStorage.getItem('current_member') || '47461'; // 1 1092
       } else {
         current_org = localStorage.getItem('current_org'); // 11112 423
         current_member = localStorage.getItem('current_member'); // 1 1092

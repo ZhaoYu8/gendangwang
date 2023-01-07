@@ -1,3 +1,11 @@
+<!--
+ * @Author: 赵宇
+ * @Description: 
+ * @Date: 2022-07-25 16:22:40
+ * @LastEditTime: 2023-01-07 13:41:00
+ * @LastEditors: zhao 13370229059@163.com
+ * @FilePath: \yuanyibaozhuang\src\views\Report.vue
+-->
 <template>
   <div class="p-10">
     <div class="w-100 mb-10">
@@ -54,7 +62,7 @@
       <template v-if="!toggleType">
         <div v-for="ge in Math.ceil(tableData.length / 16)" :key="'ss' + ge" class="box">
           <div class="header">
-            {{ model === "0" ? "业务/车间月度库存表——明细" : `业务/车间库存表${date}` }}
+            {{ model === '0' ? '业务/车间月度库存表——明细' : `业务/车间库存表${date}` }}
           </div>
           <table border="1" cellspacing="0" class="table">
             <tr style="background-color: #5491ff">
@@ -66,7 +74,7 @@
               <tr v-if="index > 0 && tableData[index - 1].receiving_unit !== tableData[index].receiving_unit" :key="item.product_name + index" style="height: 10px"></tr>
               <tr :key="item.receiving_unit + index">
                 <td v-for="n in headerArr" :key="n.id">
-                  {{ n.id !== "index" ? item[n.id] : (ge - 1) * 16 + index + 1 }}
+                  {{ n.id !== 'index' ? item[n.id] : (ge - 1) * 16 + index + 1 }}
                 </td>
               </tr>
             </template>
@@ -84,7 +92,7 @@
             <tr v-if="index > 0 && tableData[index - 1].receiving_unit !== tableData[index].receiving_unit" :key="item.product_name + index" style="height: 10px"></tr>
             <tr :key="item.receiving_unit + index">
               <td v-for="n in headerArr" :key="n.id">
-                {{ n.id !== "index" ? item[n.id] : index + 1 }}
+                {{ n.id !== 'index' ? item[n.id] : index + 1 }}
               </td>
             </tr>
           </template>
@@ -96,18 +104,18 @@
 
 <script>
 export default {
-  name: "Dialog5",
+  name: 'Dialog5',
   props: {},
   computed: {},
   data: () => {
     return {
-      date: "",
+      date: '',
       toggleType: true,
-      model: "0",
+      model: '0',
       saler_id: null,
       userData: [],
       cust: null,
-      product_name: "",
+      product_name: '',
       custData: [],
       fontSize: 14,
       dialogVisible: false,
@@ -118,17 +126,18 @@ export default {
       product_group: null,
       member_id: null,
       arr: [
-        { label: "序号", id: "index", width: "30px" },
-        { label: "销售", id: "saler_name" },
-        { label: "跟单员", id: "member_name" },
-        { label: "分类", id: "product_group" },
-        { label: "客户名称", id: "customer_name" },
-        { label: "产品名称", id: "product_name" },
-        { label: "单价", id: "product_price" },
-        { label: "数量", id: "storage_number" },
-        { label: "金额", id: "money" },
-        { label: "入库日期", id: "updated_at" },
-        { label: "仓储库位", id: "location_name" }
+        { label: '序号', id: 'index', width: '30px' },
+        { label: '销售', id: 'saler_name' },
+        { label: '跟单员', id: 'member_name' },
+        { label: '分类', id: 'product_group' },
+        { label: '客户名称', id: 'customer_name' },
+        { label: '产品名称', id: 'product_name' },
+        { label: '产品编号', id: 'product_serial' },
+        { label: '单价', id: 'product_price' },
+        { label: '数量', id: 'storage_number' },
+        { label: '金额', id: 'money' },
+        { label: '入库日期', id: 'updated_at' },
+        { label: '仓储库位', id: 'location_name' }
       ]
     };
   },
@@ -138,7 +147,7 @@ export default {
     this.custData = this.$vuexData.x.customer;
     this.userData = this.$vuexData.x.member_options;
     this.productGroupData = this.$vuexData.x.group_options;
-    this.$bus.$on("user", () => {
+    this.$bus.$on('user', () => {
       this.custData = this.$vuexData.x.customer;
       this.productGroupData = this.$vuexData.x.group_options;
       this.userData = this.$vuexData.x.member_options;
@@ -147,14 +156,14 @@ export default {
   },
   methods: {
     print() {
-      this.date = moment().format(" YYYY-MM-DD HH:mm:ss");
+      this.date = moment().format(' YYYY-MM-DD HH:mm:ss');
       this.toggleType = false;
       setTimeout(() => {
         this.toggleType = true;
       });
     },
     async change() {
-      if (this.model === "0") {
+      if (this.model === '0') {
         this.query();
         this.headerArr = this.arr;
       } else {
@@ -164,65 +173,65 @@ export default {
     async query() {
       let obj = { is_report: 1 };
       if (this.cust) {
-        obj.customer_id = this.$vuexData.x.customer.filter((r) => r.id === this.cust)[0].name;
+        obj.customer_id = this.$vuexData.x.customer.filter(r => r.id === this.cust)[0].name;
       }
-      let _arr = ["saler_id", "product_group", "member_id", "product_name"];
-      _arr.map((r) => {
+      let _arr = ['saler_id', 'product_group', 'member_id', 'product_name'];
+      _arr.map(r => {
         if (this[r]) obj[r] = this[r];
       });
-      let res = await this.$post("yuanyi_storages/list", obj);
-      this.tableData = res.data.data.entries.map((r) => {
+      let res = await this.$post('yuanyi_storages/list', obj);
+      this.tableData = res.data.data.entries.map(r => {
         return {
           ...r,
           ...{
             money: (r.product_price * r.storage_number).toFixed(2),
-            updated_at: moment(r.updated_at).format("YYYY-MM-DD")
+            updated_at: moment(r.updated_at).format('YYYY-MM-DD')
           }
         };
       });
     },
     async query1() {
-      let res = await this.$post("yuanyi_storages/saler_inventory", {
+      let res = await this.$post('yuanyi_storages/saler_inventory', {
         is_report: 1
       });
-      this.headerArr = res.data.data.headers.map((r) => {
+      this.headerArr = res.data.data.headers.map(r => {
         return { label: r.name, id: r.id };
       });
-      this.tableData = res.data.data.items.map((r) => {
+      this.tableData = res.data.data.items.map(r => {
         let obj = {};
-        this.headerArr.map((n) => {
-          obj[n.id] = typeof r[n.id] === "number" ? r[n.id].toFixed(3) : r[n.id];
+        this.headerArr.map(n => {
+          obj[n.id] = typeof r[n.id] === 'number' ? r[n.id].toFixed(3) : r[n.id];
         });
         return obj;
       });
     },
     exports() {
       //表格标题
-      let dataTitle = "用户统计2020-01-10-2020-01-12";
+      let dataTitle = '用户统计2020-01-10-2020-01-12';
       // 配置文件类型
       const wopts = {
-        bookType: "xlsx",
+        bookType: 'xlsx',
         bookSST: true,
-        type: "binary",
+        type: 'binary',
         cellStyles: true
       };
       let data = JSON.parse(JSON.stringify(this.tableData));
       let arr = [];
       data.map((r, i) => {
         arr[i] = {};
-        this.headerArr.map((n) => {
-          arr[i][n.label] = n.id === "index" ? i + 1 : r[n.id];
+        this.headerArr.map(n => {
+          arr[i][n.label] = n.id === 'index' ? i + 1 : r[n.id];
         });
       });
       this.downloadExl(arr, wopts, dataTitle);
     },
     // 下载功能
     saveAs(obj, fileName) {
-      let tmpa = document.createElement("a");
-      tmpa.download = fileName || "未命名";
+      let tmpa = document.createElement('a');
+      tmpa.download = fileName || '未命名';
       // 兼容ie
-      if ("msSaveOrOpenBlob" in navigator) {
-        window.navigator.msSaveOrOpenBlob(obj, "下载的文件名" + ".xlsx");
+      if ('msSaveOrOpenBlob' in navigator) {
+        window.navigator.msSaveOrOpenBlob(obj, '下载的文件名' + '.xlsx');
       } else {
         tmpa.href = URL.createObjectURL(obj);
       }
@@ -265,26 +274,26 @@ export default {
       let outputPos = Object.keys(tmpdata); //设置区域,比如表格从A1到D10
       // tmpdata["A1"] = { v: 1 };
       // outputPos = ["A1"].concat(outputPos);
-      let _arr = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S"];
+      let _arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S'];
       _arr = _arr.slice(0, this.headerArr.length);
-      _arr.map((r) => {
+      _arr.map(r => {
         tmpdata[`${r}1`].s = {
           font: { sz: 14, bold: true, vertAlign: true },
-          alignment: { vertical: "center", horizontal: "center" },
-          fill: { bgColor: { rgb: "5491ff" }, fgColor: { rgb: "5491ff" } }
+          alignment: { vertical: 'center', horizontal: 'center' },
+          fill: { bgColor: { rgb: '5491ff' }, fgColor: { rgb: '5491ff' } }
         };
       });
 
-      tmpdata["!cols"] = [{ wpx: 50 }, { wpx: 130 }, { wpx: 130 }, { wpx: 130 }, { wpx: 130 }, { wpx: 130 }, { wpx: 130 }, { wpx: 130 }, { wpx: 100 }, { wpx: 130 }]; //<====设置一列宽度
+      tmpdata['!cols'] = [{ wpx: 50 }, { wpx: 130 }, { wpx: 130 }, { wpx: 130 }, { wpx: 130 }, { wpx: 130 }, { wpx: 130 }, { wpx: 130 }, { wpx: 130 }, { wpx: 100 }, { wpx: 130 }]; //<====设置一列宽度
 
       let tmpWB = {
-        SheetNames: ["mySheet"], //保存的表标题
+        SheetNames: ['mySheet'], //保存的表标题
         Sheets: {
           mySheet: Object.assign(
             {},
             tmpdata, //内容
             {
-              "!ref": outputPos[0] + ":" + outputPos[outputPos.length - 1] //设置填充区域
+              '!ref': outputPos[0] + ':' + outputPos[outputPos.length - 1] //设置填充区域
             }
           )
         }
@@ -295,23 +304,23 @@ export default {
             XLSX.write(
               tmpWB,
               {
-                bookType: type == undefined ? "xlsx" : type.bookType,
+                bookType: type == undefined ? 'xlsx' : type.bookType,
                 bookSST: false,
-                type: "binary"
+                type: 'binary'
               } //这里的数据是用来定义导出的格式类型
             )
           )
         ],
         {
-          type: ""
+          type: ''
         }
       );
-      this.saveAs(tmpDown, `${new Date()}` + "." + (type.bookType == "biff2" ? "xls" : type.bookType));
+      this.saveAs(tmpDown, `库存报表 ${moment().format('YYYY-MM-DD')}` + '.' + (type.bookType == 'biff2' ? 'xls' : type.bookType));
     },
     // 获取26个英文字母用来表示excel的列
     getCharCol(n) {
-      let temCol = "",
-        s = "",
+      let temCol = '',
+        s = '',
         m = 0;
       while (n > 0) {
         m = (n % 26) + 1;
@@ -321,7 +330,7 @@ export default {
       return s;
     },
     s2ab(s) {
-      if (typeof ArrayBuffer !== "undefined") {
+      if (typeof ArrayBuffer !== 'undefined') {
         let buf = new ArrayBuffer(s.length);
         let view = new Uint8Array(buf);
         for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
@@ -359,7 +368,7 @@ export default {
     text-align: center;
     font-size: 26px;
     line-height: 26px;
-    font-family: "楷体";
+    font-family: '楷体';
     margin-bottom: 5px;
   }
   .border {

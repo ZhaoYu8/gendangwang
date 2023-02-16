@@ -1,3 +1,11 @@
+<!--
+ * @Author: 赵宇
+ * @Description: 
+ * @Date: 2022-07-25 16:22:40
+ * @LastEditTime: 2023-01-07 16:05:22
+ * @LastEditors: zhao 13370229059@163.com
+ * @FilePath: \yuanyibaozhuang\src\components\OutDepot\AddOutDepot.vue
+-->
 <template>
   <div class="add-outdepot">
     <Panel :arr="arr" @change="custChange" v-if="panelType" />
@@ -179,7 +187,7 @@ export default {
       await this.custChange({ model: x.customer[0].id, id: 'customer_id' });
       this.arr[1].model = moment().format('YYYY-MM-DD');
       this.tableData = [];
-      this.arr[17].model = '常熟市尚湖镇练墉颜巷工业园';
+      this.arr[17].model = '常熟市尚湖镇练塘颜巷工业园';
     },
     changeDialog() {
       this.dialogShow = true;

@@ -1,3 +1,11 @@
+<!--
+ * @Author: 赵宇
+ * @Description: 
+ * @Date: 2022-07-25 16:22:40
+ * @LastEditTime: 2023-02-16 10:50:10
+ * @LastEditors: zhao 13370229059@163.com
+ * @FilePath: \yuanyibaozhuang\src\views\DeliverGoods.vue
+-->
 <template>
   <div class="second p-10 box">
     <!-- 头部查询条件 -->
@@ -42,6 +50,7 @@
     <div class="pt-10 f-5 table">
       <el-table :data="tableData1" style="width: 100%;" border @selection-change="handleSelectionChange" ref="secondTable">
         <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
+        <el-table-column label="序号" type="index" align="center" />
         <el-table-column label="操作" width="50" align="center" header-align="center">
           <div slot-scope="scope" style="display: flex; justify-content: space-around;">
             <el-link :underline="false" type="danger" @click="del(scope)">删除</el-link>
@@ -68,10 +77,12 @@
     <!-- 第二个 表格 -->
     <div class="pt-10 f-2 table">
       <el-table :data="tableData2" style="width: 100%;" border ref="multipleTable_b">
+        <el-table-column label="序号" type="index" align="center" />
         <el-table-column label="操作" width="200" align="center" header-align="center">
           <div slot-scope="scope" style="display: flex; justify-content: space-around;">
             <el-link :underline="false" type="danger" @click="delTwo(scope)">删除</el-link>
             <el-link :underline="false" type="primary" @click="edit(scope)">修改</el-link>
+            <el-link :underline="false" :type="scope.row.status === 1 ? 'success' : 'primary'" @click="batch(scope)" :disabled="scope.row.status === 1"> {{ scope.row.status === 1 ? '已审核' : '审核' }}</el-link>
             <el-link :underline="false" type="primary" @click="go(scope)">详情</el-link>
             <el-link :underline="false" type="primary" @click="print(scope)">打印</el-link>
           </div>
@@ -112,7 +123,7 @@ export default {
   props: {},
   components: {
     Dialog,
-    Detail,
+    Detail
   },
   data: () => {
     return {
@@ -124,7 +135,7 @@ export default {
       arr: [
         { label: '日期', model: '', placeholder: '', id: 'delivery_date', type: 'date', data: [] },
         { label: '班次', model: '', placeholder: '', id: 'delivery_shifts', type: 'select', data: [] },
-        { label: '路线', model: '', placeholder: '请输入路线', id: 'delivery_route', type: 'select', data: [], multiple: true },
+        { label: '路线', model: '', placeholder: '请输入路线', id: 'delivery_route', type: 'select', data: [], multiple: true }
         // { label: "下单客户", model: "", placeholder: "", id: "customer_id", type: "select", data: [] },
         // { label: "产品名称", model: "", placeholder: "请输入产品名称", id: "product_name" },
       ],
@@ -133,7 +144,7 @@ export default {
       currentPage2: 1, // 第一个表格分页
       checkArr: [],
       checkArrOk: [],
-      isPrint: false,
+      isPrint: false
     };
   },
   watch: {},
@@ -141,7 +152,7 @@ export default {
   computed: {
     tableHeader() {
       return this.$common.tableHeader;
-    },
+    }
   },
   methods: {
     // 查询条件change事件
@@ -153,7 +164,7 @@ export default {
       if (this.arr[0].model && this.arr[1].model) {
         let res = await this.$post('/delivery_plans/get_routes', {
           delivery_date: this.arr[0].model,
-          delivery_shifts: this.arr[1].model,
+          delivery_shifts: this.arr[1].model
         });
         this.arr[2].data = res.data.data.delivery_route_options;
         this.arr[2].model = '';
@@ -166,8 +177,8 @@ export default {
     // 点击修改触发
     async edit(val) {
       this.$post('/delivery_plans/detail', {
-        delivery_good_id: val.row.delivery_good_id,
-      }).then((res) => {
+        delivery_good_id: val.row.delivery_good_id
+      }).then(res => {
         this.checkArrOk = res.data.data.delivery_products;
         this.editData = { id: val.row.delivery_good_id, data: res.data.data.delivery_schedule, tableData: this.tableData1 };
         this.centerDialogVisible = true;
@@ -186,15 +197,15 @@ export default {
       let data = await this.$confirm('确定删除么?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       }).then(() => {
         this.$post('/delivery_plans/delete_schedule', {
-          delivery_good_id: val.row.delivery_good_id || 0,
+          delivery_good_id: val.row.delivery_good_id || 0
         }).then(() => {
           // 删除之后查询，并且提示删除成功!
           this.$message({
             type: 'success',
-            message: '删除成功!',
+            message: '删除成功!'
           });
           let _this = this;
           setTimeout(() => {
@@ -219,7 +230,7 @@ export default {
         this.$notify({
           title: '警告',
           message: '最少选择一条产品数据!',
-          type: 'warning',
+          type: 'warning'
         });
       }
     },
@@ -244,11 +255,11 @@ export default {
     async query() {
       let obj = {
         ...this.$common.querySql.call(this, this.arr),
-        ...{ not_paginate: 1 },
+        ...{ not_paginate: 1 }
       };
-      await this.$post('/delivery_plans/list_plan', obj).then((res) => {
+      await this.$post('/delivery_plans/list_plan', obj).then(res => {
         let data = res.data.data;
-        data.map((r) => {
+        data.map(r => {
           if (!parseInt(r.delivery_number) && !Number(r.sparetime_percent)) {
             r.sparetime = 0;
           } else {
@@ -263,7 +274,7 @@ export default {
     },
     queryTwo() {
       let obj = { page: this.currentPage2 };
-      this.$post('/delivery_plans/list_schedule', obj).then((res) => {
+      this.$post('/delivery_plans/list_schedule', obj).then(res => {
         let data = res.data.data;
         this.tableData2 = data;
         this.paginate_meta2 = res.data.paginate_meta;
@@ -271,8 +282,8 @@ export default {
     },
     go(val) {
       this.$post('/delivery_plans/detail', {
-        delivery_good_id: val.row.delivery_good_id,
-      }).then((res) => {
+        delivery_good_id: val.row.delivery_good_id
+      }).then(res => {
         this.detailData = res.data;
         this.centerDialogVisible1 = true;
       });
@@ -280,8 +291,8 @@ export default {
     },
     print(val) {
       this.$post('/delivery_plans/detail', {
-        delivery_good_id: val.row.delivery_good_id,
-      }).then((res) => {
+        delivery_good_id: val.row.delivery_good_id
+      }).then(res => {
         this.detailData = res.data;
         this.centerDialogVisible1 = true;
         this.isPrint = true;
@@ -295,6 +306,27 @@ export default {
       this.arr[1].data = this.$vuexData.x.delivery_shift;
       this.arr[2].data = this.$vuexData.x.delivery_route;
     },
+    async batch(val) {
+      await this.$confirm('确定审核出库?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$post('/delivery_plans/batch_confirm', {
+          delivery_good_id: val.row.delivery_good_id || 0
+        }).then(() => {
+          // 删除之后查询，并且提示删除成功!
+          this.$message({
+            type: 'success',
+            message: '审核出库成功!'
+          });
+          let _this = this;
+          setTimeout(() => {
+            _this.queryTwo();
+          }, 300);
+        });
+      });
+    }
   },
   mounted() {
     // 取user数据
@@ -306,7 +338,7 @@ export default {
     this.currentPage2 = 1;
     this.query();
     this.queryTwo();
-  },
+  }
 };
 </script>
 

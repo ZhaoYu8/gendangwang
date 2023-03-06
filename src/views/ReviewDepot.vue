@@ -8,7 +8,15 @@
     <!-- 表格 -->
     <div class="pt-10 table">
       <el-table :data="tableData" style="width: 100%;" border ref="firstTable" stripe>
-        <el-table-column header-align="center" :label="item.label" :width="item.width" v-for="(item, index) in tableHeader" :key="item.label + index">
+        <el-table-column
+          header-align="center"
+          :align="item.align || 'center'"
+          :label="item.label"
+          :width="item.width"
+          :min-width="item.minWidth"
+          v-for="(item, index) in tableHeader"
+          :key="item.label + index"
+        >
           <template slot-scope="scope">
             <template v-if="item.id === 'outbound_task_serial'">
               <el-link v-if="item.id === 'outbound_task_serial'" type="primary" @click="update(scope.row)">{{ scope.row[item.id] }}</el-link>
@@ -39,10 +47,10 @@
 </template>
 
 <script>
-import AddOutDepot from "../components/OutDepot/AddOutDepot";
-import DetailOutDepot from "../components/OutDepot/DetailOutDepot";
+import AddOutDepot from '../components/OutDepot/AddOutDepot';
+import DetailOutDepot from '../components/OutDepot/DetailOutDepot';
 export default {
-  name: "outDepot",
+  name: 'outDepot',
   data() {
     return {
       detailData: {},
@@ -51,33 +59,33 @@ export default {
       currentPage: 1,
       total: 1,
       arr: [
-        { label: "仓库", model: "", placeholder: "", type: "select", data: [], id: "inbound_warehouse_id" },
-        { label: "仓位", model: "", placeholder: "", type: "page", data: [], id: "warehouse_location_id" },
-        { label: "客户", model: "", placeholder: "", type: "page", data: [], id: "customer_id" },
-        { label: "销售", model: "", placeholder: "", type: "select", data: [], id: "saler_id" },
-        { label: "负责人", model: "", placeholder: "", type: "select", data: [], id: "member_id" },
-        { label: "发货时间", model: "", placeholder: "", type: "daterange", span: 8, id: "delivery_date_min" },
-        { label: "关键字", model: "", placeholder: "订单编号/产品名称/收货人/收货单位", id: "query_key" },
+        { label: '仓库', model: '', placeholder: '', type: 'select', data: [], id: 'inbound_warehouse_id' },
+        { label: '仓位', model: '', placeholder: '', type: 'page', data: [], id: 'warehouse_location_id' },
+        { label: '客户', model: '', placeholder: '', type: 'page', data: [], id: 'customer_id' },
+        { label: '销售', model: '', placeholder: '', type: 'select', data: [], id: 'saler_id' },
+        { label: '负责人', model: '', placeholder: '', type: 'select', data: [], id: 'member_id' },
+        { label: '发货时间', model: '', placeholder: '', type: 'daterange', span: 8, id: 'delivery_date_min' },
+        { label: '关键字', model: '', placeholder: '订单编号/产品名称/收货人/收货单位', id: 'query_key' }
       ],
       tableData: [],
       tableHeader: [
         // 类型、跟单编号、产品名称、提交人、跟单员   这些不可改
-        { label: "序号", id: "id", width: 70, type: "serial" },
-        { label: "发货时间", id: "delivery_date" },
-        { label: "收货人", id: "contact_name" },
-        { label: "收货单位", id: "contact_company" },
-        { label: "客户", id: "customer_name" },
-        { label: "出库单号", id: "outbound_task_serial" },
-        { label: "发货总数", id: "outbound_number" },
-        { label: "当前状态", id: "status_name" },
-        { label: "更新时间", id: "updated_at" },
-        { label: "最后操作人", id: "updator" },
-      ],
+        { label: '序号', id: 'id', width: 70, type: 'serial' },
+        { label: '发货时间', id: 'delivery_date', width: 100 },
+        { label: '收货人', id: 'contact_name', width: 120 },
+        { label: '收货单位', id: 'contact_company', minWidth: 150, align: 'left' },
+        { label: '客户', id: 'customer_name', minWidth: 160, align: 'left' },
+        { label: '出库单号', id: 'outbound_task_serial' },
+        { label: '发货总数', id: 'outbound_number' },
+        { label: '当前状态', id: 'status_name' },
+        { label: '更新时间', id: 'updated_at' },
+        { label: '最后操作人', id: 'updator' }
+      ]
     };
   },
   components: {
     AddOutDepot,
-    DetailOutDepot,
+    DetailOutDepot
   },
   methods: {
     detail(res) {
@@ -87,18 +95,18 @@ export default {
     },
     // 详情跳修改
     async update(val) {
-      let res = await this.$post("outbound_tasks/for_show", {
-        id: val.id,
+      let res = await this.$post('outbound_tasks/for_show', {
+        id: val.id
       });
       res = res.data.data;
       this.addOrDeatil = true;
       this.dialogVisible = true;
       this.$nextTick(() => {
-        this.$bus.$emit("panelShow", {
+        this.$bus.$emit('panelShow', {
           outbound_task: res.outbound_task,
           tableData: res.products,
           id: val.id,
-          type: 1,
+          type: 1
         });
       });
     },
@@ -113,25 +121,25 @@ export default {
       this.dialogVisible = true;
       this.addOrDeatil = false;
       this.$nextTick(() => {
-        this.$bus.$emit("detailShow", val);
+        this.$bus.$emit('detailShow', val);
       });
     },
     panelChange() {
       this.addOrDeatil = this.dialogVisible = true;
       this.$nextTick(() => {
-        this.$bus.$emit("panelShow");
+        this.$bus.$emit('panelShow');
       });
     },
     async query() {
       let obj = {
         ...this.$common.querySql.call(this, this.arr),
-        ...{ page: this.currentPage, status: 1 },
+        ...{ page: this.currentPage, status: 1 }
       };
       if (obj.delivery_date_min) {
-        obj.delivery_date_max = moment(obj.delivery_date_min[1]).format("YYYY-MM-DD");
-        obj.delivery_date_min = moment(obj.delivery_date_min[0]).format("YYYY-MM-DD");
+        obj.delivery_date_max = moment(obj.delivery_date_min[1]).format('YYYY-MM-DD');
+        obj.delivery_date_min = moment(obj.delivery_date_min[0]).format('YYYY-MM-DD');
       }
-      let res = await this.$post("outbound_tasks/list", obj);
+      let res = await this.$post('outbound_tasks/list', obj);
       this.tableData = res.data.data.items;
       this.total = res.data.data.paginate_meta.total_count;
     },
@@ -144,18 +152,18 @@ export default {
       this.arr[0].data = x.warehouse;
       this.arr[1].data = x.location;
       this.arr[2].data = x.customer;
-      [3, 4].map((r) => {
+      [3, 4].map(r => {
         this.arr[r].data = x.member;
       });
-    },
+    }
   },
   mounted() {
     this.query();
     this.init();
-    this.$bus.$on("user", () => {
+    this.$bus.$on('user', () => {
       this.init();
     });
-  },
+  }
 };
 </script>
 

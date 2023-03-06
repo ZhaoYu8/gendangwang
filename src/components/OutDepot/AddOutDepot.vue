@@ -2,7 +2,7 @@
  * @Author: 赵宇
  * @Description: 
  * @Date: 2022-07-25 16:22:40
- * @LastEditTime: 2023-01-07 16:05:22
+ * @LastEditTime: 2023-03-06 10:22:41
  * @LastEditors: zhao 13370229059@163.com
  * @FilePath: \yuanyibaozhuang\src\components\OutDepot\AddOutDepot.vue
 -->
@@ -18,9 +18,10 @@
       </div>
     </div>
     <el-table :data="tableData" border ref="dialog1Table" height="310">
-      <el-table-column label="序号" align="center" prop="product_name" header-align="center" type="index"></el-table-column>
+      <el-table-column label="序号" align="center" header-align="center" type="index"></el-table-column>
       <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center"></el-table-column>
       <el-table-column label="产品名称" align="center" prop="product_name" header-align="center"></el-table-column>
+      <el-table-column label="产品编号" align="center" prop="product_serial" header-align="center"></el-table-column>
       <el-table-column label="仓库选择" align="center" header-align="center">
         <template slot-scope="scope">
           <el-select filterable v-model="scope.row['inbound_warehouse_id']" placeholder="">
@@ -171,7 +172,7 @@ export default {
   },
   methods: {
     async init() {
-      this.arr.map((r) => {
+      this.arr.map(r => {
         r.model = '';
       });
       let x = this.$vuexData.x;
@@ -181,7 +182,7 @@ export default {
       this.arr[10].data = x.fangdanfangshi;
       this.arr[14].data = x.fufeifangshi;
       this.arr[6].data = x.huoyunfangshi;
-      [19, 7, 15, 11, 9].map((r) => {
+      [19, 7, 15, 11, 9].map(r => {
         this.arr[r].data = x.member;
       });
       await this.custChange({ model: x.customer[0].id, id: 'customer_id' });
@@ -213,7 +214,7 @@ export default {
     },
     async custChange(val) {
       if (val.id !== 'customer_id') return;
-      this.arr[4].model = this.$vuexData.x.customer.filter((r) => r.id === val.model)[0].name;
+      this.arr[4].model = this.$vuexData.x.customer.filter(r => r.id === val.model)[0].name;
       let res = await this.$post('outbound_tasks/switch_customer', {
         customer_id: val.model
       });
@@ -226,12 +227,12 @@ export default {
     },
     async save() {
       let outbound_task = {};
-      this.arr.map((r) => {
+      this.arr.map(r => {
         outbound_task[r.id] = r.model;
       });
       // 日期单独处理一下
       outbound_task.delivery_date = moment(outbound_task.delivery_date).format('YYYY-MM-DD');
-      let arr = this.tableData.map((r) => {
+      let arr = this.tableData.map(r => {
         return {
           ...{
             inbound_warehouse_id: null,
@@ -291,11 +292,11 @@ export default {
     this.$bus.$off('panelShow');
   },
   mounted() {
-    this.$bus.$on('panelShow', async (res) => {
+    this.$bus.$on('panelShow', async res => {
       await this.init();
       if (res) {
         this.tableData = res.tableData;
-        this.arr.map((r) => {
+        this.arr.map(r => {
           r.model = res.outbound_task[r.id];
         });
         this.editId = res.id;

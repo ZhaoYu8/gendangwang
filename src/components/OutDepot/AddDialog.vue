@@ -1,3 +1,11 @@
+<!--
+ * @Author: 赵宇
+ * @Description: 
+ * @Date: 2022-07-25 16:22:40
+ * @LastEditTime: 2023-03-06 10:15:10
+ * @LastEditors: zhao 13370229059@163.com
+ * @FilePath: \yuanyibaozhuang\src\components\OutDepot\AddDialog.vue
+-->
 <template>
   <el-dialog
     title="出入库产品选择"
@@ -42,6 +50,7 @@
         <el-table-column type="selection" width="50" align="center" header-align="center"></el-table-column>
         <el-table-column label="订单编号" align="center" prop="order_serial" header-align="center"></el-table-column>
         <el-table-column label="产品名称" align="center" prop="product_name" header-align="center"></el-table-column>
+        <el-table-column label="产品编号" align="center" prop="product_serial" header-align="center"></el-table-column>
         <el-table-column label="仓库选择" align="center" header-align="center">
           <template slot-scope="scope">
             <el-select filterable v-model="scope.row['inbound_warehouse_id']" placeholder="">

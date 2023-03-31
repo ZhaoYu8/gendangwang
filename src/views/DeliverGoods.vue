@@ -2,7 +2,7 @@
  * @Author: 赵宇
  * @Description: 
  * @Date: 2022-07-25 16:22:40
- * @LastEditTime: 2023-02-16 10:50:10
+ * @LastEditTime: 2023-03-31 15:01:15
  * @LastEditors: zhao 13370229059@163.com
  * @FilePath: \yuanyibaozhuang\src\views\DeliverGoods.vue
 -->
@@ -81,8 +81,10 @@
         <el-table-column label="操作" width="200" align="center" header-align="center">
           <div slot-scope="scope" style="display: flex; justify-content: space-around;">
             <el-link :underline="false" type="danger" @click="delTwo(scope)">删除</el-link>
-            <el-link :underline="false" type="primary" @click="edit(scope)">修改</el-link>
-            <el-link :underline="false" :type="scope.row.status === 1 ? 'success' : 'primary'" @click="batch(scope)" :disabled="scope.row.status === 1"> {{ scope.row.status === 1 ? '已审核' : '审核' }}</el-link>
+            <el-link :underline="false" :type="scope.row.status === 1 ? 'info' : 'primary'" @click="edit(scope)" :disabled="scope.row.status === 1">修改</el-link>
+            <el-link :underline="false" :type="scope.row.status === 1 ? 'success' : 'primary'" @click="batch(scope)" :disabled="scope.row.status === 1">
+              {{ scope.row.status === 1 ? '已审核' : '审核' }}
+            </el-link>
             <el-link :underline="false" type="primary" @click="go(scope)">详情</el-link>
             <el-link :underline="false" type="primary" @click="print(scope)">打印</el-link>
           </div>
